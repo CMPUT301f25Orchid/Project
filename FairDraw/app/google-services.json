@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "656768165373",
+    "project_id": "fairdraw-ecea0",
+    "storage_bucket": "fairdraw-ecea0.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:656768165373:android:2d66a56fee595a8849a594",
+        "android_client_info": {
+          "package_name": "com.example.fairdraw"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDzLF4xVCjRaqFEs00dpbtSlXsm5iEA5Uw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
