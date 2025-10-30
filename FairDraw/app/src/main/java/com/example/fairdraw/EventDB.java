@@ -40,14 +40,14 @@ public class EventDB {
         return task.isSuccessful();
     }
 
-    public static void updateEvent(Event event) {
+    public static Boolean updateEvent(Event event) {
         DocumentReference eventRef = EventDB.getEventCollection().document(event.getUuid().toString());
-        eventRef.set(event);
+        return eventRef.set(event).isSuccessful();
     }
 
-    public static void deleteEvent(String eventId) {
+    public static Boolean deleteEvent(String eventId) {
         DocumentReference eventRef = EventDB.getEventCollection().document(eventId);
-        eventRef.delete();
+        return eventRef.delete().isSuccessful();
     }
 
     public static List<Event> getEvents() {

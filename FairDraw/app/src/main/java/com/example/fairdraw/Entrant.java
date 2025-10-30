@@ -14,8 +14,8 @@ public class Entrant extends User {
     public Entrant(String name, ContactsContract.CommonDataKinds.Email email,
                    ContactsContract.CommonDataKinds.Phone phoneNum, String deviceId,
                    String fcmToken, List<String> eventHistory,
-                   Dictionary<String, Boolean> notificationPrefs) {
-        super(name, email, phoneNum, deviceId, fcmToken);
+                   Dictionary<String, Boolean> notificationPrefs, List<String> roles) {
+        super(name, email, phoneNum, deviceId, fcmToken, roles);
         this.eventHistory = eventHistory;
         this.notificationPrefs = notificationPrefs;
     }

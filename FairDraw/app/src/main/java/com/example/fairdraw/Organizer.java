@@ -10,8 +10,8 @@ public class Organizer extends User {
 
     public Organizer(String name, ContactsContract.CommonDataKinds.Email email,
                      ContactsContract.CommonDataKinds.Phone phoneNum, String deviceId,
-                     String fcmToken, List<String> eventsCreated) {
-        super(name, email, phoneNum, deviceId, fcmToken);
+                     String fcmToken, List<String> eventsCreated, List<String> roles) {
+        super(name, email, phoneNum, deviceId, fcmToken, roles);
         this.eventsCreated = eventsCreated;
     }
 }
