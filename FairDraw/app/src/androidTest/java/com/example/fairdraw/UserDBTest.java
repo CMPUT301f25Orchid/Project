@@ -25,7 +25,7 @@ public class UserDBTest {
 
     @Before
     public void setUp() throws Exception {
-        testUser = new User("Test User", "test@example.com", "1234567890", testDeviceId, "test_fcm_token", Collections.singletonList("USER"));
+        testUser = new User("Test User", "test@example.com", "1234567890", testDeviceId, "test_fcm_token");
         // Clean up before each test
         deleteTestUser();
     }

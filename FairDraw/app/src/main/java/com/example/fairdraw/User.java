@@ -12,17 +12,13 @@ public class User implements Serializable {
     // For sending messages to email, phone num, etc
     protected String fcmToken;
 
-    protected List<String> roles;
-
     public User(String name, String email,
-                String phoneNum, String deviceId, String fcmToken,
-                List<String> roles) {
+                String phoneNum, String deviceId, String fcmToken) {
         this.name = name;
         this.email = email;
         this.phoneNum = phoneNum;
         this.deviceId = deviceId;
         this.fcmToken = fcmToken;
-        this.roles = roles;
     }
 
     public User() {
@@ -67,9 +63,5 @@ public class User implements Serializable {
 
     public void setFcmToken(String fcmToken) {
         this.fcmToken = fcmToken;
-    }
-
-    public boolean hasRole(String role) {
-        return roles.contains(role);
     }
 }
