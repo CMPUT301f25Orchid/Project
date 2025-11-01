@@ -1,14 +1,12 @@
 package com.example.fairdraw;
 
-import android.provider.ContactsContract;
-
 import java.io.Serializable;
 import java.util.List;
 
 public class User implements Serializable {
     protected String name;
-    protected ContactsContract.CommonDataKinds.Email email;
-    protected ContactsContract.CommonDataKinds.Phone phoneNum;
+    protected String email;
+    protected String phoneNum;
     protected String deviceId;
 
     // For sending messages to email, phone num, etc
@@ -16,8 +14,8 @@ public class User implements Serializable {
 
     protected List<String> roles;
 
-    public User(String name, ContactsContract.CommonDataKinds.Email email,
-                ContactsContract.CommonDataKinds.Phone phoneNum, String deviceId, String fcmToken,
+    public User(String name, String email,
+                String phoneNum, String deviceId, String fcmToken,
                 List<String> roles) {
         this.name = name;
         this.email = email;
@@ -35,11 +33,11 @@ public class User implements Serializable {
         return name;
     }
 
-    public ContactsContract.CommonDataKinds.Email getEmail() {
+    public String getEmail() {
         return email;
     }
 
-    public ContactsContract.CommonDataKinds.Phone getPhoneNum() {
+    public String getPhoneNum() {
         return phoneNum;
     }
 
@@ -55,11 +53,11 @@ public class User implements Serializable {
         this.name = name;
     }
 
-    public void setEmail(ContactsContract.CommonDataKinds.Email email) {
+    public void setEmail(String email) {
         this.email = email;
     }
 
-    public void setPhoneNum(ContactsContract.CommonDataKinds.Phone phoneNum) {
+    public void setPhoneNum(String phoneNum) {
         this.phoneNum = phoneNum;
     }
 

@@ -37,7 +37,7 @@ enum EventState {
 
 public class Event implements Serializable {
 
-    private UUID uuid;
+    private String uuid;
     private String title;
     private String description;
     private Integer capacity;
@@ -48,7 +48,7 @@ public class Event implements Serializable {
     private Float price;
     private String posterPath;
     private String qrSlug;
-    private EventState state;
+    private EventState state = EventState.DRAFT;
 
     // List of user ids that are in waiting list
     private List<String> waitingList;
@@ -65,7 +65,7 @@ public class Event implements Serializable {
     public Event(String title, String description, Integer capacity, Date regPeriod, Date time,
                  String location, String organizer, Float price, String posterPath,
                  String qrSlug) {
-        this.uuid = UUID.randomUUID();
+        this.uuid = UUID.randomUUID().toString();
         this.title = title;
         this.description = description;
         this.capacity = capacity;
@@ -76,7 +76,6 @@ public class Event implements Serializable {
         this.price = price;
         this.posterPath = posterPath;
         this.qrSlug = qrSlug;
-        this.state = EventState.DRAFT;
         this.waitingList = new ArrayList<>();
         this.invitedList = new ArrayList<>();
         this.enrolledList = new ArrayList<>();
@@ -87,12 +86,12 @@ public class Event implements Serializable {
         // Required for Firestore deserialization
     }
 
-    public UUID getUuid() {
+    public String getUuid() {
         return uuid;
     }
 
     public void setUuid(String uuid) {
-        this.uuid = UUID.fromString(uuid);
+        this.uuid = uuid;
     }
 
     public String getTitle() {

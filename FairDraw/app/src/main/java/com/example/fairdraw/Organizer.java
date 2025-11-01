@@ -2,16 +2,43 @@ package com.example.fairdraw;
 
 import android.provider.ContactsContract;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
-public class Organizer extends User {
+/**
+ * This class represents the model of an Organizer(only the unique things to an Organizer)
+ * and is linked to a user(containing basic user information) by the deviceid
+ * */
+public class Organizer implements Serializable {
+    private String deviceId;
+    private List<String> eventsCreated = new ArrayList<>();
 
-    private List<String> eventsCreated;
+    public Organizer(String deviceId) {
+        this.deviceId = deviceId;
+    }
 
-    public Organizer(String name, ContactsContract.CommonDataKinds.Email email,
-                     ContactsContract.CommonDataKinds.Phone phoneNum, String deviceId,
-                     String fcmToken, List<String> eventsCreated, List<String> roles) {
-        super(name, email, phoneNum, deviceId, fcmToken, roles);
+    public Organizer() {
+        // Required for Firestore deserialization
+    }
+
+    public String getDeviceId() {
+        return deviceId;
+    }
+
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
+    }
+
+    public List<String> getEventsCreated() {
+        return eventsCreated;
+    }
+
+    public void setEventsCreated(ArrayList<String> eventsCreated) {
         this.eventsCreated = eventsCreated;
+    }
+
+    public void addEventToCreated(String eventId) {
+        eventsCreated.add(eventId);
     }
 }

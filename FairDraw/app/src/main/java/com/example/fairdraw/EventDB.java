@@ -1,62 +1,91 @@
 package com.example.fairdraw;
 
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.List;
 
 /**
  * This class serves as a Firestore service provider for Event operations
- * */
+ */
 public class EventDB {
+
+    /**
+     * Callback for when an Event is retrieved from the database.
+     */
+    public interface GetEventCallback {
+        void onCallback(Event event);
+    }
+
+    /**
+     * Callback for when a list of Events is retrieved from the database.
+     */
+    public interface GetEventsCallback {
+        void onCallback(List<Event> events);
+    }
+
+    /**
+     * Callback for when an Event is added to the database.
+     */
+    public interface AddEventCallback {
+        void onCallback(boolean success);
+    }
+
+    /**
+     * Callback for when an Event is updated in the database.
+     */
+    public interface UpdateEventCallback {
+        void onCallback(boolean success);
+    }
+
+    /**
+     * Callback for when an Event is deleted from the database.
+     */
+    public interface DeleteEventCallback {
+        void onCallback(boolean success);
+    }
+
     public static CollectionReference getEventCollection() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         return db.collection("events");
     }
 
-    public static Event getEvent(String eventId) {
-        DocumentReference eventRef = EventDB.getEventCollection().document(eventId);
-
-        // Check if the event exists in the database
-        Task<DocumentSnapshot> task = eventRef.get();
-        if (task.isSuccessful()) {
-            DocumentSnapshot document = task.getResult();
-            return document.toObject(Event.class);
-        }
-        else
-        {
-            return null;
-        }
+    public static void getEvent(String eventId, GetEventCallback callback) {
+        DocumentReference eventRef = getEventCollection().document(eventId);
+        eventRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Event event = task.getResult().toObject(Event.class);
+                callback.onCallback(event);
+            } else {
+                callback.onCallback(null);
+            }
+        });
     }
 
-    public static Boolean addEvent(Event event) {
-        // Add the document with the uuid specified
-        Task<Void> task = EventDB.getEventCollection().document(event.getUuid().toString())
-                .set(event);
-        return task.isSuccessful();
+    public static void addEvent(Event event, AddEventCallback callback) {
+        getEventCollection().document(event.getUuid().toString()).set(event)
+                .addOnCompleteListener(task -> callback.onCallback(task.isSuccessful()));
     }
 
-    public static Boolean updateEvent(Event event) {
-        DocumentReference eventRef = EventDB.getEventCollection().document(event.getUuid().toString());
-        return eventRef.set(event).isSuccessful();
+    public static void updateEvent(Event event, UpdateEventCallback callback) {
+        getEventCollection().document(event.getUuid().toString()).set(event)
+                .addOnCompleteListener(task -> callback.onCallback(task.isSuccessful()));
     }
 
-    public static Boolean deleteEvent(String eventId) {
-        DocumentReference eventRef = EventDB.getEventCollection().document(eventId);
-        return eventRef.delete().isSuccessful();
+    public static void deleteEvent(String eventId, DeleteEventCallback callback) {
+        getEventCollection().document(eventId).delete()
+                .addOnCompleteListener(task -> callback.onCallback(task.isSuccessful()));
     }
 
-    public static List<Event> getEvents() {
-        Task<QuerySnapshot> task = EventDB.getEventCollection().get();
-
-        if (task.isSuccessful()) {
-            return task.getResult().toObjects(Event.class);
-        } else {
-            return null;
-        }
+    public static void getEvents(GetEventsCallback callback) {
+        getEventCollection().get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                List<Event> events = task.getResult().toObjects(Event.class);
+                callback.onCallback(events);
+            } else {
+                callback.onCallback(null);
+            }
+        });
     }
 }

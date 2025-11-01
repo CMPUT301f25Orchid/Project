@@ -2,12 +2,29 @@ package com.example.fairdraw;
 
 import android.provider.ContactsContract;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Admin extends User {
-    public Admin(String name, ContactsContract.CommonDataKinds.Email email,
-                 ContactsContract.CommonDataKinds.Phone phoneNum, String deviceId,
-                 String fcmToken, List<String> roles) {
-        super(name, email, phoneNum, deviceId, fcmToken, roles);
+/**
+ * This class represents the model of an Admin(only the unique things to an Admin)
+ * and is linked to a user(containing basic user information) by the deviceid
+ * */
+public class Admin implements Serializable {
+    private String deviceId;
+
+    public Admin(String deviceId) {
+        this.deviceId = deviceId;
+    }
+
+    public Admin() {
+        // Required for Firestore deserialization
+    }
+
+    public String getDeviceId() {
+        return deviceId;
+    }
+
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
     }
 }

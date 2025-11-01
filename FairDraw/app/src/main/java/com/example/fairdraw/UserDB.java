@@ -1,55 +1,71 @@
 package com.example.fairdraw;
 
-import android.provider.Settings;
-
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.Map;
-import java.util.Objects;
-
+/**
+ * This class serves as a Firestore service provider for the basic User information
+ */
 public class UserDB {
-    // Function to get current user's device id
 
+    /**
+     * Callback for when a User is retrieved from the database.
+     */
+    public interface GetUserCallback {
+        void onCallback(User user);
+    }
+
+    /**
+     * Callback for when a User is added to the database.
+     */
+    public interface AddUserCallback {
+        void onCallback(boolean success);
+    }
+
+    /**
+     * Callback for when a User is updated in the database.
+     */
+    public interface UpdateUserCallback {
+        void onCallback(boolean success);
+    }
+
+    /**
+     * Callback for when a User is deleted from the database.
+     */
+    public interface DeleteUserCallback {
+        void onCallback(boolean success);
+    }
 
     public static CollectionReference getUserCollection() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         return db.collection("users");
-        }
-
-    public static Map<String, Object> getUser(String deviceId) {
-        DocumentReference userRef = UserDB.getUserCollection().document(deviceId);
-        Task<DocumentSnapshot> task = userRef.get();
-        if (task.isSuccessful())
-        {
-            DocumentSnapshot document = task.getResult();
-            return document.getData();
-        }
-        else
-        {
-            return null;
-        }
     }
 
-    public static Boolean addUser(Map<String, Object> user) {
-        String deviceId = (String) user.get("deviceId");
-        assert deviceId != null;
-        DocumentReference userRef = UserDB.getUserCollection().document(deviceId);
-        Task<Void> task = userRef.set(user);
-        return task.isSuccessful();
+    public static void getUser(String deviceId, GetUserCallback callback) {
+        DocumentReference userRef = getUserCollection().document(deviceId);
+        userRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                User user = task.getResult().toObject(User.class);
+                callback.onCallback(user);
+            } else {
+                callback.onCallback(null);
+            }
+        });
     }
 
-    public static Boolean updateUser(Map<String, Object> user) {
-        String deviceId = (String) user.get("deviceId");
-        assert deviceId != null;
-        DocumentReference userRef = UserDB.getUserCollection().document(deviceId);
-        return userRef.set(user).isSuccessful();
+    public static void addUser(User user, AddUserCallback callback) {
+        getUserCollection().document(user.getDeviceId()).set(user)
+                .addOnCompleteListener(task -> callback.onCallback(task.isSuccessful()));
     }
-    public static Boolean deleteUser(String deviceId) {
-        DocumentReference userRef = UserDB.getUserCollection().document(deviceId);
-        return userRef.delete().isSuccessful();
+
+    public static void updateUser(User user, UpdateUserCallback callback) {
+        getUserCollection().document(user.getDeviceId()).set(user)
+                .addOnCompleteListener(task -> callback.onCallback(task.isSuccessful()));
+    }
+
+    public static void deleteUser(String deviceId, DeleteUserCallback callback) {
+        getUserCollection().document(deviceId).delete()
+                .addOnCompleteListener(task -> callback.onCallback(task.isSuccessful()));
     }
 }
