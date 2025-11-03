@@ -34,7 +34,7 @@
         tools:layout_editor_absoluteY="113dp" />
 
     <include
-        layout="@layout/bottom_nav_bar"
+        layout="@layout/organizer_bottom_nav_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
