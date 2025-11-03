@@ -10,9 +10,12 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+
 public class SignUpActivity extends AppCompatActivity {
 
-    private EditText nameEt, emailEt, phoneEt;
+    private TextInputEditText nameEt, emailEt, phoneEt;
     private Button submitBtn;
 
     @Override
@@ -20,10 +23,10 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        nameEt = findViewById(R.id.nameEt);
-        emailEt = findViewById(R.id.emailEt);
-        phoneEt = findViewById(R.id.phoneEt);
-        submitBtn = findViewById(R.id.submitBtn);
+        nameEt = findViewById(R.id.fullName);
+        emailEt = findViewById(R.id.etEmail);
+        phoneEt = findViewById(R.id.etPhone);
+        submitBtn = findViewById(R.id.btnSignUp);
 
         submitBtn.setOnClickListener(v -> {
             String name = nameEt.getText().toString().trim();
