@@ -2,4 +2,8 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="status_won">#BFF2A6</color>
+    <color name="status_lost">#F2A3A3</color>
+    <color name="status_wait">#A9C6FF</color>
+    <color name="status_cancel">#9E9E9E</color>
 </resources>
