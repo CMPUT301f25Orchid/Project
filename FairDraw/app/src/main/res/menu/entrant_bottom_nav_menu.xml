@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:title="Home"
+        android:id="@+id/home_activity"
+        android:icon="@drawable/nav_home_symbol_black"/>
+    <item
+        android:title="My Events"
+        android:id="@+id/events_activity"
+        android:icon="@drawable/nav_events_symbol_black"/>
+    <item
+        android:title="Scan"
+        android:id="@+id/settings_activity"
+        android:icon="@drawable/nav_qr_symbol_black"/>
+    <item
+        android:title="Notifications"
+        android:id="@+id/notifications_activity"
+        android:icon="@drawable/nav_notifications_symbol_black"/>
+
+
+</menu>
