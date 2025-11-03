@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Organizer notifications screen (reuses Entrant structure) -->
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
+
+    <!-- HEADER (blue) -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="88dp"
+        android:background="#488EF6"
+        app:title="">
+
+        <!-- Header row: user image (left) + role buttons (right) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <!-- User image (avatar placeholder) -->
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/imgAvatar"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@android:drawable/sym_def_app_icon"
+                android:contentDescription="User image"
+                app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"/>
+
+            <!-- Spacer pushes role buttons to the right -->
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+            <!-- Entrant button (inactive: blue) -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnEntrant"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#488EF6"
+                android:text="Entrant"
+                android:textAllCaps="false"
+                android:textColor="#FFFFFF"
+                app:cornerRadius="8dp"
+                app:strokeColor="#FFFFFF" />
+
+            <Space android:layout_width="8dp" android:layout_height="0dp"/>
+
+            <!-- Organizer button (selected: white) -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnOrganizer"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#FFFFFF"
+                android:text="Organizer"
+                android:textAllCaps="false"
+                android:textColor="#488EF6"
+                app:cornerRadius="8dp"
+                app:strokeColor="#FFFFFF" />
+        </LinearLayout>
+    </com.google.android.material.appbar.MaterialToolbar>
+
+    <!-- CONTENT -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_marginTop="88dp">
+
+        <!-- Screen title -->
+        <TextView
+            android:id="@+id/tvHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Notifications"
+            android:textColor="#202124"
+            android:textStyle="bold"
+            android:textSize="22sp"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- Notification list (Organizer). -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvNotificationsOrganizer"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:paddingBottom="72dp"/>
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

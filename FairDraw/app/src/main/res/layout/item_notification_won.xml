@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- green win item  -->
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    android:foreground="?attr/selectableItemBackground"
+    android:background="@drawable/notification_card_won">
+
+    <!-- row: icon | message | warn | CTA -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="14dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <!-- left status icon -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="✔"
+            android:textSize="18sp"
+            android:layout_marginEnd="10dp"/>
+
+        <!-- message text -->
+        <TextView
+            android:id="@+id/tvMessageWon"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="You have WON the lottery for “Swimming Lessons for Beginners”"
+            android:textColor="@color/text_primary"
+            android:textSize="16sp"/>
+
+        <!-- small red warning glyph (matches the mock) -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="⚠️"
+            android:textSize="16sp"
+            android:layout_marginEnd="6dp"/>
+
+        <!-- green pill button -->
+        <TextView
+            android:id="@+id/btnAcceptDecline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Accept or Decline"
+            android:textAllCaps="false"
+            android:textColor="#000000"
+            android:textSize="14sp"
+            android:background="@drawable/cta_pill_green"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"/>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
