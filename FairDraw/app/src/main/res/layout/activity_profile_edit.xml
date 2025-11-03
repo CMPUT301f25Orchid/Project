@@ -71,7 +71,7 @@
                 android:layout_marginTop="8dp"
                 android:src="@android:drawable/sym_def_app_icon"
                 android:scaleType="centerCrop"
-                app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Material3.Corner.Full" />
+                app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -230,7 +230,7 @@
                 android:orientation="horizontal"
                 android:background="#FFFFFF"
                 android:padding="10dp"
-                android:gravity="center_vertical|space_between"
+                android:gravity="center_vertical"
                 android:layout_marginTop="6dp"
                 android:layout_marginBottom="2dp"
                 android:foreground="?attr/selectableItemBackgroundBorderless"
@@ -298,7 +298,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="space_between"
+                android:gravity="center_horizontal"
                 android:layout_marginTop="16dp">
 
                 <com.google.android.material.button.MaterialButton
