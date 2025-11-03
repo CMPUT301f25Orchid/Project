@@ -1,6 +1,7 @@
 package com.example.fairdraw;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class User implements Serializable {
     private String name;
@@ -8,9 +9,13 @@ public class User implements Serializable {
     private String phoneNum;
     private String deviceId;
     private String fcmToken;
+    private ArrayList<String> roles;
 
     // Required by Firestore
-    public User() {}
+    public User() {
+        this.roles = new ArrayList<String>();
+        roles.add("entrant");
+    }
 
     public User(String name, String email, String phoneNum, String deviceId, String fcmToken) {
         this.name = name;
@@ -18,6 +23,8 @@ public class User implements Serializable {
         this.phoneNum = phoneNum;
         this.deviceId = deviceId;
         this.fcmToken = fcmToken;
+        this.roles = new ArrayList<String>();
+        this.roles.add("entrant");
     }
 
     // Getters (Firestore needs these)
@@ -26,6 +33,8 @@ public class User implements Serializable {
     public String getPhoneNum() { return phoneNum; }
     public String getDeviceId() { return deviceId; }
     public String getFcmToken() { return fcmToken; }
+    public ArrayList<String> getRoles() { return roles; }
+
 
     // Setters (optional but nice to have)
     public void setName(String name) { this.name = name; }
@@ -33,4 +42,5 @@ public class User implements Serializable {
     public void setPhoneNum(String phoneNum) { this.phoneNum = phoneNum; }
     public void setDeviceId(String deviceId) { this.deviceId = deviceId; }
     public void setFcmToken(String fcmToken) { this.fcmToken = fcmToken; }
+    public void setRoles(ArrayList<String> roles) { this.roles = roles; }
 }
