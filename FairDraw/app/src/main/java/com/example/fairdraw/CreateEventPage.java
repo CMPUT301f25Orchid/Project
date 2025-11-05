@@ -30,6 +30,7 @@ import com.journeyapps.barcodescanner.BarcodeEncoder;
 public class CreateEventPage extends AppCompatActivity {
 
     private ActivityResultLauncher<Intent> launcher;
+    View bottomNavInclude;
     BottomNavigationView bottomNav;
     Uri bannerPhoto;
     Button confirmCreateEvent;
@@ -76,6 +77,8 @@ public class CreateEventPage extends AppCompatActivity {
         eventPrice = inputLayout.findViewById(R.id.event_price);
         eventLimit = inputLayout.findViewById(R.id.event_limit);
         eventGeolocation = inputLayout.findViewById(R.id.event_geolocation);
+        bottomNavInclude = findViewById(R.id.create_bottom_nav_bar);
+
         // Initialize activity result launcher to get photo from gallery
         launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -163,7 +166,7 @@ public class CreateEventPage extends AppCompatActivity {
             launcher.launch(intent);
         });
         // Return to Organizer Main Page
-        bottomNav = findViewById(R.id.create_bottom_nav_bar);
+        bottomNav = bottomNavInclude.findViewById(R.id.home_bottom_nav_bar);
         bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.home_activity) {

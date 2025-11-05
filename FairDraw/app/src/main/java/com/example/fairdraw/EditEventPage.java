@@ -153,24 +153,20 @@ public class EditEventPage extends Fragment {
                     Date startDate = dateFormat.parse(eventStartDate.getText().toString());
                     Date endDate = dateFormat.parse(eventEndDate.getText().toString());
                     // Remember to change to update Event object that is passed
-                    Event event = new Event(
-                            eventTitle.getText().toString(),
-                            eventDescription.getText().toString(),
-                            Integer.parseInt(eventCapacity.getText().toString()),
-                            null,
-                            null,
-                            openDate,
-                            closeDate,
-                            null,
-                            startDate,
-                            endDate,
-                            eventLocation.getText().toString(),
-                            null,
-                            Float.parseFloat(eventPrice.getText().toString()),
-                            eventGeolocation.getCheckedRadioButtonId() == R.id.geo_yes,
-                            null,
-                            null
-                    );
+                    event.setTitle(eventTitle.getText().toString());
+                    event.setDescription(eventDescription.getText().toString());
+                    event.setCapacity(Integer.parseInt(eventCapacity.getText().toString()));
+                    event.setEventOpenRegDate(openDate);
+                    event.setEventCloseRegDate(closeDate);
+                    event.setStartDate(startDate);
+                    event.setEndDate(endDate);
+                    event.setLocation(eventLocation.getText().toString());
+                    event.setPrice(Float.parseFloat(eventPrice.getText().toString()));
+                    event.setGeolocation(eventGeolocation.getCheckedRadioButtonId() == R.id.geo_yes);
+                    event.setQrSlug(null);
+                    event.setPosterPath(null);
+                    event.setWaitingListLimit(null);
+
                     if (!eventLimit.getText().toString().isEmpty()){
                         Integer limit = Integer.parseInt(eventLimit.getText().toString());
                         System.out.println(limit);
