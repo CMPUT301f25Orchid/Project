@@ -68,9 +68,7 @@ public class EditEventPage extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
         // Get selected event to edit
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            event = requireArguments().getSerializable("event", Event.class);
-        }
+        event = EventDataHolder.getDataList().get(requireArguments().getInt("position"));
         // Assign views to variables
         inputLayout = view.findViewById(R.id.edit_event_input_layout);
         uploadPosterImage = inputLayout.findViewById(R.id.poster_upload);
@@ -180,13 +178,7 @@ public class EditEventPage extends Fragment {
                     Bitmap bitmap = barcodeEncoder.encodeBitmap(qrText, BarcodeFormat.QR_CODE, 400, 400);
                     event.setQrSlug(bitmap.toString());
 
-                    EventDB.updateEvent(event, success -> {
-                        if (success) {
-                            Toast.makeText(v.getContext(), "Event edited successfully", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(v.getContext(), "Failed to edit event", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    EventDataHolder.updateEvent(event);
                 }
                 catch (Exception e) {
                     Toast.makeText(v.getContext(), "Invalid date format", Toast.LENGTH_SHORT).show();

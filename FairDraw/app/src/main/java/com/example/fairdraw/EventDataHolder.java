@@ -27,6 +27,15 @@ public class EventDataHolder {
         dataList.add(event);
         eventAdapter.notifyDataSetChanged();
     }
+    public static void updateEvent(Event event , int index) {
+        EventDB.updateEvent(event, success -> {
+            if (!success) {
+                System.out.println("Failed to update event");
+            }
+        });
+        dataList.set(index, event);
+        eventAdapter.notifyDataSetChanged();
+    }
     public static void removeEvent(Event event) {
         EventDB.deleteEvent(event.getUuid().toString(), success -> {
             if (!success) {
