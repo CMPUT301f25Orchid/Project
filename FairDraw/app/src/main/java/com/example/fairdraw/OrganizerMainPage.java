@@ -29,6 +29,7 @@ public class OrganizerMainPage extends AppCompatActivity {
     EventArrayAdapter eventAdapter;
     FirebaseFirestore db;
     CollectionReference eventsRef;
+    Integer index;
 
     ArrayList<Event> dataList;
     DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
@@ -46,11 +47,6 @@ public class OrganizerMainPage extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
-        // Set up event list view
-        eventList = findViewById(R.id.event_list);
-        eventAdapter = new EventArrayAdapter(this, dataList);
-        eventList.setAdapter(eventAdapter);
 
         // Populate event list with database data
         db = FirebaseFirestore.getInstance();
@@ -70,6 +66,10 @@ public class OrganizerMainPage extends AppCompatActivity {
             }
         });
 
+        // Set up event list view
+        eventList = findViewById(R.id.event_list);
+        eventAdapter = new EventArrayAdapter(this, dataList);
+        eventList.setAdapter(eventAdapter);
 
         //Open an event to edit
         eventList.setOnItemClickListener((parent, view, position, id) -> {
@@ -98,6 +98,9 @@ public class OrganizerMainPage extends AppCompatActivity {
         fragmentContainer.bringToFront();
         EventDataHolder.setDataList(dataList);
         EventDataHolder.setEventAdapter(eventAdapter);
+        Bundle bundle = new Bundle();
+        bundle.putInt("position", dataList.indexOf(event));
+        fragment.setArguments(bundle);
         transaction.replace(R.id.fragment_container, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
