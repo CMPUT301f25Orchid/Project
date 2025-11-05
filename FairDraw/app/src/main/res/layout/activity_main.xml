@@ -16,14 +16,58 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <TextView
+        android:id="@+id/helloText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/testButton"
-        android:text="Test Button"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:text="Hello World!"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- repurpose testButton as gallery picker -->
+    <Button
+        android:id="@+id/testButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pick from gallery"
+        app:layout_constraintTop_toBottomOf="@id/helloText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- preview -->
+    <ImageView
+        android:id="@+id/previewImage"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:scaleType="centerCrop"
+        android:contentDescription="Preview"
+        app:layout_constraintTop_toBottomOf="@id/testButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:background="#EEEEEE" />
+
+    <!-- upload as entrant -->
+    <Button
+        android:id="@+id/btnUploadEntrant"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Upload as Entrant"
+        app:layout_constraintTop_toBottomOf="@id/previewImage"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btnUploadEvent"
+        android:layout_margin="8dp"/>
+
+    <!-- upload as event -->
+    <Button
+        android:id="@+id/btnUploadEvent"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Upload as Event"
+        app:layout_constraintTop_toBottomOf="@id/previewImage"
+        app:layout_constraintStart_toEndOf="@id/btnUploadEntrant"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="8dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
