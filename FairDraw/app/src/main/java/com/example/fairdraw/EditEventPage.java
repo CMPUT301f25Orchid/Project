@@ -132,6 +132,7 @@ public class EditEventPage extends Fragment {
             eventLocation.setText(event.getLocation());
             eventPrice.setText(event.getPrice().toString());
             eventLimit.setText(event.getWaitingListLimit().toString());
+            eventGeolocation.check(event.getGeolocation() ? R.id.geo_yes : R.id.geo_no);
         }
 
         // Updating event data
