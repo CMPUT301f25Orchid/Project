@@ -144,14 +144,9 @@ public class CreateEventPage extends AppCompatActivity {
                     Bitmap bitmap = barcodeEncoder.encodeBitmap(qrText, BarcodeFormat.QR_CODE, 400, 400);
                     event.setQrSlug(bitmap.toString());
 
-                    // Upload event to database
-                    EventDB.addEvent(event, success -> {
-                        if (success) {
-                            Toast.makeText(this, "Event created successfully", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(this, "Failed to create event", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    // Upload event to database and return to organizer main page
+                    EventDataHolder.addEvent(event);
+
                 }
                 catch (Exception e) {
                     Toast.makeText(this, "Invalid date format", Toast.LENGTH_SHORT).show();
@@ -170,7 +165,6 @@ public class CreateEventPage extends AppCompatActivity {
         bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.home_activity) {
-
                 Intent intent = new Intent(CreateEventPage.this, OrganizerMainPage.class);
                 startActivity(intent);
             }

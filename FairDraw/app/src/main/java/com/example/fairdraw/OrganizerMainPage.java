@@ -61,6 +61,7 @@ public class OrganizerMainPage extends AppCompatActivity {
                 Log.e("Firestore", e.toString());
             }
             if (value != null && !value.isEmpty()) {
+                dataList.clear();
                 for (QueryDocumentSnapshot doc : value) {
                     Event event = doc.toObject(Event.class);
                     dataList.add(event);
@@ -80,7 +81,8 @@ public class OrganizerMainPage extends AppCompatActivity {
         bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.create_activity) {
-
+                EventDataHolder.setDataList(dataList);
+                EventDataHolder.setEventAdapter(eventAdapter);
                 Intent intent = new Intent(OrganizerMainPage.this, CreateEventPage.class);
                 startActivity(intent);
             }
@@ -94,9 +96,8 @@ public class OrganizerMainPage extends AppCompatActivity {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         fragmentContainer = findViewById(R.id.fragment_container);
         fragmentContainer.bringToFront();
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("event", event);
-        fragment.setArguments(bundle);
+        EventDataHolder.setDataList(dataList);
+        EventDataHolder.setEventAdapter(eventAdapter);
         transaction.replace(R.id.fragment_container, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
