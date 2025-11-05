@@ -4,7 +4,10 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -86,29 +89,31 @@ public class EntrantDB {
      */
     public interface NotificationsListener {
         void onChanged(List<EntrantNotification> notifications);
+
         void onError(Exception e);
     }
-    /** Adds one notification to one**/
+
+    /**
+     * Adds one notification to one
+     **/
     public static void pushNotificationToUser(String deviceId,
                                               EntrantNotification notification,
                                               PushNotificationCallback callB) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference ref = getEntrantCollection().document(deviceId);
 
-        db.collection("entrants").document(deviceId)
-                .update("notifications", FieldValue.arrayUnion(notification))
+        ref.update("notifications", FieldValue.arrayUnion(notification))
                 .addOnSuccessListener(v -> { if (callB != null) callB.onCallback(true, null); })
                 .addOnFailureListener(e -> {
-                    // If the entrant doc doesn’t exist yet, create it with merge and the first array item.
-                    java.util.List<EntrantNotification> arr = new java.util.ArrayList<>();
-                    arr.add(notification);
-                    java.util.Map<String, Object> init = new java.util.HashMap<>();
-                    init.put("notifications", arr);
+                    // Doc/field missing notification  create it
+                    Map<String, List<EntrantNotification>> init =
+                            Collections.singletonMap("notifications", Arrays.asList(notification));
 
-                    db.collection("entrants").document(deviceId)
-                            .set(init, com.google.firebase.firestore.SetOptions.merge())
+                    ref.set(init, SetOptions.merge())
                             .addOnSuccessListener(v2 -> { if (callB != null) callB.onCallback(true, null); })
                             .addOnFailureListener(e2 -> { if (callB != null) callB.onCallback(false, e2); });
                 });
     }
+    
 
+    ;
 }
