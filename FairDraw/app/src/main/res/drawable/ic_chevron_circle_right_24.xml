@@ -1,0 +1,11 @@
+<!-- res/drawable/ic_chevron_circle_right_24.xml -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp" android:height="24dp" android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- circle -->
+    <path android:fillColor="#FFFFFFFF"
+        android:pathData="M12,2A10,10 0 1,0 22,12A10,10 0 0,0 12,2z"/>
+    <!-- chevron -->
+    <path android:fillColor="#FF62D26F"
+        android:pathData="M10.59,7.41L15.17,12L10.59,16.59L9.17,15.17L12.34,12L9.17,8.83z"/>
+</vector>

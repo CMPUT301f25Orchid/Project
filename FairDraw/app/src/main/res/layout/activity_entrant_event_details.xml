@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".EntrantEventDetails">
+
+    <!-- Top Bar -->
+    <include
+        android:id="@+id/top_bar"
+        layout="@layout/top_bar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Bottom Navigation -->
+    <include
+        android:id="@+id/bottom_nav_bar"
+        layout="@layout/entrant_bottom_nav_bar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Content -->
+    <ScrollView
+        android:id="@+id/content_scroll"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        android:clipToPadding="false"
+        android:paddingBottom="88dp"
+        app:layout_constraintTop_toBottomOf="@id/top_bar"
+        app:layout_constraintBottom_toTopOf="@id/bottom_nav_bar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+    <LinearLayout
+        android:id="@+id/content_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Hero/banner image -->
+        <ImageView
+            android:id="@+id/heroImage"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            app:layout_constraintDimensionRatio="16:9"
+            android:contentDescription="Event Banner"
+            android:background="@color/card_gray"/>
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp"
+            android:paddingTop="12dp"
+            android:textAlignment="center"
+            android:text="SWIMMING LESSONS FOR BEGINNERS"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-black" />
+
+        <!-- Summary / subtitle -->
+        <TextView
+            android:id="@+id/tvSummary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="12dp"
+            android:text="Learn the basics of swimming in a fun and safe environment! Perfect for adults who never learned to swim! All ages welcome!"
+            android:textSize="16sp"
+            android:lineSpacingExtra="2dp"
+            android:textStyle="bold"/>
+
+        <!-- Details Grid -->
+        <GridLayout
+            android:id="@+id/detailsGrid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="2"
+            android:alignmentMode="alignMargins"
+            android:useDefaultMargins="false"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
+
+            <include
+                android:id="@+id/cell_location"
+                layout="@layout/item_event_detail"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:layout_gravity="fill_horizontal"
+                android:layout_margin="6dp"/>
+
+            <include
+                android:id="@+id/cell_geolocation"
+                layout="@layout/item_event_detail"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:layout_gravity="fill_horizontal"
+                android:layout_margin="6dp"/>
+
+            <include
+                android:id="@+id/cell_capacity"
+                layout="@layout/item_event_detail"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:layout_gravity="fill_horizontal"
+                android:layout_margin="6dp"/>
+
+            <include
+                android:id="@+id/cell_reg_period"
+                layout="@layout/item_event_detail"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:layout_gravity="fill_horizontal"
+                android:layout_margin="6dp"/>
+
+            <include
+                android:id="@+id/cell_price"
+                layout="@layout/item_event_detail"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:layout_gravity="fill_horizontal"
+                android:layout_margin="6dp"/>
+
+            <include
+                android:id="@+id/cell_organizer"
+                layout="@layout/item_event_detail"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:layout_gravity="fill_horizontal"
+                android:layout_margin="6dp"/>
+
+            <!-- If you want Schedule to span the full width (like your mock), span 2 columns -->
+            <include
+                android:id="@+id/cell_schedule"
+                layout="@layout/item_event_detail"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:layout_columnSpan="2"
+                android:layout_gravity="fill_horizontal"
+                android:layout_margin="6dp"/>
+        </GridLayout>
+
+
+        <!-- Waitlist CTA -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnWaitlist"
+            style="@style/Widget.Material3.Button"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="12dp"
+            android:text="Join Lottery Waitlist"
+            android:textAllCaps="false"
+            android:textSize="16sp"
+            android:letterSpacing="0.06"
+            android:fontFamily="sans-serif-medium"
+            app:cornerRadius="16dp"
+            app:icon="@drawable/ic_chevron_circle_right_24"
+            app:iconSize="20dp"
+            app:iconPadding="12dp"
+            app:iconGravity="textEnd"
+            app:iconTint="@android:color/white"
+            app:backgroundTint="@color/waitlist_button_tint"
+            android:textColor="@android:color/white"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:stateListAnimator="@null" />
+
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/lotteryCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="12dp"
+            app:cardCornerRadius="12dp"
+            app:cardUseCompatPadding="true"
+            app:strokeWidth="1dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="12dp">
+
+                <!-- Left: bullets -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Lottery Guidelines and Criteria"
+                        android:textStyle="bold"
+                        android:textSize="14sp"
+                        android:paddingBottom="6dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="• Join the waiting list while registration is open\n• When registration closes participants are randomly selected\n• Participants are notified and must confirm attendance\n• If someone declines, another person is drawn from the waiting list"
+                        android:lineSpacingExtra="2dp"
+                        android:textSize="12sp"/>
+                </LinearLayout>
+
+                <!-- Right: blue info box -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    android:background="@drawable/bg_info_box">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="All entrants have an equal chance of being selected. The system uses a random lottery draw to ensure fairness. Being first on the list does not improve your chances — everyone on the list has equal opportunity."
+                        android:textSize="12sp"
+                        android:lineSpacingExtra="2dp"/>
+                </LinearLayout>
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+</ScrollView>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>

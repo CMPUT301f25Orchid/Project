@@ -92,6 +92,17 @@ public class MainActivity extends AppCompatActivity {
                 handleUploadTask(t, "Event");
             }
         });
+
+        // Add a button that sends me to the EntrantEventDetails activity
+        Button btn = findViewById(R.id.my_test);
+        btn.setText("Test");
+        btn.setOnClickListener(v -> {
+            String testEventId = "3bc7da3d-3426-4f94-b2f8-004ffaf3604f";
+            Intent intent = new Intent(this, EntrantEventDetails.class);
+            intent.putExtra("event_id", testEventId);
+            startActivity(intent);
+            Log.d("test", "test");
+        });
     }
 
     private void handleUploadTask(Task<Uri> task, String label) {
