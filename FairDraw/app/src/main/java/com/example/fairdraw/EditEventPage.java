@@ -22,6 +22,7 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.google.firestore.admin.v1.Index;
 import com.google.zxing.BarcodeFormat;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
@@ -51,6 +52,7 @@ public class EditEventPage extends Fragment {
     RadioGroup eventGeolocation = null;
     DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
     Event event = null;
+    Integer index;
 
     public EditEventPage() {
         // Required empty public constructor
@@ -68,7 +70,8 @@ public class EditEventPage extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
         // Get selected event to edit
-        event = EventDataHolder.getDataList().get(requireArguments().getInt("position"));
+        index = requireArguments().getInt("position");
+        event = EventDataHolder.getDataList().get(index);
         // Assign views to variables
         inputLayout = view.findViewById(R.id.edit_event_input_layout);
         uploadPosterImage = inputLayout.findViewById(R.id.poster_upload);
@@ -114,22 +117,23 @@ public class EditEventPage extends Fragment {
             requireActivity().getSupportFragmentManager().popBackStack();
         });
         // Prefilling fields with event data
-        if (event == null) {
+        if (event != null) {
+            String openDate = dateFormat.format(event.getEventOpenRegDate());
+            String closeDate = dateFormat.format(event.getEventCloseRegDate());
+            String startDate = dateFormat.format(event.getStartDate());
+            String endDate = dateFormat.format(event.getEndDate());
             eventTitle.setText(event.getTitle());
             eventDescription.setText(event.getDescription());
-            eventCapacity.setText(event.getCapacity());
-            eventRegistrationOpenDate.setText(event.getEventOpenRegDate().toString());
-            eventRegistrationCloseDate.setText(event.getEventCloseRegDate().toString());
-            eventStartDate.setText(event.getStartDate().toString());
-            eventEndDate.setText(event.getEndDate().toString());
+            eventCapacity.setText(event.getCapacity().toString());
+            eventRegistrationOpenDate.setText(openDate);
+            eventRegistrationCloseDate.setText(closeDate);
+            eventStartDate.setText(startDate);
+            eventEndDate.setText(endDate);
             eventLocation.setText(event.getLocation());
             eventPrice.setText(event.getPrice().toString());
-            eventLimit.setText(event.getWaitingListLimit());
+            eventLimit.setText(event.getWaitingListLimit().toString());
+            eventGeolocation.check(event.getGeolocation() ? R.id.geo_yes : R.id.geo_no);
         }
-        eventTitle.setText(event.getTitle());
-        eventDescription.setText(event.getDescription());
-        eventCapacity.setText(event.getCapacity().toString());
-        eventLocation.setText(event.getLocation());
 
         // Updating event data
         confirmEventEdit.setOnClickListener(v->{
@@ -173,12 +177,7 @@ public class EditEventPage extends Fragment {
                     if (bannerPhoto != null){
                         event.setPosterPath(bannerPhoto.toString());
                     }
-                    String qrText = event.getTitle().concat(" - ").concat(event.getDescription());
-                    BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
-                    Bitmap bitmap = barcodeEncoder.encodeBitmap(qrText, BarcodeFormat.QR_CODE, 400, 400);
-                    event.setQrSlug(bitmap.toString());
-
-                    EventDataHolder.updateEvent(event);
+                    EventDataHolder.updateEvent(event, index);
                 }
                 catch (Exception e) {
                     Toast.makeText(v.getContext(), "Invalid date format", Toast.LENGTH_SHORT).show();

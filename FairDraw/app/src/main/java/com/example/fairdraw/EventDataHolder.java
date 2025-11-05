@@ -1,5 +1,7 @@
 package com.example.fairdraw;
 
+import android.widget.Toast;
+
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -23,6 +25,9 @@ public class EventDataHolder {
             if (!success) {
                 System.out.println("Failed to add event");
             }
+            else{
+                Toast.makeText(eventAdapter.getContext(), "Event added successfully", Toast.LENGTH_SHORT).show();
+            }
         });
         dataList.add(event);
         eventAdapter.notifyDataSetChanged();
@@ -31,6 +36,8 @@ public class EventDataHolder {
         EventDB.updateEvent(event, success -> {
             if (!success) {
                 System.out.println("Failed to update event");
+            } else{
+                Toast.makeText(eventAdapter.getContext(), "Event updated successfully", Toast.LENGTH_SHORT).show();
             }
         });
         dataList.set(index, event);
@@ -40,6 +47,8 @@ public class EventDataHolder {
         EventDB.deleteEvent(event.getUuid().toString(), success -> {
             if (!success) {
                 System.out.println("Failed to delete event");
+            }else{
+                Toast.makeText(eventAdapter.getContext(), "Event successfully removed", Toast.LENGTH_SHORT).show();
             }
         });
         dataList.remove(event);
