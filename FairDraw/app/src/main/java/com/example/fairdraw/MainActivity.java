@@ -1,5 +1,6 @@
 package com.example.fairdraw;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,10 +19,13 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.gms.tasks.Task;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     private ImageView previewImage;
-    private Button pickButton, uploadEntrantBtn, uploadEventBtn;
+    private Button pickButton, uploadEntrantBtn, uploadEventBtn, openNotifications;
 
     @Nullable
     private Uri pickedImageUri = null;
@@ -46,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
         pickButton = findViewById(R.id.testButton);
         uploadEntrantBtn = findViewById(R.id.btnUploadEntrant);
         uploadEventBtn = findViewById(R.id.btnUploadEvent);
+        openNotifications= findViewById(R.id.btnOpenNotifications);
+
 
         pickButton.setOnClickListener(v -> pickImage.launch("image/*"));
 
@@ -86,7 +93,35 @@ public class MainActivity extends AppCompatActivity {
                 handleUploadTask(t, "Event");
             }
         });
+        String deviceId = DevicePrefsManager.getDeviceId(this);
+        EntrantDB.addEntrant(new Entrant(deviceId), ok -> seedDummyNotifications(deviceId));
+
+
+        // Open notifications
+        openNotifications.setOnClickListener(v ->
+                startActivity(new Intent(MainActivity.this, EntrantNotificationsActivity.class))
+        );
+
+
     }
+
+    private void seedDummyNotifications(String deviceId) {
+        List<EntrantNotification> dummies = Arrays.asList(
+                new EntrantNotification(NotificationType.WIN,      "evt_swim",  "Swimming Lessons"),
+                new EntrantNotification(NotificationType.LOSE,     "evt_cook",  "Cooking 101"),
+                new EntrantNotification(NotificationType.WAITLIST, "evt_ball",  "Basketball Camp"),
+                new EntrantNotification(NotificationType.REPLACE,  "evt_piano", "Piano Basics")
+        );
+        for (EntrantNotification n : dummies) {
+            EntrantDB.pushNotificationToUser(deviceId, n, (ok, e) -> {
+                if (!ok) {
+                    Toast.makeText(this, "Seed failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+        Toast.makeText(this, "Seed request sent to entrants/" + deviceId, Toast.LENGTH_SHORT).show();
+    }
+
 
     private void handleUploadTask(Task<Uri> task, String label) {
         task.addOnSuccessListener(uri -> {

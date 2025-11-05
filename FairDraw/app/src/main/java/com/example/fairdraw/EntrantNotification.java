@@ -11,6 +11,9 @@ public class EntrantNotification implements Serializable {
     public boolean read = false;
     public EntrantNotification() {}
     public EntrantNotification(NotificationType t, String eventId, String title) {
-        this.type = type; this.eventId = eventId; this.title = title;
+        this.type = (t == null) ? null : t.name();
+        this.eventId = eventId;
+        this.title = title;
     }
 }
+
