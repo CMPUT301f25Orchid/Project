@@ -15,6 +15,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -136,52 +137,48 @@ public class EntrantDBTest {
             fail("getEntrant timed out");
         }
     }
+
     @Test
-    public void testPushNotificationToUser() throws Exception {
-        // Ensure the entrant doc exists (mirrors your other tests)
+    public void testPushNotificationToUser() throws InterruptedException {
         CountDownLatch addLatch = new CountDownLatch(1);
-        EntrantDB.addEntrant(testEntrant, success -> addLatch.countDown());
-        assertTrue("addEntrant timed out", addLatch.await(5, TimeUnit.SECONDS));
+        EntrantDB.addEntrant(testEntrant, success -> {
+            assertTrue(success);
+            addLatch.countDown();
+        });
+        if (!addLatch.await(5, TimeUnit.SECONDS)) {
+            fail("addEntrant timed out");
+        }
 
-        // Build a tiny notification (set fields directly to avoid ctor mismatch)
-        EntrantNotification n = new EntrantNotification();
-        n.type = NotificationType.WIN.name();
-        n.eventId = "evt_push_1";
-        n.title = "Sample Event";   // short header you store in DB
-        n.read = false;
-
-        // Push the notification
+        //Push a single notification
+        EntrantNotification n =
+                new EntrantNotification(NotificationType.WIN, "evt1", "Test Event");
         CountDownLatch pushLatch = new CountDownLatch(1);
         EntrantDB.pushNotificationToUser(testDeviceId, n, (ok, e) -> {
-            assertTrue("push failed: " + (e != null ? e.getMessage() : ""), ok);
+            assertTrue("pushNotification failed: " + e, ok);
             pushLatch.countDown();
         });
-        assertTrue("push timed out", pushLatch.await(7, TimeUnit.SECONDS));
+        if (!pushLatch.await(5, TimeUnit.SECONDS)) {
+            fail("pushNotification timed out");
+        }
+        ;
+        CountDownLatch getLatch = new CountDownLatch(1);
+        EntrantDB.getEntrant(testDeviceId, entrant -> {
+            assertNotNull("entrant null after push", entrant);
+            assertNotNull("notifications missing on entrant", entrant.getNotifications());
+            assertTrue("notifications empty", !entrant.getNotifications().isEmpty());
 
-        // Read back the entrant doc and check the notifications array
-        CountDownLatch readLatch = new CountDownLatch(1);
-        final List<Map<String, Object>>[] holder = new List[1];
+            EntrantNotification last = entrant.getNotifications()
+                    .get(entrant.getNotifications().size() - 1);
+            assertEquals("WIN", last.type);
+            assertEquals("evt1", last.eventId);
+            assertEquals("Test Event", last.title);
+            assertFalse(last.read);
 
-        com.google.firebase.firestore.FirebaseFirestore.getInstance()
-                .collection("entrants").document(testDeviceId)
-                .get()
-                .addOnSuccessListener(snap -> {
-                    if (snap != null && snap.exists()) {
-                        holder[0] = (List<Map<String, Object>>) snap.get("notifications");
-                    }
-                    readLatch.countDown();
-                })
-                .addOnFailureListener(e -> readLatch.countDown());
-
-        assertTrue("read timed out", readLatch.await(7, TimeUnit.SECONDS));
-        assertNotNull("notifications should exist", holder[0]);
-        assertEquals("should have exactly 1 notification", 1, holder[0].size());
-
-        Map<String, Object> first = holder[0].get(0);
-        assertEquals("WIN", first.get("type"));
-        assertEquals("evt_push_1", first.get("eventId"));
-        assertEquals("Sample Event", first.get("title"));
-        assertEquals(false, first.get("read"));
+            getLatch.countDown();
+        });
+        if (!getLatch.await(5, TimeUnit.SECONDS)) fail("getEntrant timed out");
     }
 
+    ;
 }
+
