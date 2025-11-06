@@ -1,5 +1,6 @@
 package com.example.fairdraw.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.widget.Button;
@@ -95,7 +96,7 @@ public class EntrantHomeActivity extends BaseTopBottomActivity {
             TextView capacityView = cardView.findViewById(R.id.eventCapacity);
             TextView priceView = cardView.findViewById(R.id.eventPrice);
             TextView statusView = cardView.findViewById(R.id.eventStatus);
-            Button joinBtn = cardView.findViewById(R.id.viewDetailsButton);
+            Button viewDetailsButton = cardView.findViewById(R.id.viewDetailsButton);
             ImageView eventImage = cardView.findViewById(R.id.eventImage);
 
             // Set values
@@ -126,9 +127,12 @@ public class EntrantHomeActivity extends BaseTopBottomActivity {
             }
 
             // Set button click
-            joinBtn.setOnClickListener(v ->
-                    Toast.makeText(this, "Joined waiting list for " + event.getTitle(), Toast.LENGTH_SHORT).show()
-            );
+            viewDetailsButton.setOnClickListener(v -> {
+                // TODO: navigate to event details
+                Intent intent = new Intent(EntrantHomeActivity.this, EntrantEventDetails.class);
+                intent.putExtra("event_id", event.getUuid());
+                startActivity(intent);
+            });
 
             // Add card to layout
             eventListContainer.addView(cardView);
