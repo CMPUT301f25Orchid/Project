@@ -44,8 +44,14 @@ public class Event implements Serializable {
     private String title;
     private String description;
     private Integer capacity;
+    private Integer waitingListLimit;
+    private Date openRegDate;
+    private Date closeRegDate;
     private Date regPeriod;
     private Date time;
+    private Boolean geolocation;
+    private Date startDate;
+    private Date endDate;
     private String location; // Mark Location as transient
     private String organizer;
     private Float price;
@@ -66,9 +72,9 @@ public class Event implements Serializable {
     // List of user IDs who declined their invitation or cancelled their attendance.
     private List<String> cancelledList;
 
-    public Event(String title, String description, Integer capacity, Date regPeriod, Date time,
-                 String location, String organizer, Float price, String posterPath,
-                 String qrSlug) {
+    public Event(String title, String description, Integer capacity, Date regPeriod,
+                 Date time, String location, String organizer, Float price,
+                 String posterPath, String qrSlug) {
         this.uuid = UUID.randomUUID().toString();
         this.title = title;
         this.description = description;
@@ -86,9 +92,23 @@ public class Event implements Serializable {
         this.cancelledList = new ArrayList<>();
     }
 
+    public Event(String title, String description, Integer capacity, Integer waitingListLimit, Date regPeriod,
+                 Date openRegDate, Date closeRegDate, Date time, Date startDate, Date endDate,
+                 String location, String organizer, Float price, Boolean geolocation,
+                 String posterPath, String qrSlug){
+        this(title, description, capacity, regPeriod, time, location, organizer, price, posterPath, qrSlug);
+        this.openRegDate = openRegDate;
+        this.closeRegDate = closeRegDate;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.geolocation = geolocation;
+        this.waitingListLimit = waitingListLimit;
+    }
     public Event() {
         // Required for Firestore deserialization
     }
+
+
 
     public String getUuid() {
         return uuid;
@@ -121,7 +141,8 @@ public class Event implements Serializable {
     public void setCapacity(Integer capacity) {
         this.capacity = capacity;
     }
-
+    public Integer getWaitingListLimit(){return waitingListLimit;}
+    public void setWaitingListLimit(Integer waitingListLimit) {this.waitingListLimit = waitingListLimit;}
     public Date getRegPeriod() {
         return regPeriod;
     }
@@ -129,7 +150,13 @@ public class Event implements Serializable {
     public void setRegPeriod(Date regPeriod) {
         this.regPeriod = regPeriod;
     }
+    public Date getEventOpenRegDate() {return openRegDate;}
+    public void setEventOpenRegDate(Date openRegDate) {this.openRegDate = openRegDate;}
+    public Date getEventCloseRegDate() {return closeRegDate;}
+    public void setEventCloseRegDate(Date closeRegDate) {this.closeRegDate = closeRegDate;}
 
+    public Boolean getGeolocation() {return geolocation;}
+    public void setGeolocation(Boolean geolocation) {this.geolocation = geolocation;}
     public Date getTime() {
         return time;
     }
@@ -137,6 +164,19 @@ public class Event implements Serializable {
     public void setTime(Date time) {
         this.time = time;
     }
+    public Date getStartDate() {
+        return startDate;
+    }
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+    public Date getEndDate() {
+        return endDate;
+    }
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
 
     public String getLocation() {
         return location;
