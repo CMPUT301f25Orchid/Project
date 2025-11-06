@@ -22,6 +22,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+/**
+ * Activity for the organizer main page.
+ */
 public class OrganizerMainPage extends AppCompatActivity {
     BottomNavigationView bottomNav;
     FrameLayout fragmentContainer;
@@ -50,7 +53,7 @@ public class OrganizerMainPage extends AppCompatActivity {
 
         // Populate event list with database data
         db = FirebaseFirestore.getInstance();
-        dataList = EventDataHolder.getDataList();
+        dataList = OrganizerEventsDataHolder.getDataList();
         eventsRef = db.collection("events");
         eventsRef.addSnapshotListener((value, e) -> {
             if (e != null) {
@@ -81,8 +84,8 @@ public class OrganizerMainPage extends AppCompatActivity {
         bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.create_activity) {
-                EventDataHolder.setDataList(dataList);
-                EventDataHolder.setEventAdapter(eventAdapter);
+                OrganizerEventsDataHolder.setDataList(dataList);
+                OrganizerEventsDataHolder.setEventAdapter(eventAdapter);
                 Intent intent = new Intent(OrganizerMainPage.this, CreateEventPage.class);
                 startActivity(intent);
             }
@@ -96,8 +99,8 @@ public class OrganizerMainPage extends AppCompatActivity {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         fragmentContainer = findViewById(R.id.fragment_container);
         fragmentContainer.bringToFront();
-        EventDataHolder.setDataList(dataList);
-        EventDataHolder.setEventAdapter(eventAdapter);
+        OrganizerEventsDataHolder.setDataList(dataList);
+        OrganizerEventsDataHolder.setEventAdapter(eventAdapter);
         Bundle bundle = new Bundle();
         bundle.putInt("position", dataList.indexOf(event));
         fragment.setArguments(bundle);

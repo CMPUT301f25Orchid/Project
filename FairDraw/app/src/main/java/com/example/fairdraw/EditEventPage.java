@@ -3,9 +3,7 @@ package com.example.fairdraw;
 import static android.app.Activity.RESULT_OK;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -22,15 +20,13 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.google.firestore.admin.v1.Index;
-import com.google.zxing.BarcodeFormat;
-import com.journeyapps.barcodescanner.BarcodeEncoder;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Objects;
 
+/**
+ * A simple {@link Fragment} subclass used to edit an event.
+ */
 public class EditEventPage extends Fragment {
 
     private ActivityResultLauncher<Intent> launcher;
@@ -71,7 +67,7 @@ public class EditEventPage extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         // Get selected event to edit
         index = requireArguments().getInt("position");
-        event = EventDataHolder.getDataList().get(index);
+        event = OrganizerEventsDataHolder.getDataList().get(index);
         // Assign views to variables
         inputLayout = view.findViewById(R.id.edit_event_input_layout);
         uploadPosterImage = inputLayout.findViewById(R.id.poster_upload);
@@ -177,7 +173,7 @@ public class EditEventPage extends Fragment {
                     if (bannerPhoto != null){
                         event.setPosterPath(bannerPhoto.toString());
                     }
-                    EventDataHolder.updateEvent(event, index);
+                    OrganizerEventsDataHolder.updateEvent(event, index);
                 }
                 catch (Exception e) {
                     Toast.makeText(v.getContext(), "Invalid date format", Toast.LENGTH_SHORT).show();
