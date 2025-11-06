@@ -1,15 +1,18 @@
 package com.example.fairdraw;
 
-import android.location.Location;
-import androidx.annotation.NonNull;
+import android.location.Location;import androidx.annotation.NonNull;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 enum EventState {
     DRAFT {
@@ -55,17 +58,18 @@ public class Event implements Serializable {
     private String posterPath;
     private String qrSlug;
     private EventState state = EventState.DRAFT;
+    private final Random random = new Random();
 
-    // List of user ids that are in waiting list
+    // List of user IDs who are on the waiting list for the lottery.
     private List<String> waitingList;
 
-    // List of user ids that are in invited list
+    // List of user IDs who have won the lottery and been sent an invitation.
     private List<String> invitedList;
 
-    // List of user ids that are enrolled
+    // List of user IDs who have accepted their invitation and are confirmed attendees.
     private List<String> enrolledList;
 
-    // List of users who cancelled attending the event
+    // List of user IDs who declined their invitation or cancelled their attendance.
     private List<String> cancelledList;
 
     public Event(String title, String description, Integer capacity, Date regPeriod,
@@ -252,5 +256,82 @@ public class Event implements Serializable {
 
     public void setCancelledList(List<String> cancelledList) {
         this.cancelledList = cancelledList;
+    }
+
+    /**
+     * Selects new lottery winners from the waiting list to fill the event up to its capacity.
+     * Existing invitees are preserved.
+     * @return A list containing all invited users (existing and new).
+     */
+    public List<String> drawLotteryWinners() {
+        // Calculate how many new winners we need to draw.
+        int spotsToFill = capacity - enrolledList.size() - invitedList.size();
+
+        // If there are no spots to fill, do nothing.
+        if (spotsToFill <= 0) {
+            return new ArrayList<>(invitedList); // Return the current list of invitees
+        }
+
+        // Ensure we don't try to draw more people than are on the waiting list.
+        int numToDraw = Math.min(spotsToFill, waitingList.size());
+
+        if (numToDraw > 0) {
+            // Shuffle the waiting list to ensure fairness.
+            Collections.shuffle(waitingList, random);
+
+            // Take the new winners from the top of the shuffled list.
+            List<String> newWinners = waitingList.subList(0, numToDraw);
+
+            // Add the new winners to the invited list.
+            invitedList.addAll(newWinners);
+
+            // Remove the new winners from the waiting list.
+            // Create a new list for the remaining waiting list participants.
+            List<String> remainingWaiting = new ArrayList<>(waitingList.subList(numToDraw, waitingList.size()));
+            waitingList.clear();
+            waitingList.addAll(remainingWaiting);
+        }
+
+        // Return a copy of the complete invited list.
+        return new ArrayList<>(invitedList);
+    }
+
+
+    /**
+     * Replaces an existing winner with a new one from the waiting list cause the oldWinner
+     * rejected their invitation.
+     * Removes the oldWinner from the invited list and adds them to the cancelled list.
+     * @param oldWinner The winner to be replaced.
+     * @return The new winner's deviceId, or null if no replacement is possible.
+     */
+    public String replaceLotteryWinner(String oldWinner) {
+        if (!invitedList.remove(oldWinner)) {
+            // The person was not in the invited list; do nothing.
+            return null;
+        }
+
+        // Find candidates for replacement: people on the waiting list who are not already invited.
+        // This prevents picking someone who is already a winner.
+        List<String> replacementCandidates = waitingList.stream()
+                .filter(person -> !invitedList.contains(person))
+                .collect(Collectors.toList());
+
+        if (replacementCandidates.isEmpty()) {
+            // No one on the waiting list to replace the winner.
+            return null;
+        }
+
+        // Pick a random new winner from the valid candidates.
+        int randomIndex = random.nextInt(replacementCandidates.size());
+        String newWinner = replacementCandidates.get(randomIndex);
+
+        // Update the lists
+        invitedList.add(newWinner);
+        waitingList.remove(newWinner);
+
+        // Add to cancelled list
+        cancelledList.add(oldWinner);
+
+        return newWinner;
     }
 }
