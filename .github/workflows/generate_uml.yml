@@ -20,60 +20,54 @@ jobs:
         uses: actions/checkout@v4
 
       # Step 2: Set up JDK 17
-      # We need Java to run the UML generator
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
-          java-version: "17"
-          distribution: "temurin"
+          java-version: '17'
+          distribution: 'temurin'
 
       # Step 3: Set up Python
-      # We need Python to run our formatter script
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.10"
+          python-version: '3.10'
 
-      # Step 4: Download the command-line PlantUML Generator
-      # We can't use an IDE plugin here, so we use a CLI tool.
-      # 'pumlg' generates UML from Java *source code*, so we don't need to build.
-      - name: Download PlantUML Generator (pumlg)
+      # Step 4: Download the PlantUML Generator (NEW TOOL)
+      # The old 'pumlg' tool is offline (404). This is a well-maintained replacement.
+      - name: Download PlantUML Generator
         run: |
-          wget https://github.com/puml-java-tools/pumlg/releases/download/v1.0/pumlg-1.0.jar -O pumlg.jar
-          java -jar pumlg.jar --version # Verify it works
+          wget https://github.com/lorenzovngl/plantuml-generator/releases/download/v1.0/PlantUMLGenerator.jar -O PlantUMLGenerator.jar
+          java -jar PlantUMLGenerator.jar --version # Verify it works
 
       # Step 5: Generate the raw UMLDiagram.puml file
-      # Updated source root and output file paths
+      # We provide the specific package path you want to scan
+      # and the output file.
       - name: Generate raw PlantUML file
         run: |
-          java -jar pumlg.jar \
-            -r FairDraw/app/src/main/java \
-            -p com.example.fairdraw \
-            -o FairDraw/UMLDiagram.puml \
-            -public -protected -package -private
-
+          java -jar PlantUMLGenerator.jar \
+            FairDraw/app/src/main/java/com/example/fairdraw \
+            FairDraw/UMLDiagram.puml
+          
           echo "--- Raw UMLDiagram.puml generated ---"
           cat FairDraw/UMLDiagram.puml
 
       # Step 6: Run the Python script to format the .puml file
-      # Updated to use the new file path
       - name: Format the PlantUML file
         run: |
           python .github/scripts/puml_formatter.py FairDraw/UMLDiagram.puml
           # Overwrite the original with the formatted one
           mv FairDraw/UMLDiagram_formatted.puml FairDraw/UMLDiagram.puml
-
+          
           echo "--- Formatted UMLDiagram.puml created ---"
           cat FairDraw/UMLDiagram.puml
 
       # Step 7: Commit and push the new diagram
-      # Updated to add the file from its new location
       - name: Commit and push if changes
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add FairDraw/UMLDiagram.puml
-
+          
           # Check if there are changes to commit
           if ! git diff --staged --quiet; then
             # Add [ci skip] to the commit message to prevent an infinite loop
