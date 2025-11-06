@@ -18,9 +18,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FairDraw">
         <activity
-            android:name=".TestDeepLinkActivity"
+            android:name=".ProfileActivity"
             android:exported="false" />
-        <!-- Router that handles all app deep links -->
+        <activity
+            android:name=".TestDeepLinkActivity"
+            android:exported="false" /> <!-- Router that handles all app deep links -->
         <activity
             android:name=".DeepLinkRouterActivity"
             android:exported="true">
