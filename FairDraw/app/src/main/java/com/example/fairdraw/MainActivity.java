@@ -24,10 +24,13 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.gms.tasks.Task;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     private ImageView previewImage;
-    private Button pickButton, uploadEntrantBtn, uploadEventBtn;
+    private Button pickButton, uploadEntrantBtn, uploadEventBtn, openNotifications;
 
     @Nullable
     private Uri pickedImageUri = null;
@@ -39,6 +42,9 @@ public class MainActivity extends AppCompatActivity {
     // simple demo IDs
     private static final String DEMO_ENTRANT_ID = "demo_entrant_123";
     private static final String DEMO_EVENT_ID   = "demo_event_ABC";
+
+    private Button entrantHomeScreen;
+
 
     // Gallery picker (images only)
     private final ActivityResultLauncher<String> pickImage =
@@ -68,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
         pickButton = findViewById(R.id.testButton);
         uploadEntrantBtn = findViewById(R.id.btnUploadEntrant);
         uploadEventBtn = findViewById(R.id.btnUploadEvent);
+        openNotifications= findViewById(R.id.btnOpenNotifications);
+
 
         pickButton.setOnClickListener(v -> pickImage.launch("image/*"));
 
@@ -93,6 +101,25 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        entrantHomeScreen = findViewById(R.id.entrantHomeScreen);
+
+        entrantHomeScreen.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, EntrantHomeActivity.class);
+            startActivity(intent);
+        });
+
+
+        String deviceId = DevicePrefsManager.getDeviceId(this);
+        EntrantDB.addEntrant(new Entrant(deviceId), ok -> seedDummyNotifications(deviceId));
+
+
+        // Open notifications
+        openNotifications.setOnClickListener(v ->
+                startActivity(new Intent(MainActivity.this, EntrantNotificationsActivity.class))
+        );
+
+
+
         // Add a button that sends me to the EntrantEventDetails activity
         Button btn = findViewById(R.id.my_test);
         btn.setText("Test");
@@ -104,6 +131,24 @@ public class MainActivity extends AppCompatActivity {
             Log.d("test", "test");
         });
     }
+
+    private void seedDummyNotifications(String deviceId) {
+        List<EntrantNotification> dummies = Arrays.asList(
+                new EntrantNotification(NotificationType.WIN,      "evt_swim",  "Swimming Lessons"),
+                new EntrantNotification(NotificationType.LOSE,     "evt_cook",  "Cooking 101"),
+                new EntrantNotification(NotificationType.WAITLIST, "evt_ball",  "Basketball Camp"),
+                new EntrantNotification(NotificationType.REPLACE,  "evt_piano", "Piano Basics")
+        );
+        for (EntrantNotification n : dummies) {
+            EntrantDB.pushNotificationToUser(deviceId, n, (ok, e) -> {
+                if (!ok) {
+                    Toast.makeText(this, "Seed failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+        Toast.makeText(this, "Seed request sent to entrants/" + deviceId, Toast.LENGTH_SHORT).show();
+    }
+
 
     private void handleUploadTask(Task<Uri> task, String label) {
         task.addOnSuccessListener(uri -> {
