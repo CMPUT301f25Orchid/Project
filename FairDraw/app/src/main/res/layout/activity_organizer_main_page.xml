@@ -28,7 +28,7 @@
 
     <TextView
         android:id="@+id/organizer_page_title"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:text="My Events"
@@ -48,8 +48,8 @@
         app:menu="@menu/organizer_bottom_nav_menu" />
 
     <ListView
-        android:id="@+id/eventsList"
-        android:layout_width="wrap_content"
+        android:id="@+id/event_list"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/home_bottom_nav_bar"
         app:layout_constraintStart_toStartOf="parent"

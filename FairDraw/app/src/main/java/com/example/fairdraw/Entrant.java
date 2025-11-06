@@ -16,6 +16,7 @@ import java.util.List;
 public class Entrant implements Serializable {
     private String deviceId;
     private ArrayList<String> eventHistory = new ArrayList<>();
+    private ArrayList<EntrantNotification> notifications = new ArrayList<>();
 
     // Just email and phone true or false
     private HashMap<String, Boolean> notificationPrefs = new HashMap<>();
@@ -44,6 +45,7 @@ public class Entrant implements Serializable {
         this.eventHistory = eventHistory;
     }
 
+
     public HashMap<String, Boolean> getNotificationPrefs() {
         return notificationPrefs;
     }
@@ -58,4 +60,17 @@ public class Entrant implements Serializable {
             notificationPrefs.put(key, newNotificationPrefs.get(key));
         }
     }
+    public void addNotification(EntrantNotification notification) {
+        notifications.add(notification);
+    }
+    public void removeNotification(EntrantNotification notification) {
+        notifications.remove(notification);
+    }
+    public ArrayList<EntrantNotification> getNotifications() {
+        return notifications;
+    }
+    public void setNotifications(ArrayList<EntrantNotification> notifications) {
+        this.notifications = notifications;
+    }
+
 }
