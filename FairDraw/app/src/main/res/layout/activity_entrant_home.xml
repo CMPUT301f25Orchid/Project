@@ -6,7 +6,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EntrantHomeActivity">
+    tools:context=".Activities.EntrantEventDetails">
 
     <!-- Scrollable content above the bottom nav -->
     <ScrollView
@@ -23,8 +23,7 @@
             android:id="@+id/event_list_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="12dp">
+            android:orientation="vertical">
 
             <include layout="@layout/top_bar" />
 
@@ -36,16 +35,17 @@
                 android:text="Community Events"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textStyle="bold"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp" />
+                android:padding="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginHorizontal="8dp"/>
 
             <!-- Filter Button -->
             <Button
                 android:id="@+id/filterEventsBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
                 android:text="Filter Events"
-                android:layout_margin="16dp"
+                android:layout_marginHorizontal="8dp"
                 android:backgroundTint="@color/black"
                 android:textColor="@android:color/white"/>
 

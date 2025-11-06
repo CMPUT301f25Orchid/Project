@@ -5,7 +5,7 @@
     android:id="@+id/organizer_navigation_bar"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".Activities.MainActivity">
 
     <Button
         android:layout_width="wrap_content"
@@ -27,10 +27,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/my_test"/>
     <TextView
         android:id="@+id/helloText"
         android:layout_width="wrap_content"
