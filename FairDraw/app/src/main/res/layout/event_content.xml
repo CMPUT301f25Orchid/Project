@@ -16,12 +16,13 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/event_id"
-        android:layout_width="wrap_content"
+        android:id="@+id/event_info"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:padding="10sp"
         android:text="ID"
         android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/event_content_title"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
