@@ -1,12 +1,9 @@
 name: Generate and Format UML Diagram
 
-# Run this workflow on every push to the 'main' branch
 on:
   push:
-    branches:
-      - main
+    branches: [main]
 
-# Grant permissions for the action to write changes back to the repo
 permissions:
   contents: write
 
@@ -15,62 +12,97 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Check out your repository's code
+      # 1) Checkout
       - name: Check out repository
         uses: actions/checkout@v4
 
-      # Step 2: Set up JDK 17
+      # 2) JDK 17
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
-          distribution: 'temurin'
+          java-version: "17"
+          distribution: "temurin"
 
-      # Step 3: Set up Python
+      # 3) Python (for your formatter)
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: "3.10"
 
-      # Step 4: Download the PlantUML Generator (NEW TOOL)
-      # The old 'pumlg' tool is offline (404). This is a well-maintained replacement.
-      - name: Download PlantUML Generator
+      # 4) Download the v0.0.5 bundle (libs + plugin; we only need libs)
+      - name: Download plantuml-parser libs
         run: |
-          wget https://github.com/lorenzovngl/plantuml-generator/releases/download/v1.0/PlantUMLGenerator.jar -O PlantUMLGenerator.jar
-          java -jar PlantUMLGenerator.jar --version # Verify it works
+          mkdir -p tools/plantuml-parser
+          cd tools/plantuml-parser
+          wget -q https://github.com/shuzijun/plantuml-parser/releases/download/v0.0.5/plantuml-parser-0.0.5.zip -O plantuml-parser.zip
+          unzip -q plantuml-parser.zip
+          # Jars land in plantuml-parser/lib: commons-io-2.8.0.jar, javaparser-core-3.23.1.jar,
+          # plantuml-parser-core-0.0.7.jar, plantuml-parser-plugin-0.0.5.jar
+          # We only need the core+deps; keep all in lib for classpath simplicity.
 
-      # Step 5: Generate the raw UMLDiagram.puml file
-      # We provide the specific package path you want to scan
-      # and the output file.
+      # 5) Compile a tiny Java runner that uses the core API
+      - name: Build UML generator (tiny driver over core API)
+        run: |
+          cat > tools/plantuml-parser/UmlGen.java << 'EOF'
+          import java.io.File;
+          import com.shuzijun.plantumlparser.core.ParserConfig;
+          import com.shuzijun.plantumlparser.core.ParserProgram;
+
+          public class UmlGen {
+              public static void main(String[] args) throws Exception {
+                  if (args.length < 2) {
+                      System.err.println("Usage: java UmlGen <sourceDirOrFile> <outPumlPath>");
+                      System.exit(2);
+                  }
+                  String source = args[0];
+                  String outPuml = args[1];
+
+                  ParserConfig cfg = new ParserConfig();
+                  cfg.addFilePath(source);                  // directory or single file
+                  cfg.setOutFilePath(outPuml);              // where to write .puml
+
+                  // Visibility filters – adjust as you like
+                  cfg.addMethodModifier("public");
+                  cfg.addMethodModifier("protected");
+                  cfg.addFieldModifier("public");
+
+                  new ParserProgram(cfg).execute();
+                  System.out.println("Wrote: " + outPuml);
+              }
+          }
+          EOF
+
+          # Compile against core + deps (plugin jar not required but harmless on classpath)
+          javac -cp "tools/plantuml-parser/plantuml-parser/lib/*" tools/plantuml-parser/UmlGen.java
+
+      # 6) Generate the raw PlantUML file
       - name: Generate raw PlantUML file
         run: |
-          java -jar PlantUMLGenerator.jar \
-            FairDraw/app/src/main/java/com/example/fairdraw \
-            FairDraw/UMLDiagram.puml
-          
-          echo "--- Raw UMLDiagram.puml generated ---"
-          cat FairDraw/UMLDiagram.puml
+          mkdir -p FairDraw
+          # Run with classpath including compiled class + all libs
+          java -cp "tools/plantuml-parser:tools/plantuml-parser/plantuml-parser/lib/*" UmlGen \
+            "FairDraw/app/src/main/java" \
+            "FairDraw/UMLDiagram.puml"
 
-      # Step 6: Run the Python script to format the .puml file
+          echo "--- Raw UMLDiagram.puml generated ---"
+          sed -n '1,120p' FairDraw/UMLDiagram.puml || true
+
+      # 7) Format with your Python script (unchanged)
       - name: Format the PlantUML file
         run: |
           python .github/scripts/puml_formatter.py FairDraw/UMLDiagram.puml
-          # Overwrite the original with the formatted one
           mv FairDraw/UMLDiagram_formatted.puml FairDraw/UMLDiagram.puml
-          
-          echo "--- Formatted UMLDiagram.puml created ---"
-          cat FairDraw/UMLDiagram.puml
 
-      # Step 7: Commit and push the new diagram
+          echo "--- Formatted UMLDiagram.puml created ---"
+          sed -n '1,120p' FairDraw/UMLDiagram.puml || true
+
+      # 8) Commit & push if changed (unchanged)
       - name: Commit and push if changes
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add FairDraw/UMLDiagram.puml
-          
-          # Check if there are changes to commit
           if ! git diff --staged --quiet; then
-            # Add [ci skip] to the commit message to prevent an infinite loop
             git commit -m "docs: Auto-generate UML diagram [ci skip]"
             git push
           else
