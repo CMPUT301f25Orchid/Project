@@ -1,9 +1,15 @@
 package com.example.fairdraw;
 
 import android.content.Intent;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -49,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(this, "No image selected", Toast.LENGTH_SHORT).show();
                 }
             });
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

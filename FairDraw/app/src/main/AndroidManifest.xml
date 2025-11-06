@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature
+        android:name="android.hardware.camera.any"
+        android:required="false" />
 
     <application
         android:allowBackup="true"
@@ -12,14 +20,35 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FairDraw">
         <activity
+            android:name=".TestDeepLinkActivity"
+            android:exported="false" />
+        <!-- Router that handles all app deep links -->
+        <activity
+            android:name=".DeepLinkRouterActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Custom scheme, no hosting needed -->
+                <data
+                    android:host="open"
+                    android:scheme="fairdraw" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".EntrantScan"
+            android:exported="false" />
+        <activity
             android:name=".CreateEventPage"
             android:exported="false" />
         <activity
             android:name=".OrganizerMainPage"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".MainActivity"
-            android:exported="true"/>
+            android:exported="true" />
         <activity
             android:name=".SignUpActivity"
             android:exported="false" />
@@ -30,7 +59,6 @@
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
