@@ -63,6 +63,14 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+        Button myTest = findViewById(R.id.my_test);
+        myTest.setOnClickListener(v -> {
+            // Send user to organizer manage event activity
+            Intent intent = new Intent(this, OrganizerManageEvent.class);
+            intent.putExtra("eventId", "66aab1da-7e37-4f03-8eeb-51e9af9ffc55");
+            startActivity(intent);
+        });
+
         storageService = new FirebaseImageStorageService();
         previewImage = findViewById(R.id.previewImage);
         pickButton = findViewById(R.id.testButton);
