@@ -40,6 +40,9 @@ public class MainActivity extends AppCompatActivity {
     private static final String DEMO_ENTRANT_ID = "demo_entrant_123";
     private static final String DEMO_EVENT_ID   = "demo_event_ABC";
 
+    private Button entrantHomeScreen;
+
+
     // Gallery picker (images only)
     private final ActivityResultLauncher<String> pickImage =
             registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
@@ -92,6 +95,15 @@ public class MainActivity extends AppCompatActivity {
                 handleUploadTask(t, "Event");
             }
         });
+
+        entrantHomeScreen = findViewById(R.id.entrantHomeScreen);
+
+        entrantHomeScreen.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, EntrantHomeActivity.class);
+            startActivity(intent);
+        });
+
+
     }
 
     private void handleUploadTask(Task<Uri> task, String label) {
