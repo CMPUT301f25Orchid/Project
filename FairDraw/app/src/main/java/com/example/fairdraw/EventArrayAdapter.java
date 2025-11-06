@@ -12,6 +12,9 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
+/**
+ * An adapter for the event list view.
+ */
 public class EventArrayAdapter extends ArrayAdapter<Event> {
     public EventArrayAdapter(Context context, ArrayList<Event> events){super(context, 0, events);}
     @NonNull
@@ -27,9 +30,9 @@ public class EventArrayAdapter extends ArrayAdapter<Event> {
         }
         Event event = getItem(position);
         TextView eventTitle = view.findViewById(R.id.event_content_title);
-        TextView eventId = view.findViewById(R.id.event_id);
+        TextView eventId = view.findViewById(R.id.event_info);
         eventTitle.setText(event.getTitle());
-        eventId.setText(event.getUuid());
+        eventId.setText(event.getDescription());
         return view;
 
 

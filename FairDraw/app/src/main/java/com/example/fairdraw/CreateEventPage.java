@@ -24,9 +24,11 @@ import java.util.Date;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.zxing.BarcodeFormat;
-import com.google.zxing.WriterException;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
+/**
+ * Activity for creating a new event.
+ */
 public class CreateEventPage extends AppCompatActivity {
 
     private ActivityResultLauncher<Intent> launcher;
@@ -145,7 +147,7 @@ public class CreateEventPage extends AppCompatActivity {
                     event.setQrSlug(bitmap.toString());
 
                     // Upload event to database and return to organizer main page
-                    EventDataHolder.addEvent(event);
+                    OrganizerEventsDataHolder.addEvent(event);
 
                 }
                 catch (Exception e) {

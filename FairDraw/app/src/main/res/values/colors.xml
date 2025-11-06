@@ -15,4 +15,9 @@
     <color name="card_gray">#E0E0E0</color>
 
     <color name="text_primary">#202124</color>
+    <color name="waitlist_join_green">#62D26F</color>
+    <color name="waitlist_leave_red">#FF6B6B</color>
+    <color name="black_70">#B3000000</color>
+    <color name="blue_info_bg">#E6F2FF</color>
+
 </resources>

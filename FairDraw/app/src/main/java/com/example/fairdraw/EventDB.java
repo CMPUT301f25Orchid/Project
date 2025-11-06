@@ -3,6 +3,7 @@ package com.example.fairdraw;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
 
 import java.util.List;
 
@@ -56,6 +57,23 @@ public class EventDB {
         eventRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Event event = task.getResult().toObject(Event.class);
+                callback.onCallback(event);
+            } else {
+                callback.onCallback(null);
+            }
+        });
+    }
+
+    public static ListenerRegistration listenToEvent(String eventId, GetEventCallback callback) {
+        DocumentReference eventRef = getEventCollection().document(eventId);
+        return eventRef.addSnapshotListener((snapshot, e) -> {
+            if (e != null) {
+                callback.onCallback(null);
+                return;
+            }
+
+            if (snapshot != null && snapshot.exists()) {
+                Event event = snapshot.toObject(Event.class);
                 callback.onCallback(event);
             } else {
                 callback.onCallback(null);
