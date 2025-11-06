@@ -25,7 +25,7 @@
 
     <!-- Optional per-list action icon -->
     <ImageView
-        android:id="@+id/ivClose"
+        android:id="@+id/ivCancelEntrant"
         android:layout_width="18dp"
         android:layout_height="18dp"
         android:src="@drawable/ic_close_24"

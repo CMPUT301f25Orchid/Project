@@ -16,13 +16,19 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.fairdraw.DBs.EntrantDB;
 import com.example.fairdraw.DBs.EventDB;
 import com.example.fairdraw.Adapters.EntrantListArrayAdapter;
+import com.example.fairdraw.Models.Entrant;
+import com.example.fairdraw.Others.EntrantNotification;
+import com.example.fairdraw.Others.NotificationType;
+import com.example.fairdraw.ServiceUtility.DevicePrefsManager;
 import com.example.fairdraw.ServiceUtility.FirebaseImageStorageService;
 import com.example.fairdraw.Others.ListItemEntrant;
 import com.example.fairdraw.Models.Event;
 import com.example.fairdraw.R;
 import com.example.fairdraw.SendNotificationDialogFragment;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +65,24 @@ public class OrganizerManageEvent extends AppCompatActivity {
             return;
         }
 
+        // If the user is not the organizer of the event, finish the activity
+        EventDB.getEventCollection().document(eventId).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document != null && document.exists()) {
+                    event = document.toObject(Event.class);
+                    if (event == null || !event.getOrganizer().equals(DevicePrefsManager.getDeviceId(this))) {
+                        Log.d("OrganizerManageEvent", "User is not the organizer of the event");
+                        finish();
+                        return;
+                    }
+                } else {
+                    Log.d("OrganizerManageEvent", "Event document does not exist");
+                    finish();
+                    return;
+                }
+            }});
+
         storageService = new FirebaseImageStorageService();
 
         // Initialize views
@@ -82,12 +106,39 @@ public class OrganizerManageEvent extends AppCompatActivity {
             }
 
             if (snapshot != null && snapshot.exists()) {
-                Event event1 = snapshot.toObject(Event.class);
-                assert event1 != null;
-                bindEvent(event1);
+                event = snapshot.toObject(Event.class);
+                assert event != null;
+                bindEvent(event);
             } else {
                 Log.d("OrganizerManageEvent", "Current data: null");
             }
+        });
+
+        btnDrawAndInvite.setOnClickListener(v -> {
+            event.drawLotteryWinners();
+            EventDB.updateEvent(event, new EventDB.UpdateEventCallback() {
+                @Override
+                public void onCallback(boolean success) {
+                    Log.d("OrganizerManageEvent", "Event updated");
+                    if (success) {
+                        // Send a notification to the entrants which is just pushing a notification
+                        // to the Entrant object
+                        // First, go through the invited list and send a notification to each entrant
+                        for (String entrantId : event.getInvitedList()) {
+                            EntrantDB.getEntrant(entrantId, new EntrantDB.GetEntrantCallback() {
+                                @Override
+                                public void onCallback(Entrant entrant) {
+                                    if (entrant == null) return;
+                                    EntrantNotification notification =
+                                            new EntrantNotification(NotificationType.WIN, eventId,
+                                                    "You won!");
+                                    EntrantDB.pushNotificationToUser(entrantId, notification, null);
+                                }
+                            });
+                        }
+                    }
+                }
+            });
         });
     }
 
@@ -112,16 +163,16 @@ public class OrganizerManageEvent extends AppCompatActivity {
         // Draw and invite button logic later
 
         // Show invited list
-        buildEntrantItemRecyclerView(rvInvited, e.getInvitedList(), false);
+        buildInvitedRecycler(rvInvited, e.getInvitedList());
 
         // Cancelled list
-        buildEntrantItemRecyclerView(rvCancelled, e.getCancelledList(), true);
+        buildReadOnlyRecycler(rvCancelled, e.getCancelledList());
 
         // Registered list
-        buildEntrantItemRecyclerView(rvRegistered, e.getEnrolledList(), true);
+        buildReadOnlyRecycler(rvRegistered, e.getEnrolledList());
 
         // Waiting list
-        buildEntrantItemRecyclerView(rvWaiting, e.getWaitingList(), true);
+        buildReadOnlyRecycler(rvWaiting, e.getWaitingList());
 
         // Link action buttons later
         btnSendNotification.setOnClickListener(v -> {
@@ -136,13 +187,46 @@ public class OrganizerManageEvent extends AppCompatActivity {
         });
     }
 
-    private void buildEntrantItemRecyclerView(RecyclerView recyclerView, List<String> stringList, Boolean hideCloseButton) {
-        List<ListItemEntrant> entrantList = new ArrayList<>();
-        for (String s : stringList) {
-            entrantList.add(new ListItemEntrant(s));
-        }
-        EntrantListArrayAdapter adapter = new EntrantListArrayAdapter(this, entrantList, hideCloseButton);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapter);
+    private void buildReadOnlyRecycler(RecyclerView rv, List<String> ids) {
+        List<ListItemEntrant> list = new ArrayList<>();
+        for (String id : ids) list.add(new ListItemEntrant(id));
+        EntrantListArrayAdapter adapter = new EntrantListArrayAdapter(this, list, true);
+        rv.setLayoutManager(new LinearLayoutManager(this));
+        rv.setHasFixedSize(true);
+        rv.setAdapter(adapter);
     }
+
+
+    private void buildInvitedRecycler(RecyclerView rv, List<String> invited) {
+        List<ListItemEntrant> entrantList = new ArrayList<>();
+        for (String id : invited) entrantList.add(new ListItemEntrant(id));
+
+        EntrantListArrayAdapter adapter = new EntrantListArrayAdapter(this, entrantList, false);
+        rv.setLayoutManager(new LinearLayoutManager(this));
+        rv.setHasFixedSize(true);
+        rv.setAdapter(adapter);
+
+        adapter.setOnCloseClickListener((entrantId, position) -> {
+            if (event == null) return;
+
+            boolean moved = event.moveInvitedToCancelled(entrantId);
+            if (!moved) {
+                Toast.makeText(this, "Entrant not in invited list.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Persist — use your signature; if you have a callback, handle error/rollback if needed
+            EventDB.updateEvent(event, new EventDB.UpdateEventCallback(){
+                @Override
+                public void onCallback(boolean success) {
+                    if (success) {
+                        adapter.notifyItemRemoved(position);
+                    } else {
+                        Toast.makeText(OrganizerManageEvent.this, "Failed to update event.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        });
+    }
+
 }

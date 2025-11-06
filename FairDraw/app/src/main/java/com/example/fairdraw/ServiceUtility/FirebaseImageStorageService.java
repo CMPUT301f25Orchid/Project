@@ -150,7 +150,7 @@ public class FirebaseImageStorageService {
      * @return A Task containing the download URL of the uploaded image.
      */
     public Task<Uri> uploadEventPoster(@NonNull String eventId, @NonNull Uri fileUri) {
-        return putFileAndGetUrl(eventPosterRef(eventId), fileUri, "image/jpeg");
+        return putFileAndGetUrl(eventPosterRef(eventId), fileUri, "poster/jpg");
     }
 
     /**

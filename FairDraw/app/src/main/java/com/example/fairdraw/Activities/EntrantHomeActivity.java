@@ -1,6 +1,10 @@
 package com.example.fairdraw.Activities;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -21,8 +25,12 @@ import com.example.fairdraw.Models.Event;
 import com.example.fairdraw.Others.BarType;
 import com.example.fairdraw.Others.EventState;
 import com.example.fairdraw.R;
+import com.example.fairdraw.ServiceUtility.DevicePrefsManager;
+import com.example.fairdraw.ServiceUtility.FirebaseImageStorageService;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -37,6 +45,15 @@ public class EntrantHomeActivity extends BaseTopBottomActivity {
         setContentView(R.layout.activity_entrant_home);
 
         initBottomNav(BarType.ENTRANT, findViewById(R.id.home_bottom_nav_bar));
+
+        // For now, set the onClickListener of the top_bar's organizer button to go to Organizer Manage Event page
+        findViewById(R.id.top_bar).findViewById(R.id.btnOrganizer).setOnClickListener(v -> {
+            String eventId = "018a3e7a-5df5-40ae-ae75-7209dd6c21f6";
+            Intent intent = new Intent(this, OrganizerManageEvent.class);
+            intent.putExtra("eventId", eventId);
+            startActivity(intent);
+        });
+
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());

@@ -1,5 +1,7 @@
 package com.example.fairdraw.Models;
 
+import androidx.annotation.NonNull;
+
 import com.example.fairdraw.Others.EventState;
 
 import java.io.Serializable;
@@ -307,4 +309,19 @@ public class Event implements Serializable {
 
         return newWinner;
     }
+
+    // Event.java
+    public boolean moveInvitedToCancelled(@NonNull String entrantId) {
+        if (invitedList == null) return false;
+
+        boolean removed = invitedList.remove(entrantId);
+        if (!removed) return false;
+
+        if (cancelledList == null) cancelledList = new ArrayList<>();
+        if (!cancelledList.contains(entrantId)) {
+            cancelledList.add(entrantId);
+        }
+        return true;
+    }
+
 }
