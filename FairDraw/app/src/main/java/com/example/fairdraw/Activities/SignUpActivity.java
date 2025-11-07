@@ -15,7 +15,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.fairdraw.R;
 import com.example.fairdraw.DBs.UserDB;
 import com.example.fairdraw.ServiceUtility.DevicePrefsManager;
-import com.example.fairdraw.ServiceUtility.GatePrefs;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.example.fairdraw.Models.*;
@@ -59,7 +58,6 @@ public class SignUpActivity extends AppCompatActivity {
                     Toast.makeText(this, "Failed to create account: " + msg, Toast.LENGTH_LONG).show();
                     return;
                 }
-                GatePrefs.setKnownExists(this, true);
                 intent = new Intent(this, ProfileActivity.class);
                 intent.putExtra("deviceId", deviceId);
                 startActivity(intent);

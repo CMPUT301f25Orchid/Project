@@ -47,24 +47,6 @@ public class OrganizerMainPage extends AppCompatActivity {
     ArrayList<Event> dataList;
 
 
-    private void seedDummyNotifications(String deviceId) {
-        List<EntrantNotification> dummies = Arrays.asList(
-                new EntrantNotification(NotificationType.WIN,      "evt_swim",  "Swimming Lessons"),
-                new EntrantNotification(NotificationType.LOSE,     "evt_cook",  "Cooking 101"),
-                new EntrantNotification(NotificationType.WAITLIST, "evt_ball",  "Basketball Camp"),
-                new EntrantNotification(NotificationType.REPLACE,  "evt_piano", "Piano Basics")
-        );
-        for (EntrantNotification notification : dummies) {
-            EntrantDB.pushNotificationToUser(deviceId, notification, (ok, e) -> {
-                if (!ok) {
-                    Toast.makeText(this, "Seed failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-        Toast.makeText(this, "Seed request sent to entrants/" + deviceId, Toast.LENGTH_SHORT).show();
-    }
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,13 +61,10 @@ public class OrganizerMainPage extends AppCompatActivity {
         final String deviceId = DevicePrefsManager.getDeviceId(this);
 
         // Get entrant button to switch activities
-        findViewById(R.id.entrant_button).setOnClickListener(v -> {
+        findViewById(R.id.btnEntrant).setOnClickListener(v -> {
             Intent intent = new Intent(this, EntrantHomeActivity.class);
             startActivity(intent);
         });
-
-        Log.d("OrganizerMainPage", "Seeding dummy notifications for organizer main page...");
-        seedDummyNotifications(DevicePrefsManager.getDeviceId(this));
 
         // Populate event list with database data
         db = FirebaseFirestore.getInstance();

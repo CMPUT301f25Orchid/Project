@@ -17,6 +17,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.fairdraw.DBs.UserDB;
 import com.example.fairdraw.Models.User;
 import com.example.fairdraw.R;
+import com.example.fairdraw.ServiceUtility.DevicePrefsManager;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -44,7 +45,7 @@ public class ProfileActivity extends AppCompatActivity {
         viewHistoryButton = findViewById(R.id.btnViewHistory);
 
         //Getting the device ID passed from the previous activity
-        String deviceId = getIntent().getStringExtra("deviceId");
+        String deviceId = DevicePrefsManager.getDeviceId(this);
 
         if (deviceId != null && !deviceId.isEmpty()){
             //Fetching user data from Firestore based on the device ID
