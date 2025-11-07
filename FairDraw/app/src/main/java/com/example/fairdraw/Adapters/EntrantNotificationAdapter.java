@@ -74,7 +74,7 @@ public class EntrantNotificationAdapter extends RecyclerView.Adapter<EntrantNoti
                 break;
             case viewLost:
             default:
-                v = inf.inflate(R.layout.item_notification_lost, parent, false);
+                v = inf.inflate(R.layout.item_notification_won, parent, false);
                 break;
         }
         return new ViewHolder(v);
