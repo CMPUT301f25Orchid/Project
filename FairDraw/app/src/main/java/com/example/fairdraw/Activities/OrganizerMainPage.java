@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,9 +15,13 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.fairdraw.Adapters.EventArrayAdapter;
+import com.example.fairdraw.DBs.EntrantDB;
 import com.example.fairdraw.Models.Event;
+import com.example.fairdraw.Others.EntrantNotification;
+import com.example.fairdraw.Others.NotificationType;
 import com.example.fairdraw.Others.OrganizerEventsDataHolder;
 import com.example.fairdraw.R;
+import com.example.fairdraw.ServiceUtility.DevicePrefsManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.CollectionReference;
@@ -25,6 +30,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Activity for the organizer main page.
@@ -41,7 +48,22 @@ public class OrganizerMainPage extends AppCompatActivity {
     ArrayList<Event> dataList;
     DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 
-
+    private void seedDummyNotifications(String deviceId) {
+        List<EntrantNotification> dummies = Arrays.asList(
+                new EntrantNotification(NotificationType.WIN,      "evt_swim",  "Swimming Lessons"),
+                new EntrantNotification(NotificationType.LOSE,     "evt_cook",  "Cooking 101"),
+                new EntrantNotification(NotificationType.WAITLIST, "evt_ball",  "Basketball Camp"),
+                new EntrantNotification(NotificationType.REPLACE,  "evt_piano", "Piano Basics")
+        );
+        for (EntrantNotification notification : dummies) {
+            EntrantDB.pushNotificationToUser(deviceId, notification, (ok, e) -> {
+                if (!ok) {
+                    Toast.makeText(this, "Seed failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+        Toast.makeText(this, "Seed request sent to entrants/" + deviceId, Toast.LENGTH_SHORT).show();
+    }
 
 
     @Override
@@ -54,6 +76,15 @@ public class OrganizerMainPage extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        // Get entrant button to switch activities
+        findViewById(R.id.entrant_button).setOnClickListener(v -> {
+            Intent intent = new Intent(this, EntrantHomeActivity.class);
+            startActivity(intent);
+        });
+
+        Log.d("OrganizerMainPage", "Seeding dummy notifications for organizer main page...");
+        seedDummyNotifications(DevicePrefsManager.getDeviceId(this));
 
         // Populate event list with database data
         db = FirebaseFirestore.getInstance();

@@ -3,6 +3,7 @@ package com.example.fairdraw.Activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -46,6 +47,19 @@ public class EntrantHomeActivity extends BaseTopBottomActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_entrant_home);
+
+        // Initialize top and bottom navigation bars
+        // For now do top nav manually here
+        View entrantBtn = findViewById(R.id.btnEntrant);
+        entrantBtn.setOnClickListener(v ->{
+            Toast.makeText(this, "You are already on the Entrant Home page.", Toast.LENGTH_SHORT).show();
+        });
+
+        View organizerBtn = findViewById(R.id.btnOrganizer);
+        organizerBtn.setOnClickListener(v ->{
+            Intent intent = new Intent(this, OrganizerMainPage.class);
+            startActivity(intent);
+        });
 
         initBottomNav(BarType.ENTRANT, findViewById(R.id.home_bottom_nav_bar));
 
@@ -101,10 +115,6 @@ public class EntrantHomeActivity extends BaseTopBottomActivity {
             });
             dialog.show(getSupportFragmentManager(), "filter_dialog");
         });
-
-
-
-
     }
 
     @Override

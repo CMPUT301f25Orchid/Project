@@ -1,5 +1,6 @@
 package com.example.fairdraw.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.GridLayout;
@@ -55,6 +56,32 @@ public class EntrantEventDetails extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_entrant_event_details);
+
+        // Init bottom nav (do manually here since not extending base activity)
+        View bottomNav = findViewById(R.id.home_bottom_nav_bar);
+
+        // Home button
+        bottomNav.findViewById(R.id.home_activity).setOnClickListener(v -> {
+            finish();
+        });
+
+        // events button TODO
+        bottomNav.findViewById(R.id.events_activity).setOnClickListener(v -> {
+            // no-op, already here
+        });
+
+        // scan button
+        bottomNav.findViewById(R.id.scan_activity).setOnClickListener(v -> {
+            // Launch scan activity
+            Intent intent = new Intent(this, EntrantScan.class);
+            startActivity(intent);
+        });
+
+        // notifications button
+        bottomNav.findViewById(R.id.notifications_activity).setOnClickListener(v -> {
+            Intent intent = new Intent(this, EntrantNotificationsActivity.class);
+            startActivity(intent);
+        });
 
         // grab views
         tvTitle     = findViewById(R.id.tvTitle);
