@@ -9,21 +9,33 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import java.util.EnumMap;
 import java.util.Map;
 
+/**
+ * Utility class for generating QR codes.
+ * This class provides static methods to create Bitmap QR codes from string content.
+ * This class is final and cannot be instantiated.
+ */
 public final class QrUtil {
+    /**
+     * Private constructor to prevent instantiation.
+     */
     private QrUtil() {}
 
     /**
-     * How to use:
-     * testButton.setOnClickListener(v -> {
-     *             Uri link = DeepLinkUtil.buildLink(TestDeepLinkActivity.class, extras);
-     *             Bitmap qr = null;
-     *             try {
-     *                 qr = QrUtil.generate(link.toString(), 800);
-     *             } catch (Exception e) {
-     *                 throw new RuntimeException(e);
-     *             }
-     *             imageView.setImageBitmap(qr);
-     * */
+     * Generates a QR code as a Bitmap from the given content string.
+     * The QR code is encoded with minimal margin and rendered as a black-and-white bitmap.
+     * 
+     * Example usage:
+     * <pre>
+     * Uri link = DeepLinkUtil.buildLink(TestDeepLinkActivity.class, extras);
+     * Bitmap qr = QrUtil.generate(link.toString(), 800);
+     * imageView.setImageBitmap(qr);
+     * </pre>
+     * 
+     * @param content The content to encode in the QR code (typically a URL or string)
+     * @param size The width and height of the square QR code bitmap in pixels
+     * @return A Bitmap containing the QR code image
+     * @throws Exception If QR code generation fails
+     */
     public static Bitmap generate(String content, int size) throws Exception {
         Map<EncodeHintType, Object> hints = new EnumMap<>(EncodeHintType.class);
         hints.put(EncodeHintType.MARGIN, 1);
