@@ -127,6 +127,8 @@ class com.example.fairdraw.Models.Event {
 + setCancelledList(arg0 : List<String>) : void
 + drawLotteryWinners() : List<String>
 + replaceLotteryWinner(arg0 : String) : String
++ cancelLotteryWinner(arg0 : String) : void
++ acceptLotteryWinner(arg0 : String) : void
 }
 class com.example.fairdraw.Models.User {
 + getName() : String
@@ -213,6 +215,10 @@ class com.example.fairdraw.Models.Entrant {
 + removeNotification(arg0 : EntrantNotification) : void
 + getNotifications() : ArrayList<EntrantNotification>
 + setNotifications(arg0 : ArrayList<EntrantNotification>) : void
+}
+class com.example.fairdraw.Fragments.DecisionFragment {
++ newInstance(arg0 : EntrantNotification) : DecisionFragment
++ onCreateDialog(arg0 : Bundle) : Dialog
 }
 class com.example.fairdraw.Adapters.EntrantListArrayAdapter {
 + onCreateViewHolder(arg0 : ViewGroup, arg1 : int) : EntrantViewHolder
@@ -373,6 +379,7 @@ androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.Pr
 com.example.fairdraw.Activities.BaseTopBottomActivity <|-- com.example.fairdraw.Activities.EntrantHomeActivity
 androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.MainActivity
 java.io.Serializable <|.. com.example.fairdraw.Models.Entrant
+androidx.fragment.app.DialogFragment <|-- com.example.fairdraw.Fragments.DecisionFragment
 com.example.fairdraw.Adapters.Adapter <|-- com.example.fairdraw.Adapters.EntrantListArrayAdapter
 com.example.fairdraw.Adapters.EntrantListArrayAdapter +.. com.example.fairdraw.Adapters.EntrantListArrayAdapter$EntrantViewHolder
 com.example.fairdraw.Adapters.ViewHolder <|-- com.example.fairdraw.Adapters.EntrantListArrayAdapter$EntrantViewHolder
