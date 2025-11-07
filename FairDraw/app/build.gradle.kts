@@ -35,6 +35,18 @@ android {
 
 dependencies {
 
+    // existing dependencies...
+    androidTestImplementation ("androidx.test:core:1.5.0")
+    androidTestImplementation ("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation ("androidx.test:runner:1.5.2")
+
+    // Add Mockito for instrumentation tests
+    androidTestImplementation ("org.mockito:mockito-android:5.5.0")
+
+
+    testImplementation("org.mockito:mockito-inline:4.5.1")
+    testImplementation("org.robolectric:robolectric:4.11.1")
+    testImplementation("androidx.test:core:1.5.0")
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)

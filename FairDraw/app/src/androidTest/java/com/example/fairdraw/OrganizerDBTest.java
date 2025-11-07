@@ -17,6 +17,9 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import com.example.fairdraw.DBs.OrganizerDB;
+import com.example.fairdraw.Models.Organizer;
+
 @RunWith(AndroidJUnit4.class)
 public class OrganizerDBTest {
 

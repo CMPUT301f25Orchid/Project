@@ -120,7 +120,7 @@ public class EntrantHomeActivity extends BaseTopBottomActivity {
     /**
      * Adds eventscard.xml for each Event
      */
-    private void displayEvents(List<Event> events) {
+    public void displayEvents(List<Event> events) {
         eventListContainer.removeAllViews(); // Clear previous views to prevent duplicates
         LayoutInflater inflater = LayoutInflater.from(this);
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
