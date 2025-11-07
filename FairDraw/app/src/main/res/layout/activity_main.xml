@@ -5,7 +5,18 @@
     android:id="@+id/organizer_navigation_bar"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".Activities.MainActivity">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Test"
+        android:id="@+id/my_test"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
     <TextView
         android:layout_width="wrap_content"
@@ -69,6 +80,16 @@
         app:layout_constraintStart_toEndOf="@id/btnUploadEntrant"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_margin="8dp"/>
+    <Button
+        android:id="@+id/btnOpenNotifications"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Open Notifications"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
 
     <Button
         android:layout_width="wrap_content"
@@ -77,12 +98,23 @@
         android:text="Entrant Scan"
         app:layout_constraintBottom_toBottomOf="parent"
         />
+
+    <Button
+        android:id="@+id/entrantHomeScreen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:text="Entrant Screen"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:layout_editor_absoluteX="245dp" />
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="192dp"
         android:layout_height="175dp"
-        tools:layout_editor_absoluteX="97dp"
-        tools:layout_editor_absoluteY="535dp"
+        tools:layout_editor_absoluteX="92dp"
+        tools:layout_editor_absoluteY="464dp"
         tools:srcCompat="@tools:sample/avatars" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

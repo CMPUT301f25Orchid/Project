@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@android:color/white">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="FILTER EVENTS"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:paddingBottom="8dp" />
+
+    <!-- Status -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Status:"
+        android:textStyle="bold"
+        android:paddingTop="4dp" />
+
+    <RadioGroup
+        android:id="@+id/statusGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RadioButton android:id="@+id/statusAll" android:text="All" android:checked="true"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content" />
+        <RadioButton android:id="@+id/statusOpen" android:text="Open"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content" />
+        <RadioButton android:id="@+id/statusClosed" android:text="Closed"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content" />
+    </RadioGroup>
+
+    <!-- Interests -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Interests:"
+        android:textStyle="bold"
+        android:paddingTop="8dp" />
+
+    <RadioGroup
+        android:id="@+id/interestsGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RadioButton android:id="@+id/interestAll" android:text="All" android:checked="true"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content" />
+        <RadioButton android:id="@+id/interestSports" android:text="Sports and Recreation"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content" />
+        <RadioButton android:id="@+id/interestCulture" android:text="Arts/Culture"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content" />
+        <RadioButton android:id="@+id/interestEducation" android:text="Education"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content" />
+    </RadioGroup>
+
+    <!-- Availability -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Availability:"
+        android:textStyle="bold"
+        android:paddingTop="8dp" />
+
+    <RadioGroup
+        android:id="@+id/availabilityGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RadioButton android:id="@+id/availabilityAll" android:text="All" android:checked="true"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content" />
+        <RadioButton android:id="@+id/availabilityMon" android:text="Mondays"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content" />
+        <RadioButton android:id="@+id/availabilityTue" android:text="Tuesdays"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content" />
+        <RadioButton android:id="@+id/availabilityWed" android:text="Wednesdays"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content" />
+        <RadioButton android:id="@+id/availabilityThu" android:text="Thursdays"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content" />
+        <RadioButton android:id="@+id/availabilityFri" android:text="Fridays"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content" />
+        <RadioButton android:id="@+id/availabilitySat" android:text="Saturdays"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content" />
+        <RadioButton android:id="@+id/availabilitySun" android:text="Sundays"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content" />
+    </RadioGroup>
+
+    <!-- Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingTop="12dp">
+
+        <Button
+            android:id="@+id/applyFiltersBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="APPLY FILTERS"
+            android:backgroundTint="@android:color/darker_gray"
+            android:textColor="@android:color/white"/>
+
+        <Space android:layout_width="12dp" android:layout_height="match_parent"/>
+
+        <Button
+            android:id="@+id/clearFiltersBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="CLEAR ALL"
+            android:backgroundTint="@android:color/darker_gray"
+            android:textColor="@android:color/white"/>
+    </LinearLayout>
+</LinearLayout>

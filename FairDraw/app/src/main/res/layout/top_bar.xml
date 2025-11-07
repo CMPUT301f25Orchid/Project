@@ -21,8 +21,8 @@
         <!-- User image -->
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/imgAvatar"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:src="@android:drawable/sym_def_app_icon"
             android:contentDescription="User image"
             app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"/>
@@ -34,17 +34,19 @@
             android:layout_weight="1"/>
 
         <!-- Entrant pill -->
+        <!-- Use a LinearLayout to wrap the Entrant and Organizer buttons and then do the spacing using the Layout -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnEntrant"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
+            android:layout_width="80dp"
+            android:layout_height="50dp"
             android:text="Entrant"
             android:textAllCaps="false"
             android:textColor="#FFFFFF"
             android:backgroundTint="#488EF6"
-            app:cornerRadius="18dp"
-            app:strokeColor="#FFFFFF"/>
+            app:cornerRadius="9dp"
+            app:strokeColor="#FFFFFF"
+            android:textSize="12sp"/>
 
         <Space
             android:layout_width="8dp"
@@ -54,13 +56,14 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnOrganizer"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
+            android:layout_width="95dp"
+            android:layout_height="50dp"
             android:text="Organizer"
             android:textAllCaps="false"
             android:textColor="#488EF6"
             android:backgroundTint="#FFFFFF"
-            app:cornerRadius="18dp"
-            app:strokeColor="#FFFFFF"/>
+            app:cornerRadius="9dp"
+            app:strokeColor="#FFFFFF"
+            android:textSize="12sp"/>
     </LinearLayout>
 </com.google.android.material.appbar.MaterialToolbar>

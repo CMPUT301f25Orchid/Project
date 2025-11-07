@@ -20,11 +20,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FairDraw">
         <activity
-            android:name=".TestDeepLinkActivity"
+            android:name=".Activities.OrganizerManageEvent"
             android:exported="false" />
-        <!-- Router that handles all app deep links -->
         <activity
-            android:name=".DeepLinkRouterActivity"
+            android:name=".Activities.EntrantEventDetails"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.ProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.TestDeepLinkActivity"
+            android:exported="false" /> <!-- Router that handles all app deep links -->
+        <activity
+            android:name=".Activities.DeepLinkRouterActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -38,29 +46,35 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".EntrantScan"
+            android:name=".Activities.EntrantScan"
             android:exported="false" />
         <activity
-            android:name=".CreateEventPage"
+            android:name=".Activities.EntrantHomeActivity"
             android:exported="false" />
         <activity
-            android:name=".OrganizerMainPage"
+            android:name=".Activities.CreateEventPage"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.OrganizerMainPage"
             android:exported="true" />
         <activity
-            android:name=".MainActivity"
-            android:exported="true" />
+            android:name=".Activities.MainActivity"
+            android:exported="true"/>
         <activity
-            android:name=".SignUpActivity"
+            android:name=".Activities.SignUpActivity"
             android:exported="false" />
         <activity
-            android:name=".SplashActivity"
+            android:name=".Activities.SplashActivity"
             android:exported="true"
             android:theme="@style/Theme.App.Splash">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Activities.EntrantNotificationsActivity" />
+
     </application>
 
 </manifest>
