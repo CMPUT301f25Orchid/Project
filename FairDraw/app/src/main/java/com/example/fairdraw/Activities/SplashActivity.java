@@ -15,8 +15,15 @@ import com.example.fairdraw.ServiceUtility.DevicePrefsManager;
 import com.example.fairdraw.ServiceUtility.GatePrefs;
 import com.example.fairdraw.R;
 
+/**
+ * Splash screen activity that appears when the app is launched.
+ * Checks if the user has completed initial setup and navigates to the appropriate screen:
+ * - If user exists: navigates to ProfileActivity
+ * - If user doesn't exist: navigates to SignUpActivity
+ */
 public class SplashActivity extends AppCompatActivity {
 
+    /** Intent for navigation */
     Intent intent;
 
     @Override

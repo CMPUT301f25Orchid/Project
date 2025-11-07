@@ -16,19 +16,48 @@ import androidx.fragment.app.DialogFragment;
 import com.example.fairdraw.R;
 import java.util.Calendar;
 
+/**
+ * DialogFragment for filtering events based on status, interest, and availability.
+ * This fragment provides UI controls for applying and clearing event filters.
+ */
 public class FilterEventsDialogFragment extends DialogFragment {
 
+    /** Listener interface for filter actions */
     private FilterListener listener;
+    /** Bundle argument key for current status filter */
     private static final String ARG_STATUS = "current_status";
+    /** Bundle argument key for current interest filter */
     private static final String ARG_INTEREST = "current_interest";
+    /** Bundle argument key for current availability filter */
     private static final String ARG_AVAILABILITY = "current_availability";
 
+    /**
+     * Interface for handling filter events.
+     */
     public interface FilterListener {
+        /**
+         * Called when filters are applied.
+         * 
+         * @param status The selected status filter
+         * @param interest The selected interest filter
+         * @param availability The selected availability filter
+         */
         void onFiltersApplied(String status, String interest, int availability);
+        
+        /**
+         * Called when filters are cleared.
+         */
         void onFiltersCleared();
     }
 
-    // ✅ Use a static newInstance method to pass arguments
+    /**
+     * Creates a new instance of FilterEventsDialogFragment with current filter values.
+     * 
+     * @param currentStatus The current status filter value
+     * @param currentInterest The current interest filter value
+     * @param currentAvailability The current availability filter value
+     * @return A new instance with arguments set
+     */
     public static FilterEventsDialogFragment newInstance(String currentStatus, String currentInterest, int currentAvailability) {
         FilterEventsDialogFragment fragment = new FilterEventsDialogFragment();
         Bundle args = new Bundle();
@@ -39,10 +68,21 @@ public class FilterEventsDialogFragment extends DialogFragment {
         return fragment;
     }
 
+    /**
+     * Sets the filter listener for handling filter events.
+     * 
+     * @param listener The FilterListener to receive filter events
+     */
     public void setFilterListener(FilterListener listener) {
         this.listener = listener;
     }
 
+    /**
+     * Creates the filter dialog with UI controls for selecting filters.
+     * 
+     * @param savedInstanceState Bundle containing the fragment's previously saved state
+     * @return The Dialog to be displayed
+     */
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {

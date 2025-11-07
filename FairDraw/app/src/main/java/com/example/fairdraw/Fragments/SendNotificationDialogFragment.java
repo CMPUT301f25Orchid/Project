@@ -10,17 +10,50 @@ import androidx.fragment.app.DialogFragment;
 import com.google.android.material.textfield.TextInputEditText;
 import java.util.Objects;
 
+/**
+ * DialogFragment for sending notifications to entrants in specific event categories.
+ * This fragment allows organizers to compose and send custom notifications to
+ * waiting list, selected, or cancelled entrants for a specific event.
+ */
 public class SendNotificationDialogFragment extends DialogFragment {
 
-    public enum Audience { WAITING_LIST, SELECTED, CANCELLED }
+    /**
+     * Enum representing the possible target audiences for notifications.
+     */
+    public enum Audience { 
+        /** Entrants currently on the waiting list */
+        WAITING_LIST, 
+        /** Entrants who have been selected (invited) */
+        SELECTED, 
+        /** Entrants who cancelled or were cancelled */
+        CANCELLED 
+    }
 
+    /**
+     * Interface for handling notification send events.
+     */
     public interface Listener {
+        /**
+         * Called when a notification is ready to be sent.
+         * 
+         * @param eventId The ID of the event
+         * @param audience The target audience for the notification
+         * @param message The notification message content
+         */
         void onSendNotification(String eventId, Audience audience, String message);
     }
 
+    /** Bundle argument key for event ID */
     private static final String ARG_EVENT_ID = "arg_event_id";
+    /** Listener for notification send events */
     @Nullable private Listener listener;
 
+    /**
+     * Creates a new instance of SendNotificationDialogFragment for a specific event.
+     * 
+     * @param eventId The ID of the event to send notifications for
+     * @return A new instance with arguments set
+     */
     public static SendNotificationDialogFragment newInstance(String eventId) {
         SendNotificationDialogFragment f = new SendNotificationDialogFragment();
         Bundle b = new Bundle();
@@ -29,8 +62,16 @@ public class SendNotificationDialogFragment extends DialogFragment {
         return f;
     }
 
+    /**
+     * Sets the listener for notification send events.
+     * 
+     * @param l The Listener to receive notification send events
+     */
     public void setListener(@Nullable Listener l) { this.listener = l; }
 
+    /**
+     * Called when the dialog is starting. Sets the dialog width to match parent.
+     */
     @Override public void onStart() {
         super.onStart();
         // Make dialog width nice & centered
@@ -40,6 +81,15 @@ public class SendNotificationDialogFragment extends DialogFragment {
         }
     }
 
+    /**
+     * Creates and returns the view for the notification dialog.
+     * Sets up UI controls for audience selection, message input, and send/cancel actions.
+     * 
+     * @param inflater The LayoutInflater to inflate views
+     * @param container The parent view
+     * @param savedInstanceState Bundle containing the fragment's previously saved state
+     * @return The created view
+     */
     @Nullable @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {

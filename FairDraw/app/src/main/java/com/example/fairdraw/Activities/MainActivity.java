@@ -34,26 +34,38 @@ import com.google.android.gms.tasks.Task;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Main activity of the FairDraw application.
+ * Serves as a test/demo activity for image upload functionality and navigation to other screens.
+ * Provides buttons for uploading entrant profiles, event posters, and accessing notifications.
+ */
 public class MainActivity extends AppCompatActivity {
 
+    /** ImageView for previewing selected images */
     private ImageView previewImage;
+    /** UI buttons for image picking, uploading, and navigation */
     private Button pickButton, uploadEntrantBtn, uploadEventBtn, openNotifications;
 
+    /** URI of the image selected from gallery */
     @Nullable
     private Uri pickedImageUri = null;
+    /** Sample bitmap for testing (optional) */
     @Nullable
-    private Bitmap sampleBitmap = null; // optional path
+    private Bitmap sampleBitmap = null;
 
+    /** Service for handling Firebase Storage operations */
     private FirebaseImageStorageService storageService;
 
-    // simple demo IDs
+    /** Demo entrant ID for testing uploads */
     private static final String DEMO_ENTRANT_ID = "demo_entrant_123";
+    /** Demo event ID for testing uploads */
     private static final String DEMO_EVENT_ID   = "demo_event_ABC";
 
+    /** Button for navigating to entrant home screen */
     private Button entrantHomeScreen;
 
 
-    // Gallery picker (images only)
+    /** Activity result launcher for picking images from gallery */
     private final ActivityResultLauncher<String> pickImage =
             registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
                 if (uri != null) {
@@ -65,6 +77,12 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
+    /**
+     * Called when the activity is created.
+     * Initializes UI components, sets up Firebase Storage, and configures button click listeners.
+     * 
+     * @param savedInstanceState Bundle containing the activity's previously saved state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -147,6 +165,12 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Seeds dummy notifications for testing purposes.
+     * Creates sample notifications of different types and adds them to the specified user.
+     * 
+     * @param deviceId The device ID of the user to receive test notifications
+     */
     private void seedDummyNotifications(String deviceId) {
         List<EntrantNotification> dummies = Arrays.asList(
                 new EntrantNotification(NotificationType.WIN,      "evt_swim",  "Swimming Lessons"),
@@ -165,6 +189,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Handles the result of an image upload task.
+     * Displays success or failure messages to the user.
+     * 
+     * @param task The upload Task containing the download URL
+     * @param label A label identifying what was uploaded (e.g., "Entrant", "Event")
+     */
     private void handleUploadTask(Task<Uri> task, String label) {
         task.addOnSuccessListener(uri -> {
             Toast.makeText(this, label + " uploaded!\nURL:\notification" + uri, Toast.LENGTH_LONG).show();
