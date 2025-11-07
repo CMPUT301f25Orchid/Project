@@ -14,6 +14,7 @@ import android.net.Uri;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import com.example.fairdraw.ServiceUtility.FirebaseImageStorageService;
 import com.google.android.gms.tasks.Task;
 
 import org.junit.After;

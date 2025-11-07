@@ -105,6 +105,7 @@ public class EditProfileActivity extends AppCompatActivity {
         String newEmail = emailEditText.getText().toString().trim();
         String newPhone = phoneEditText.getText().toString().trim();
 
+
         // Update the local currentUser object with the new data
         currentUser.setName(newName);
         currentUser.setEmail(newEmail);

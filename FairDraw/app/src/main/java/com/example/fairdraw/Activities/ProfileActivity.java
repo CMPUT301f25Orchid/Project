@@ -74,6 +74,27 @@ public class ProfileActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
+
+//        deleteAccButton.setOnClickListener(v -> {
+//            // Call the deleteUser method from UserDB
+//            UserDB.deleteUser(deviceId, (ok, e) -> {
+//                // This callback runs after the delete operation is complete
+//                if (ok) {
+//                    // The user was successfully deleted
+//                    Log.d(TAG, "User account deleted successfully.");
+//                    Toast.makeText(ProfileActivity.this, "Account deleted.", Toast.LENGTH_SHORT).show();
+//
+//                    // IMPORTANT: Finish the activity to return to the previous screen.
+//                    // This is what makes the test pass.
+//                    finish();
+//                } else {
+//                    // There was an error deleting the user
+//                    Log.e(TAG, "Failed to delete user account.", e);
+//                    Toast.makeText(ProfileActivity.this, "Failed to delete account.", Toast.LENGTH_SHORT).show();
+//                }
+//            });
+//        });    NEEDS TO BE COMPLETED, SHOULD DELETING THE ACCOUNT RETURN YOU TO THE SIGN UP PAGE INSTEAD OF JUST FINISHING THE ACTIVITY
+
     }
 
     /**

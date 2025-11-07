@@ -21,6 +21,10 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import com.example.fairdraw.DBs.EntrantDB;
+import com.example.fairdraw.Models.Entrant;
+import com.example.fairdraw.Others.EntrantNotification;
+import com.example.fairdraw.Others.NotificationType;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
