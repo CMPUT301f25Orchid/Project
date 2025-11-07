@@ -354,8 +354,8 @@ com.example.fairdraw.Adapters.Adapter <|-- com.example.fairdraw.Adapters.Entrant
 com.example.fairdraw.Adapters.EntrantNotificationAdapter +.. com.example.fairdraw.Adapters.EntrantNotificationAdapter$OnAction
 com.example.fairdraw.Adapters.EntrantNotificationAdapter +.. com.example.fairdraw.Adapters.EntrantNotificationAdapter$ViewHolder
 com.example.fairdraw.Adapters.ViewHolder <|-- com.example.fairdraw.Adapters.EntrantNotificationAdapter$ViewHolder
-androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.EntrantScan
-androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.EntrantNotificationsActivity
+com.example.fairdraw.Activities.BaseTopBottomActivity <|-- com.example.fairdraw.Activities.EntrantScan
+com.example.fairdraw.Activities.BaseTopBottomActivity <|-- com.example.fairdraw.Activities.EntrantNotificationsActivity
 androidx.fragment.app.DialogFragment <|-- com.example.fairdraw.Fragments.FilterEventsDialogFragment
 com.example.fairdraw.Fragments.FilterEventsDialogFragment +.. com.example.fairdraw.Fragments.FilterEventsDialogFragment$FilterListener
 androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.OrganizerManageEvent
