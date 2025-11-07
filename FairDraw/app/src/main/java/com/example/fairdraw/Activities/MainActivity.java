@@ -154,8 +154,8 @@ public class MainActivity extends AppCompatActivity {
                 new EntrantNotification(NotificationType.WAITLIST, "evt_ball",  "Basketball Camp"),
                 new EntrantNotification(NotificationType.REPLACE,  "evt_piano", "Piano Basics")
         );
-        for (EntrantNotification n : dummies) {
-            EntrantDB.pushNotificationToUser(deviceId, n, (ok, e) -> {
+        for (EntrantNotification notification : dummies) {
+            EntrantDB.pushNotificationToUser(deviceId, notification, (ok, e) -> {
                 if (!ok) {
                     Toast.makeText(this, "Seed failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -167,8 +167,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void handleUploadTask(Task<Uri> task, String label) {
         task.addOnSuccessListener(uri -> {
-            Toast.makeText(this, label + " uploaded!\nURL:\n" + uri, Toast.LENGTH_LONG).show();
-            // Tip: save uri.toString() to Firestore if you want to reference it later
+            Toast.makeText(this, label + " uploaded!\nURL:\notification" + uri, Toast.LENGTH_LONG).show();
+
         }).addOnFailureListener(e -> {
             Toast.makeText(this, "Upload failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
         });

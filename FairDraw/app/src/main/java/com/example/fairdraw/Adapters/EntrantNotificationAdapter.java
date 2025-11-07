@@ -19,8 +19,8 @@ import java.util.Locale;
 public class EntrantNotificationAdapter extends RecyclerView.Adapter<EntrantNotificationAdapter.ViewHolder> {
 
     public interface OnAction {
-        void onAcceptDecline(EntrantNotification n);  // only for WIN row
-        void onItemClick(EntrantNotification n);       // optional
+        void onAcceptDecline(EntrantNotification notification);  // only for WIN row
+        void onItemClick(EntrantNotification notification);       // optional
     }
 
     private static final int viewWon         = 1;
@@ -82,14 +82,19 @@ public class EntrantNotificationAdapter extends RecyclerView.Adapter<EntrantNoti
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder h, int position) {
-        EntrantNotification n = items.get(position);
+        EntrantNotification notification = items.get(position);
 
-        String ev = (n.title == null || n.title.isEmpty()) ? "this event" : "“" + n.title + "”";
-        String msg = resolveType(n.type).title(ev);
+        String event = (notification.title == null || notification.title.isEmpty()) ? "this event" : "“" + notification.title + "”";
+        String msg;
+        if (resolveType(notification.type) != NotificationType.OTHER) {
+            msg = resolveType(notification.type).title(event);
+        } else {
+            msg = notification.message;
+        }
 
         if (h.msg != null) h.msg.setText(msg);
-        if (h.cta != null) h.cta.setOnClickListener(v -> { if (actions != null) actions.onAcceptDecline(n); });
-        h.itemView.setOnClickListener(v -> { if (actions != null) actions.onItemClick(n); });
+        if (h.cta != null) h.cta.setOnClickListener(v -> { if (actions != null) actions.onAcceptDecline(notification); });
+        h.itemView.setOnClickListener(v -> { if (actions != null) actions.onItemClick(notification); });
     }
 
     private static NotificationType resolveType(String s) {

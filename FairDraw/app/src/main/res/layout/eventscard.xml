@@ -93,7 +93,7 @@
                 android:paddingBottom="7dp"/>
 
             <Button
-                android:id="@+id/event_edit_button"
+                android:id="@+id/view_details_button"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:minWidth="96dp"
