@@ -21,8 +21,20 @@ import com.example.fairdraw.Others.EntrantNotification;
 import com.example.fairdraw.R;
 import com.example.fairdraw.ServiceUtility.DevicePrefsManager;
 
+/**
+ * DialogFragment for displaying an accept/decline decision dialog for event invitations.
+ * This fragment allows entrants to accept or decline lottery win invitations.
+ */
 public class DecisionFragment extends DialogFragment {
+    /** The notification associated with this decision dialog */
     private EntrantNotification notification;
+    
+    /**
+     * Creates a new instance of DecisionFragment with the specified notification.
+     * 
+     * @param notification The EntrantNotification containing event and user information
+     * @return A new instance of DecisionFragment with arguments set
+     */
     public DecisionFragment newInstance(EntrantNotification notification){
         DecisionFragment fragment = new DecisionFragment();
         Bundle args = new Bundle();
@@ -35,6 +47,13 @@ public class DecisionFragment extends DialogFragment {
         fragment.setArguments(args);
         return fragment;
     }
+        
+        /**
+         * Creates the dialog with accept and decline buttons for the event invitation.
+         * 
+         * @param savedInstanceState Bundle containing the fragment's previously saved state
+         * @return The Dialog to be displayed
+         */
         @NonNull
         @Override
         public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {

@@ -9,46 +9,52 @@ import com.example.fairdraw.Models.Event;
 import java.util.ArrayList;
 
 /**
- * A singleton class that holds the data for the app.
+ * A singleton class that holds and manages event data for organizers in the application.
+ * This class maintains a centralized list of events and provides methods to add, update,
+ * and remove events while synchronizing with the database and UI adapter.
  */
 public class OrganizerEventsDataHolder {
+    /** The list of events managed by organizers */
     private static ArrayList<Event> dataList = new ArrayList<>();
+    /** The adapter used to display events in the UI */
     public static EventArrayAdapter eventAdapter = null;
+    
+    /**
+     * Gets the list of organizer events.
+     * @return The ArrayList of Event objects
+     */
     public static ArrayList<Event> getDataList() {
         return dataList;
     }
 
     /**
-     * Set the data list for the app.
-     * @param dataList
-     *      This is the list of organizer events that will be displayed in the app.
+     * Sets the data list for organizer events.
+     * @param dataList The list of organizer events to be displayed in the app
      */
     public static void setDataList(ArrayList<Event> dataList) {
         OrganizerEventsDataHolder.dataList = dataList;
     }
 
     /**
-     * Set the event adapter for the app.
-     * @param eventAdapter
-     *      This is the adapter that will be used to display the events in the app.
+     * Sets the event adapter for the app.
+     * @param eventAdapter The adapter used to display events in the UI
      */
     public static void setEventAdapter(EventArrayAdapter eventAdapter) {
         OrganizerEventsDataHolder.eventAdapter = eventAdapter;
     }
 
     /**
-     * Get the event adapter for the app.
-     * @return
-     *      Returns the event adapter that will be used to display the events in the app.
+     * Gets the event adapter for the app.
+     * @return The event adapter used to display events in the UI
      */
     public static EventArrayAdapter getEventAdapter() {
         return eventAdapter;
     }
 
     /**
-     * Add an event to the data list and add it to the database.
-     * @param event
-     *      The new event that needs to be added
+     * Adds an event to the data list and persists it to the database.
+     * Notifies the adapter to refresh the UI display.
+     * @param event The new event to be added
      */
     public static void addEvent(Event event) {
         EventDB.addEvent(event, success -> {
@@ -64,11 +70,10 @@ public class OrganizerEventsDataHolder {
     }
 
     /**
-     * Update an event in the data list and update it in the database.
-     * @param event
-     *      The event that is replacing the old event
-     * @param index
-     *      The index of the event that needs to be updated
+     * Updates an event in the data list and persists the changes to the database.
+     * Notifies the adapter to refresh the UI display.
+     * @param event The event with updated data
+     * @param index The index of the event to be updated in the data list
      */
     public static void updateEvent(Event event , int index) {
         EventDB.updateEvent(event, success -> {
@@ -83,9 +88,9 @@ public class OrganizerEventsDataHolder {
     }
 
     /**
-     * Remove an event from the data list, remove it from the database, and update the event display.
-     * @param event
-     *      The event that needs to be removed
+     * Removes an event from the data list and deletes it from the database.
+     * Notifies the adapter to refresh the UI display.
+     * @param event The event to be removed
      */
     public static void removeEvent(Event event) {
         EventDB.deleteEvent(event.getUuid().toString(), success -> {

@@ -18,9 +18,16 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.example.fairdraw.Models.*;
 
+/**
+ * Activity for new user sign-up.
+ * Collects user information (name, email, phone) and creates a new user account in the database.
+ * Validates input fields before submission and navigates to the profile activity on success.
+ */
 public class SignUpActivity extends AppCompatActivity {
 
+    /** Input fields for user information */
     private TextInputEditText nameEt, emailEt, phoneEt;
+    /** Submit button to create the account */
     private Button submitBtn;
 
     Intent intent;

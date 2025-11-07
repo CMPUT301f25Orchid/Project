@@ -29,12 +29,22 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 import java.util.Calendar;
+
+/**
+ * Home activity for entrants in the FairDraw application.
+ * Displays a list of published events that entrants can browse and join.
+ * Provides filtering options and real-time updates of the event list from Firestore.
+ * Extends BaseTopBottomActivity to include bottom navigation.
+ */
 public class EntrantHomeActivity extends BaseTopBottomActivity {
 
+    /** Container for dynamically added event cards */
     private LinearLayout eventListContainer;
+    /** Firestore listener for real-time event updates */
     private ListenerRegistration eventListener;
 
-    private List<Event> allEvents;  // store full list
+    /** Stores the complete list of events */
+    private List<Event> allEvents;
 
     // Store current filter state
     private String currentStatusFilter = "All";

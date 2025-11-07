@@ -16,33 +16,76 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * RecyclerView adapter for displaying entrant notifications with different layouts based on notification type.
+ * Supports different view types for WIN, LOSE, WAITLIST, and REPLACE notifications.
+ */
 public class EntrantNotificationAdapter extends RecyclerView.Adapter<EntrantNotificationAdapter.ViewHolder> {
 
+    /**
+     * Interface for handling user actions on notification items.
+     */
     public interface OnAction {
-        void onAcceptDecline(EntrantNotification notification);  // only for WIN row
-        void onItemClick(EntrantNotification notification);       // optional
+        /**
+         * Called when user accepts or declines a WIN notification.
+         * @param notification The notification being acted upon
+         */
+        void onAcceptDecline(EntrantNotification notification);
+        
+        /**
+         * Called when user clicks on any notification item.
+         * @param notification The notification that was clicked
+         */
+        void onItemClick(EntrantNotification notification);
     }
 
+    /** View type constant for WIN notifications */
     private static final int viewWon         = 1;
+    /** View type constant for LOSE notifications */
     private static final int viewLost        = 2;
+    /** View type constant for WAITLIST notifications */
     private static final int viewWaitJoined = 3;
+    /** View type constant for REPLACE notifications */
     private static final int viewWaitLeft   = 4;
 
+    /** The list of notifications to display */
     private final List<EntrantNotification> items = new ArrayList<>();
+    /** Callback for handling user actions */
     private final OnAction actions;
 
+    /**
+     * Constructs a new EntrantNotificationAdapter.
+     * 
+     * @param actions The callback interface for handling user actions
+     */
     public EntrantNotificationAdapter(OnAction actions) {
         this.actions = actions;
     }
 
+    /**
+     * Updates the list of notifications and refreshes the display.
+     * 
+     * @param list The new list of notifications
+     */
     public void setItems(List<EntrantNotification> list) {
         items.clear();
         if (list != null) items.addAll(list);
         notifyDataSetChanged();
     }
 
+    /**
+     * Gets the number of notifications in the list.
+     * 
+     * @return The total number of notifications
+     */
     @Override public int getItemCount() { return items.size(); }
 
+    /**
+     * Determines the view type for a notification based on its type.
+     * 
+     * @param pos The position of the notification
+     * @return The view type constant for the notification
+     */
     @Override public int getItemViewType(int pos) {
         String raw = items.get(pos).type;
         String t = (raw == null) ? "" : raw.trim().toUpperCase(Locale.US);
@@ -55,8 +98,14 @@ public class EntrantNotificationAdapter extends RecyclerView.Adapter<EntrantNoti
         }
     }
 
-
-
+    /**
+     * Creates a new ViewHolder for a notification item based on the view type.
+     * Different layouts are inflated for different notification types.
+     * 
+     * @param parent The parent ViewGroup
+     * @param vt The view type
+     * @return A new ViewHolder for the notification
+     */
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int vt) {
@@ -80,6 +129,13 @@ public class EntrantNotificationAdapter extends RecyclerView.Adapter<EntrantNoti
         return new ViewHolder(v);
     }
 
+    /**
+     * Binds data to the ViewHolder for the notification at the specified position.
+     * Sets up the notification message and click listeners.
+     * 
+     * @param h The ViewHolder to bind data to
+     * @param position The position of the notification in the list
+     */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder h, int position) {
         EntrantNotification notification = items.get(position);
@@ -97,22 +153,45 @@ public class EntrantNotificationAdapter extends RecyclerView.Adapter<EntrantNoti
         h.itemView.setOnClickListener(v -> { if (actions != null) actions.onItemClick(notification); });
     }
 
+    /**
+     * Resolves a string to a NotificationType enum value.
+     * 
+     * @param s The string representation of the notification type
+     * @return The corresponding NotificationType, or NotificationType.WIN if parsing fails
+     */
     private static NotificationType resolveType(String s) {
         try { return NotificationType.valueOf(s); }
         catch (Exception ignore) { return NotificationType.WIN; }
     }
 
-    /** */
+    /**
+     * ViewHolder for notification items.
+     * Holds references to views that may vary based on notification type.
+     */
     static class ViewHolder extends RecyclerView.ViewHolder {
-        final TextView msg; // tvMessageWon / tvMessageLost / tvMessageWaitJoined / tvMessageWaitLeft
-        final TextView cta; // btnAcceptDecline (WIN only), else null
+        /** TextView displaying the notification message */
+        final TextView msg;
+        /** TextView for the call-to-action button (only for WIN notifications) */
+        final TextView cta;
 
+        /**
+         * Constructs a new ViewHolder.
+         * 
+         * @param v The item view
+         */
         ViewHolder(@NonNull View v) {
             super(v);
             msg = pickOne(v, R.id.tvMessageWon, R.id.tvMessageLost, R.id.tvMessageWaitJoined, R.id.tvMessageWaitLeft);
             cta = v.findViewById(R.id.btnAcceptDecline);
         }
 
+        /**
+         * Searches for the first TextView with a matching ID from the provided list.
+         * 
+         * @param v The view to search in
+         * @param ids The list of resource IDs to search for
+         * @return The first TextView found, or null if none match
+         */
         private static TextView pickOne(View v, int... ids) {
             for (int id : ids) {
                 TextView t = v.findViewById(id);

@@ -9,10 +9,18 @@ import com.example.fairdraw.Others.BarType;
 import com.example.fairdraw.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-/** This is base class gives the functionality to initialize the onclick listener for the common
- * top and bottom navigation bar in each activity that has them.
+/**
+ * Base activity class that provides common functionality for activities with top and bottom navigation bars.
+ * This class initializes click listeners for navigation items and handles navigation between different
+ * sections of the app based on the user's role (Entrant, Organizer, or Admin).
  */
 public class BaseTopBottomActivity extends AppCompatActivity {
+    /**
+     * Initializes the bottom navigation bar with click listeners based on the user's role.
+     * 
+     * @param barType The type of navigation bar (ENTRANT, ORGANIZER, or ADMIN)
+     * @param root The BottomNavigationView to initialize
+     */
     protected void initBottomNav(BarType barType, BottomNavigationView root) {
         if (barType == BarType.ENTRANT) {
             View home = root.findViewById(R.id.home_activity);

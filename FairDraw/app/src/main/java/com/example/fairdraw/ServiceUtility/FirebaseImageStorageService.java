@@ -35,7 +35,11 @@ public class FirebaseImageStorageService {
         this.storage = FirebaseStorage.getInstance();
     }
 
-    // ---------- Path helpers ----------
+    /**
+     * Gets a reference to an entrant's profile image in Firebase Storage.
+     * @param entrantId The ID of the entrant
+     * @return A StorageReference to the entrant's profile image
+     */
     private StorageReference entrantProfileRef(@NonNull String entrantId) {
         return storage.getReference()
                 .child(ENTRANTS_DIR)
@@ -43,6 +47,11 @@ public class FirebaseImageStorageService {
                 .child(PROFILE_NAME);
     }
 
+    /**
+     * Gets a reference to an event's poster image in Firebase Storage.
+     * @param eventId The ID of the event
+     * @return A StorageReference to the event's poster image
+     */
     private StorageReference eventPosterRef(@NonNull String eventId) {
         return storage.getReference()
                 .child(EVENTS_DIR)
