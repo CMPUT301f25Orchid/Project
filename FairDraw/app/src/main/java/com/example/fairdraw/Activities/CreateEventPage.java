@@ -25,6 +25,8 @@ import java.util.Date;
 import com.example.fairdraw.Models.Event;
 import com.example.fairdraw.Others.OrganizerEventsDataHolder;
 import com.example.fairdraw.R;
+import com.example.fairdraw.ServiceUtility.DevicePrefsManager;
+import com.example.fairdraw.ServiceUtility.FirebaseImageStorageService;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.zxing.BarcodeFormat;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
@@ -66,6 +68,8 @@ public class CreateEventPage extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        // Get DeviceId
+        final String deviceID = DevicePrefsManager.getDeviceId(this);
 
         // Initialize view variables
         confirmCreateEvent = findViewById(R.id.confirm_create_event);
@@ -136,14 +140,17 @@ public class CreateEventPage extends AppCompatActivity {
                             null,
                             null
                     );
+                    event.setOrganizer(deviceID);
                     if (!eventLimit.getText().toString().isEmpty()){
                         Integer limit = Integer.parseInt(eventLimit.getText().toString());
-                        System.out.println(limit);
                         event.setWaitingListLimit(limit);
                     }
                     if (bannerPhoto != null){
                         event.setPosterPath(bannerPhoto.toString());
+                        FirebaseImageStorageService storageService = new FirebaseImageStorageService();
+                        storageService.uploadEventPoster(event.getUuid(), bannerPhoto);
                     }
+                    //Make QR code **SUBJECT TO CHANGE**
                     String qrText = event.getTitle().concat(" - ").concat(event.getDescription());
                     BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
                     Bitmap bitmap = barcodeEncoder.encodeBitmap(qrText, BarcodeFormat.QR_CODE, 400, 400);

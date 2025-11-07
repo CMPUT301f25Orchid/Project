@@ -9,7 +9,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -89,13 +88,13 @@ public class EntrantHomeActivity extends BaseTopBottomActivity {
             CardView cardView = (CardView) inflater.inflate(R.layout.eventscard, eventListContainer, false);
 
             // Bind views
-            TextView titleView = cardView.findViewById(R.id.eventTitle);
-            TextView locationView = cardView.findViewById(R.id.eventLocation);
-            TextView dateView = cardView.findViewById(R.id.eventDate);
-            TextView capacityView = cardView.findViewById(R.id.eventCapacity);
-            TextView priceView = cardView.findViewById(R.id.eventPrice);
+            TextView titleView = cardView.findViewById(R.id.event_content_title);
+            TextView locationView = cardView.findViewById(R.id.event_content_location);
+            TextView dateView = cardView.findViewById(R.id.event_content_date);
+            TextView capacityView = cardView.findViewById(R.id.event_content_capacity);
+            TextView priceView = cardView.findViewById(R.id.event_content_price);
             TextView statusView = cardView.findViewById(R.id.eventStatus);
-            Button joinBtn = cardView.findViewById(R.id.viewDetailsButton);
+            Button joinBtn = cardView.findViewById(R.id.event_edit_button);
             ImageView eventImage = cardView.findViewById(R.id.eventImage);
 
             // Set values

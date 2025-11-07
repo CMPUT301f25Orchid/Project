@@ -17,6 +17,7 @@ import com.example.fairdraw.Adapters.EventArrayAdapter;
 import com.example.fairdraw.Models.Event;
 import com.example.fairdraw.Others.OrganizerEventsDataHolder;
 import com.example.fairdraw.R;
+import com.example.fairdraw.ServiceUtility.DevicePrefsManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.CollectionReference;
@@ -36,10 +37,9 @@ public class OrganizerMainPage extends AppCompatActivity {
     EventArrayAdapter eventAdapter;
     FirebaseFirestore db;
     CollectionReference eventsRef;
-    Integer index;
 
     ArrayList<Event> dataList;
-    DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+
 
 
 
@@ -54,6 +54,8 @@ public class OrganizerMainPage extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        // Get User DeviceID
+        final String deviceId = DevicePrefsManager.getDeviceId(this);
 
         // Populate event list with database data
         db = FirebaseFirestore.getInstance();
@@ -67,7 +69,12 @@ public class OrganizerMainPage extends AppCompatActivity {
                 dataList.clear();
                 for (QueryDocumentSnapshot doc : value) {
                     Event event = doc.toObject(Event.class);
-                    dataList.add(event);
+                    if (event.getOrganizer() == null){
+                        continue;
+                    }
+                    if (event.getOrganizer().equals(deviceId)){
+                        dataList.add(event);
+                    }
                 }
                 eventAdapter.notifyDataSetChanged();
             }
@@ -75,13 +82,12 @@ public class OrganizerMainPage extends AppCompatActivity {
 
         // Set up event list view
         eventList = findViewById(R.id.event_list);
-        eventAdapter = new EventArrayAdapter(this, dataList);
-        eventList.setAdapter(eventAdapter);
-
-        //Open an event to edit
-        eventList.setOnItemClickListener((parent, view, position, id) -> {
-            openFragment(dataList.get(position));
+        eventAdapter = new EventArrayAdapter(this, dataList, this::openFragment, position -> {
+            Intent intent = new Intent(OrganizerMainPage.this, OrganizerManageEvent.class);
+            intent.putExtra("eventId", dataList.get(position).getUuid());
+            startActivity(intent);
         });
+        eventList.setAdapter(eventAdapter);
 
         // Move to Create Event Page
         bottomNav = findViewById(R.id.home_bottom_nav_bar);
@@ -98,7 +104,7 @@ public class OrganizerMainPage extends AppCompatActivity {
     }
 
     // Define how to open a the even edit Fragment
-    void openFragment(Event event){
+    void openFragment(Integer index){
         EditEventPage fragment = new EditEventPage();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         fragmentContainer = findViewById(R.id.fragment_container);
@@ -106,7 +112,7 @@ public class OrganizerMainPage extends AppCompatActivity {
         OrganizerEventsDataHolder.setDataList(dataList);
         OrganizerEventsDataHolder.setEventAdapter(eventAdapter);
         Bundle bundle = new Bundle();
-        bundle.putInt("position", dataList.indexOf(event));
+        bundle.putInt("position", index);
         fragment.setArguments(bundle);
         transaction.replace(R.id.fragment_container, fragment);
         transaction.addToBackStack(null);

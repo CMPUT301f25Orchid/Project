@@ -42,6 +42,7 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.installations)
     implementation(libs.firebase.storage)
+    implementation(libs.cardview)
     testImplementation(libs.junit)
     implementation ("com.journeyapps:zxing-android-embedded:4.3.0")
     androidTestImplementation(libs.ext.junit)

@@ -67,7 +67,7 @@ public class FirebaseImageStorageService {
                                           int jpegQuality,
                                           int maxBytes) {
         byte[] data = compressBitmapToJpegBytes(bitmap, jpegQuality, maxBytes);
-        return putBytesAndGetUrl(entrantProfileRef(entrantId), data, "image/jpeg");
+        return putBytesAndGetUrl(entrantProfileRef(entrantId), data, "image/*");
     }
 
     /**
@@ -78,7 +78,7 @@ public class FirebaseImageStorageService {
      * @return A Task containing the download URL of the uploaded image.
      */
     public Task<Uri> uploadEntrantProfile(@NonNull String entrantId, @NonNull Uri fileUri) {
-        return putFileAndGetUrl(entrantProfileRef(entrantId), fileUri, "image/jpeg");
+        return putFileAndGetUrl(entrantProfileRef(entrantId), fileUri, "image/*");
     }
 
     /**
@@ -139,7 +139,7 @@ public class FirebaseImageStorageService {
                                        int jpegQuality,
                                        int maxBytes) {
         byte[] data = compressBitmapToJpegBytes(bitmap, jpegQuality, maxBytes);
-        return putBytesAndGetUrl(eventPosterRef(eventId), data, "image/jpeg");
+        return putBytesAndGetUrl(eventPosterRef(eventId), data, "image/*");
     }
 
     /**
@@ -150,7 +150,7 @@ public class FirebaseImageStorageService {
      * @return A Task containing the download URL of the uploaded image.
      */
     public Task<Uri> uploadEventPoster(@NonNull String eventId, @NonNull Uri fileUri) {
-        return putFileAndGetUrl(eventPosterRef(eventId), fileUri, "image/jpeg");
+        return putFileAndGetUrl(eventPosterRef(eventId), fileUri, "image/*");
     }
 
     /**

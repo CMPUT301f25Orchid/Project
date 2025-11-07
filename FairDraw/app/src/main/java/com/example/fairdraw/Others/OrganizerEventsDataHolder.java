@@ -9,7 +9,7 @@ import com.example.fairdraw.Models.Event;
 import java.util.ArrayList;
 
 /**
- * A singleton class that holds the data for the app.
+ * A singleton class that holds the event data for the organizer.
  */
 public class OrganizerEventsDataHolder {
     private static ArrayList<Event> dataList = new ArrayList<>();

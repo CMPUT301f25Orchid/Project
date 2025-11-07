@@ -1,5 +1,7 @@
 package com.example.fairdraw.Activities;
 
+import static com.example.fairdraw.DBs.OrganizerDB.getOrganizerCollection;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -47,6 +49,9 @@ public class SignUpActivity extends AppCompatActivity {
 
             final String deviceId = DevicePrefsManager.getDeviceId(this);
             User user = new User(name, email, phone, deviceId, /*fcmToken*/ null);
+
+            // Add deviceID to organizer database
+            getOrganizerCollection().document(user.getDeviceId()).set(user);
 
             UserDB.upsertUser(user, (ok, e) -> {
                 if (!ok) {
