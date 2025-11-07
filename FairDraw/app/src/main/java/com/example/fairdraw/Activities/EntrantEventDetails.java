@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.example.fairdraw.DBs.EventDB;
+import com.example.fairdraw.ServiceUtility.DevicePrefsManager;
 import com.example.fairdraw.ServiceUtility.FirebaseImageStorageService;
 import com.example.fairdraw.Models.Event;
 import com.example.fairdraw.R;
@@ -39,6 +40,7 @@ public class EntrantEventDetails extends AppCompatActivity {
 
     private ListenerRegistration eventListener;
     FirebaseImageStorageService storageService;
+    final boolean[] onWaitlist = {false};
 
 
     private void bindCell(int includeId, int iconRes, String title, String subtitle) {
@@ -75,17 +77,46 @@ public class EntrantEventDetails extends AppCompatActivity {
                 Toast.makeText(this, "Unable to load event.", Toast.LENGTH_LONG).show();
                 return;
             }
+            // Check waitlist status
+            if (event.getWaitingList().contains(DevicePrefsManager.getDeviceId(this))) {
+                onWaitlist[0] = true;
+                btnWaitlist.setText("Leave Lottery Waitlist");
+            } else {
+                onWaitlist[0] = false;
+                btnWaitlist.setText("Join Lottery Waitlist");
+            }
+
             bindEvent(event);
         });
 
         storageService = new FirebaseImageStorageService();
 
-        // 3) button toggle (we’ll later connect to real waitlist status)
-        final boolean[] onWaitlist = {false};
+        // 3) setup waitlist button
         btnWaitlist.setOnClickListener(v -> {
-            onWaitlist[0] = !onWaitlist[0];
-            btnWaitlist.setSelected(onWaitlist[0]);
-            btnWaitlist.setText(onWaitlist[0] ? "Leave Waitlist" : "Join Lottery Waitlist");
+            if (onWaitlist[0]) {
+                // Remove from waitlist
+                EventDB.removeFromWaitlist(eventId, DevicePrefsManager.getDeviceId(this), success -> {
+                    if (success) {
+                        onWaitlist[0] = false;
+                        btnWaitlist.setText("Join Lottery Waitlist");
+                        Toast.makeText(this, "Removed from waitlist", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "Failed to remove from waitlist", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+            else {
+                // Add to waitlist
+                EventDB.addToWaitlist(eventId, DevicePrefsManager.getDeviceId(this), success -> {
+                    if (success) {
+                        onWaitlist[0] = true;
+                        btnWaitlist.setText("Leave Lottery Waitlist");
+                        Toast.makeText(this, "Added to waitlist", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "Failed to add to waitlist", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
         });
     }
 
