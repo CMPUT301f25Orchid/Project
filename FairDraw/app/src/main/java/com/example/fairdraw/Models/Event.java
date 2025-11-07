@@ -307,4 +307,21 @@ public class Event implements Serializable {
 
         return newWinner;
     }
+
+    /* This function should collect the device id and move it from the invited list to the
+     * cancelled list
+     */
+    public void cancelLotteryWinner(String deviceId) {
+        if (invitedList.remove(deviceId)) {
+            cancelledList.add(deviceId);
+        }
+    }
+    /* This function should collect the device id and move it from the invited list to the
+     * enrolled list
+     */
+    public void acceptLotteryWinner(String deviceId) {
+        if (invitedList.remove(deviceId)) {
+            enrolledList.add(deviceId);
+        }
+    }
 }
