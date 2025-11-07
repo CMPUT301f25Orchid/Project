@@ -20,7 +20,7 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
-            android:id="@+id/event_list_container"
+            android:id="@+id/content_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -49,8 +49,14 @@
                 android:backgroundTint="@color/black"
                 android:textColor="@android:color/white"/>
 
+            <LinearLayout
+                android:id="@+id/event_list_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <!-- Cards will be added here -->
+            </LinearLayout>
 
-            <!-- Cards will be added here -->
         </LinearLayout>
     </ScrollView>
 

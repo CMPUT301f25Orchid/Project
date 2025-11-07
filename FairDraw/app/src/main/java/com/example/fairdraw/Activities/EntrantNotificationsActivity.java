@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fairdraw.DBs.EntrantDB;
+import com.example.fairdraw.Others.BarType;
 import com.example.fairdraw.Fragments.DecisionFragment;
 import com.example.fairdraw.Models.Entrant;
 import com.example.fairdraw.Others.EntrantNotification;
@@ -15,6 +16,7 @@ import com.example.fairdraw.ServiceUtility.DevicePrefsManager;
 import com.example.fairdraw.Others.EntrantNotification;
 import com.example.fairdraw.Adapters.EntrantNotificationAdapter;
 import com.example.fairdraw.R;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.ListenerRegistration;
 
@@ -25,8 +27,7 @@ import java.util.Map;
 
 
     /** Entrant screen: listens to entrants/{deviceId}.notifications and displays them. */
-    public final class EntrantNotificationsActivity extends AppCompatActivity {
-
+    public final class EntrantNotificationsActivity extends BaseTopBottomActivity {
         private ListenerRegistration reg;
         private EntrantNotificationAdapter adapter;
 
@@ -48,6 +49,11 @@ import java.util.Map;
                 }
             });
             rv.setAdapter(adapter);
+            initBottomNav(BarType.ENTRANT, findViewById(R.id.home_bottom_nav_bar));
+
+            BottomNavigationView bottomNav = findViewById(R.id.home_bottom_nav_bar);
+            bottomNav.setSelectedItemId(R.id.notifications_activity);
+
         }
 
         @Override

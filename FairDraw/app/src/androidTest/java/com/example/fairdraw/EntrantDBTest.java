@@ -21,6 +21,10 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import com.example.fairdraw.DBs.EntrantDB;
+import com.example.fairdraw.Models.Entrant;
+import com.example.fairdraw.Others.EntrantNotification;
+import com.example.fairdraw.Others.NotificationType;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -141,54 +145,55 @@ public class EntrantDBTest {
         }
     }
 
-
+    /**
+     * Tests the pushNotificationToUser method in EntrantDB.
+     *
+     * @throws InterruptedException
+     */
     @Test
     public void testPushNotificationToUser() throws InterruptedException {
-        // Ensure entrant doc exists
-        CountDownLatch addLatch = new CountDownLatch(1);
-        EntrantDB.addEntrant(testEntrant, ok -> {
-            assertTrue("addEntrant failed", ok);
-            addLatch.countDown();
-        });
-        assertTrue("addEntrant timed out", addLatch.await(5, TimeUnit.SECONDS));
-
-        // Push one notification
-        EntrantNotification n =
+        CountDownLatch latch = new CountDownLatch(1);
+        EntrantNotification firstNotification =
                 new EntrantNotification(NotificationType.WIN, "evt1", "Test Event");
+        EntrantNotification secondNotification =
+                new EntrantNotification(NotificationType.LOSE, "evt2", "Another Event");
 
-        CountDownLatch pushLatch = new CountDownLatch(1);
-        EntrantDB.pushNotificationToUser(testDeviceId, n, (ok, e) -> {
-            assertTrue("pushNotification failed: " + e, ok);
-            pushLatch.countDown();
-        });
-        assertTrue("pushNotification timed out", pushLatch.await(5, TimeUnit.SECONDS));
+        EntrantDB.addEntrant(testEntrant, addOk -> {
+            assertTrue("Failed to add entrant", addOk);
 
-        // Read back notifications array directly from Firestore
-        CountDownLatch readLatch = new CountDownLatch(1);
-        FirebaseFirestore.getInstance()
-                .collection("entrants").document(testDeviceId)
-                .get()
-                .addOnSuccessListener((DocumentSnapshot snap) -> {
-                    assertTrue("entrant doc missing", snap.exists());
-                    @SuppressWarnings("unchecked")
-                    List<Map<String, Object>> arr = (List<Map<String, Object>>) snap.get("notifications");
-                    assertNotNull("notifications field missing", arr);
-                    assertFalse("notifications array empty", arr.isEmpty());
+            EntrantDB.pushNotificationToUser(testDeviceId, firstNotification, (push1Ok, e1) -> {
+                assertTrue("First notification push failed", push1Ok);
 
-                    Map<String, Object> last = arr.get(arr.size() - 1);
-                    assertEquals("WIN", String.valueOf(last.get("type")));
-                    assertEquals("evt1", String.valueOf(last.get("eventId")));
-                    assertEquals("Test Event", String.valueOf(last.get("title")));
-                    Object r = last.get("read");
-                    assertTrue("read should be false or absent", r == null || Boolean.FALSE.equals(r));
+                EntrantDB.pushNotificationToUser(testDeviceId, secondNotification, (push2Ok, e2) -> {
+                    assertTrue("Second notification push failed", push2Ok);
 
-                    readLatch.countDown();
-                })
-                .addOnFailureListener(e -> {
-                    fail("read back failed: " + e);
-                    readLatch.countDown();
+                    FirebaseFirestore.getInstance().collection("entrants").document(testDeviceId).get()
+                            .addOnSuccessListener(snap -> {
+                                assertTrue("Entrant document not found", snap.exists());
+
+                                Object notificationsObj = snap.get("notifications");
+                                if (!(notificationsObj instanceof List)) {
+                                    fail("Notifications field is not a List");
+                                    return;
+                                }
+
+                                List<Map<String, Object>> notifs = (List<Map<String, Object>>) notificationsObj;
+                                assertNotNull("Notifications field is missing", notifs);
+                                assertEquals("Should be 2 notifications", 2, notifs.size());
+
+                                assertEquals("evt1", notifs.get(0).get("eventId"));
+
+                                assertEquals("LOSE", notifs.get(1).get("type"));
+                                assertEquals("evt2", notifs.get(1).get("eventId"));
+                                assertEquals("Another Event", notifs.get(1).get("title"));
+                                assertFalse("New notification should be unread", (Boolean) notifs.get(1).get("read"));
+
+                                latch.countDown();
+                            })
+                            .addOnFailureListener(e -> fail("Firestore read failed: " + e.getMessage()));
                 });
-
-        assertTrue("read back timed out", readLatch.await(5, TimeUnit.SECONDS));
+            });
+        });
+        assertTrue("Test timed out", latch.await(10, TimeUnit.SECONDS));
     }
 }
