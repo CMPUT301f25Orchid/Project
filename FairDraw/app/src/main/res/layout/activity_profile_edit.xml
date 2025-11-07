@@ -60,7 +60,7 @@
                     android:textAllCaps="false"
                     android:textStyle="bold"
                     app:cornerRadius="10dp"
-                    app:backgroundTint="#E6E6E6"/>
+                    app:backgroundTint="#5C78D9"/>
             </LinearLayout>
 
             <com.google.android.material.imageview.ShapeableImageView
@@ -96,7 +96,7 @@
                     android:id="@+id/etName"
                     android:layout_width="match_parent"
                     android:layout_height="52dp"
-                    android:text="John Doe"
+                    android:text=""
                     android:enabled="true"
                     android:textColor="#111111"
                     android:paddingStart="16dp"
@@ -127,7 +127,7 @@
                     android:id="@+id/etEmail"
                     android:layout_width="match_parent"
                     android:layout_height="52dp"
-                    android:text="johndoe@gmail.com"
+                    android:text=""
                     android:inputType="textEmailAddress"
                     android:enabled="true"
                     android:textColor="#111111"
@@ -158,7 +158,7 @@
                     android:id="@+id/etPhone"
                     android:layout_width="match_parent"
                     android:layout_height="52dp"
-                    android:text="+17804629631"
+                    android:text=""
                     android:inputType="phone"
                     android:enabled="true"
                     android:textColor="#111111"

@@ -15,9 +15,10 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.fairdraw.DBs.UserDB;
-import com.example.fairdraw.EditProfileActivity;
 import com.example.fairdraw.Models.User;
 import com.example.fairdraw.R;
+import com.example.fairdraw.ServiceUtility.DevicePrefsManager;
+import com.google.firebase.firestore.ListenerRegistration;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -27,17 +28,13 @@ public class ProfileActivity extends AppCompatActivity {
     private Button editButton, returnButton, deleteAccButton, viewHistoryButton;
     private TextView nameTextView, emailTextView, phoneTextView;
 
+    private ListenerRegistration userListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_profile);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-
 
         //Initializing UI elements
         nameTextView = findViewById(R.id.etName);
@@ -50,7 +47,7 @@ public class ProfileActivity extends AppCompatActivity {
         viewHistoryButton = findViewById(R.id.btnViewHistory);
 
         //Getting the device ID passed from the previous activity
-        String deviceId = getIntent().getStringExtra("deviceId");
+        String deviceId = DevicePrefsManager.getDeviceId(this);
 
         if (deviceId != null && !deviceId.isEmpty()){
             //Fetching user data from Firestore based on the device ID
@@ -63,7 +60,7 @@ public class ProfileActivity extends AppCompatActivity {
             Toast.makeText(this, "Could not load user profile.", Toast.LENGTH_SHORT).show();
             finish();
         }
-        
+
         editButton.setOnClickListener(View -> {
             // Handle edit button click
             // Start EditProfileActivity
@@ -84,7 +81,7 @@ public class ProfileActivity extends AppCompatActivity {
      * @param deviceId The device ID of the user to fetch data for.
      */
     private void fetchAndDisplayUserData(String deviceId) {
-        UserDB.getUserOrNull(deviceId, new UserDB.GetUserCallback() {
+        userListener = UserDB.addUserSnapshotListener(deviceId, new UserDB.GetUserCallback() {
             @Override
             public void onCallback(@Nullable User user, @Nullable Exception e) {
                 if (e != null) {
@@ -109,6 +106,14 @@ public class ProfileActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (userListener != null) {
+            userListener.remove();
+        }
     }
 }
 

@@ -1,5 +1,6 @@
 package com.example.fairdraw.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.widget.Button;
@@ -37,6 +38,11 @@ public class EntrantHomeActivity extends BaseTopBottomActivity {
         setContentView(R.layout.activity_entrant_home);
 
         initBottomNav(BarType.ENTRANT, findViewById(R.id.home_bottom_nav_bar));
+        findViewById(R.id.imgAvatar).setOnClickListener(v -> {
+            // Send to ProfileActivity
+            Intent intent = new Intent(this, ProfileActivity.class);
+            startActivity(intent);
+        });
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
