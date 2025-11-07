@@ -16,10 +16,27 @@ import com.example.fairdraw.R;
 import java.util.ArrayList;
 
 /**
- * An adapter for the event list view.
+ * ArrayAdapter for displaying a list of events in a ListView.
+ * This adapter inflates event_content layout for each event item and displays
+ * the event's title and description.
  */
 public class EventArrayAdapter extends ArrayAdapter<Event> {
+    /**
+     * Constructs a new EventArrayAdapter.
+     * 
+     * @param context The application context
+     * @param events The list of events to display
+     */
     public EventArrayAdapter(Context context, ArrayList<Event> events){super(context, 0, events);}
+    
+    /**
+     * Creates and returns a view for an event item at the specified position.
+     * 
+     * @param position The position of the event in the list
+     * @param convertView The recycled view to reuse, if available
+     * @param parent The parent ViewGroup
+     * @return The view for the event item
+     */
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent){
