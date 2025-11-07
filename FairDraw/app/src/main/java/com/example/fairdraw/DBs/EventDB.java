@@ -124,6 +124,29 @@ public class EventDB {
     }
 
     /**
+     * Attaches a snapshot listener to the events collection for real-time updates.
+     * @param callback The callback to be invoked on data changes.
+     * @return The listener registration.
+     */
+    public static ListenerRegistration listenToEvents(GetEventsCallback callback) {
+        return getEventCollection().addSnapshotListener((snapshots, e) -> {
+            if (e != null) {
+                // An error occurred
+                callback.onCallback(null);
+                return;
+            }
+
+            if (snapshots != null) {
+                List<Event> events = snapshots.toObjects(Event.class);
+                callback.onCallback(events);
+            } else {
+                callback.onCallback(null);
+            }
+        });
+    }
+
+
+    /**
      * Removes a device from the waitlist of a specific event.
      * @param eventId The ID of the event to modify.
      * @param deviceId The ID of the device to remove from the waitlist.
