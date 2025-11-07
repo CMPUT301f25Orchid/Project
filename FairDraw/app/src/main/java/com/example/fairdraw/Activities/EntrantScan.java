@@ -16,7 +16,9 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.fairdraw.Others.BarType;
 import com.example.fairdraw.R;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.zxing.ResultPoint;
 import com.journeyapps.barcodescanner.BarcodeCallback;
 import com.journeyapps.barcodescanner.BarcodeResult;
@@ -24,7 +26,7 @@ import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 
 import java.util.List;
 
-public class EntrantScan extends AppCompatActivity {
+public class EntrantScan extends BaseTopBottomActivity {
 
     private DecoratedBarcodeView barcodeScanner;
     private boolean handled; // prevent double navigation
@@ -71,6 +73,10 @@ public class EntrantScan extends AppCompatActivity {
         barcodeScanner = findViewById(R.id.barcodeScanner);
         barcodeScanner.setStatusText("");
         ensureCameraPermissionAndStart();
+        initBottomNav(BarType.ENTRANT, findViewById(R.id.home_bottom_nav_bar));
+
+        BottomNavigationView bottomNav = findViewById(R.id.home_bottom_nav_bar);
+        bottomNav.setSelectedItemId(R.id.settings_activity);
     }
 
     private void ensureCameraPermissionAndStart() {

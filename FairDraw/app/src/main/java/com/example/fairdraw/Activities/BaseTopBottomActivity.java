@@ -17,7 +17,7 @@ public class BaseTopBottomActivity extends AppCompatActivity {
         if (barType == BarType.ENTRANT) {
             View home = root.findViewById(R.id.home_activity);
             View events = root.findViewById(R.id.events_activity);
-            View scan = root.findViewById(R.id.settings_activity);
+            View scan = root.findViewById(R.id.scan_activity);
             View notifications = root.findViewById(R.id.notifications_activity);
 
             home.setOnClickListener(v -> {

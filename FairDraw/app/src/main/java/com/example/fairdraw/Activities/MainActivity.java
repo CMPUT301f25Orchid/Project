@@ -168,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
     private void handleUploadTask(Task<Uri> task, String label) {
         task.addOnSuccessListener(uri -> {
             Toast.makeText(this, label + " uploaded!\nURL:\notification" + uri, Toast.LENGTH_LONG).show();
-            // Tip: save uri.toString() to Firestore if you want to reference it later
+
         }).addOnFailureListener(e -> {
             Toast.makeText(this, "Upload failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
         });
