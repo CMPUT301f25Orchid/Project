@@ -10,8 +10,22 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Set;
 
+/**
+ * Small helper Activity that routes app-specific deep links to an internal Activity class.
+ *
+
+ * The 'dest' query parameter must be the fully qualified Activity class name. All other
+ * query parameters are copied into the forwarded Intent as String extras.
+ */
 public class DeepLinkRouterActivity extends AppCompatActivity {
 
+    /**
+     * Reads the incoming Intent Uri, validates required parameters and forwards the Intent to
+     * the destination Activity. Shows a Toast on invalid links or when the destination class
+     * cannot be found.
+     *
+     * @param savedInstanceState previous state bundle
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

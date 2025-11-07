@@ -28,6 +28,12 @@ import java.util.ArrayList;
 
 /**
  * Activity for the organizer main page.
+ *
+ * Displays a list of events the organizer can manage. The activity listens for changes to the
+ * Firestore "events" collection and updates the UI using an {@link EventArrayAdapter}.
+ * Selecting an item opens an edit fragment ( {@link com.example.fairdraw.Activities.EditEventPage}).
+ * The bottom navigation offers quick access to create a new event which launches
+ * {@link com.example.fairdraw.Activities.CreateEventPage}.
  */
 public class OrganizerMainPage extends AppCompatActivity {
     BottomNavigationView bottomNav;
@@ -41,9 +47,14 @@ public class OrganizerMainPage extends AppCompatActivity {
     ArrayList<Event> dataList;
     DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 
-
-
-
+    /**
+     * Activity lifecycle entry point. Sets up the list view, adapter and a realtime listener
+     * on the Firestore "events" collection.
+     * <p>
+     * This method also wires the bottom navigation item that launches the create-event flow.
+     *
+     * @param savedInstanceState previous saved state or null
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,7 +108,13 @@ public class OrganizerMainPage extends AppCompatActivity {
         });
     }
 
-    // Define how to open a the even edit Fragment
+    /**
+     * Opens the {@link EditEventPage} fragment for the provided event.
+     * The fragment receives a Bundle argument named "position" indicating the index of the
+     * supplied event within the current data list so it can read/update the correct model.
+     *
+     * @param event the Event to edit (must be present in the current dataList)
+     */
     void openFragment(Event event){
         EditEventPage fragment = new EditEventPage();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();

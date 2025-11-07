@@ -19,6 +19,11 @@ public class SplashActivity extends AppCompatActivity {
 
     Intent intent;
 
+    /**
+     * Small launcher activity that decides whether to route to SignUpActivity or EntrantHomeActivity
+     * based on whether a user document exists for this device id. Updates GatePrefs accordingly.
+     * @param savedInstanceState saved state bundle
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

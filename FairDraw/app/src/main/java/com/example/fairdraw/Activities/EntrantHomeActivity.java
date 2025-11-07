@@ -41,6 +41,14 @@ public class EntrantHomeActivity extends BaseTopBottomActivity {
     private int currentAvailabilityFilter = -1;
 
 
+    /**
+     * Activity that shows a list of events to entrants with filtering options.
+     * <p>
+     * The activity listens to a real-time Event list from {@link EventDB} and
+     * updates the UI as events change. Users can open filters to refine the displayed events.
+     *
+     * @param savedInstanceState saved bundle
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,7 +112,6 @@ public class EntrantHomeActivity extends BaseTopBottomActivity {
 
 
 
-
     }
 
     @Override
@@ -118,7 +125,8 @@ public class EntrantHomeActivity extends BaseTopBottomActivity {
 
 
     /**
-     * Adds eventscard.xml for each Event
+     * Render a list of Event cards into the event list container.
+     * @param events list of events to display
      */
     private void displayEvents(List<Event> events) {
         eventListContainer.removeAllViews(); // Clear previous views to prevent duplicates
@@ -179,6 +187,12 @@ public class EntrantHomeActivity extends BaseTopBottomActivity {
         }
     }
 
+    /**
+     * Apply the currently selected filters to the stored event list and update UI.
+     * @param status status filter ("All", "Open", "Closed")
+     * @param interest text filter to match in description
+     * @param availability integer day-of-week filter or -1 for no filter
+     */
     private void applyFilters(String status, String interest, int availability) {
         if (allEvents == null) return;
 
@@ -228,6 +242,9 @@ public class EntrantHomeActivity extends BaseTopBottomActivity {
         }
     }
 
+    /**
+     * Shows a simple message when no events match the filters.
+     */
     private void showNoEventsMessage() {
         eventListContainer.removeAllViews(); // Clear previous views
         TextView emptyView = new TextView(this);

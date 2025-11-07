@@ -27,6 +27,12 @@ import com.example.fairdraw.SendNotificationDialogFragment;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Organizer-facing Activity used to manage a single event.
+ * <p>
+ * Displays event details and lists of invited/registered/cancelled/waiting entrants.
+ * Provides actions such as sending notifications and viewing final entrants.
+ */
 public class OrganizerManageEvent extends AppCompatActivity {
 
     String eventId;
@@ -45,6 +51,11 @@ public class OrganizerManageEvent extends AppCompatActivity {
     Button btnSeeWaitingMap;
     FirebaseImageStorageService storageService;
 
+    /**
+     * Activity entry point. Reads the required "eventId" intent extra and subscribes to
+     * the event document for real-time updates.
+     * @param savedInstanceState saved state bundle
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,6 +102,10 @@ public class OrganizerManageEvent extends AppCompatActivity {
         });
     }
 
+    /**
+     * Bind an Event model to the UI and setup child recycler views.
+     * @param e Event model instance
+     */
     public void bindEvent(Event e) {
         // Show hero image
         storageService.getEventPosterDownloadUrl(eventId).addOnCompleteListener(urlTask -> {
@@ -136,6 +151,12 @@ public class OrganizerManageEvent extends AppCompatActivity {
         });
     }
 
+    /**
+     * Build and attach a simple Entrant list adapter to a RecyclerView.
+     * @param recyclerView target RecyclerView
+     * @param stringList list of entrant ids
+     * @param hideCloseButton whether the adapter should hide the close/remove button
+     */
     private void buildEntrantItemRecyclerView(RecyclerView recyclerView, List<String> stringList, Boolean hideCloseButton) {
         List<ListItemEntrant> entrantList = new ArrayList<>();
         for (String s : stringList) {

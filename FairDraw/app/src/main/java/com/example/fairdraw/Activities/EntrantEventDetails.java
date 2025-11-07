@@ -25,6 +25,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+/**
+ * Activity that displays detailed information for a single Event to an entrant.
+ * <p>
+ * It listens to real-time updates for the event document and allows the user to
+ * join or leave the lottery/waitlist for the event.
+ */
 public class EntrantEventDetails extends AppCompatActivity {
 
     // --- Views ---
@@ -50,6 +56,15 @@ public class EntrantEventDetails extends AppCompatActivity {
         ((TextView) cell.findViewById(R.id.subtitle)).setText(subtitle);
     }
 
+    /**
+     * Activity lifecycle entry point. Reads the event_id extra, subscribes to realtime updates
+     * and initializes UI controls including the waitlist button.
+     *
+     * Expected Intent extras:
+     *  - "event_id": String UUID of the event document
+     *
+     * @param savedInstanceState saved state bundle
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

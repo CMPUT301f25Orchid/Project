@@ -17,9 +17,23 @@ import java.util.ArrayList;
 
 /**
  * An adapter for the event list view.
+ *
+ * <p>Provides a simple mapping from {@link com.example.fairdraw.Models.Event} objects
+ * into the {@code R.layout.event_content} layout used by the events list UI.</p>
  */
 public class EventArrayAdapter extends ArrayAdapter<Event> {
+    /**
+     * Create a new EventArrayAdapter.
+     *
+     * @param context host context
+     * @param events list of events to display
+     */
     public EventArrayAdapter(Context context, ArrayList<Event> events){super(context, 0, events);}
+
+    /**
+     * Return a view for the event at the given position.
+     * Safely handles a null Event object by showing empty strings.
+     */
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent){
@@ -34,8 +48,13 @@ public class EventArrayAdapter extends ArrayAdapter<Event> {
         Event event = getItem(position);
         TextView eventTitle = view.findViewById(R.id.event_content_title);
         TextView eventId = view.findViewById(R.id.event_info);
-        eventTitle.setText(event.getTitle());
-        eventId.setText(event.getDescription());
+        if (event != null) {
+            eventTitle.setText(event.getTitle());
+            eventId.setText(event.getDescription());
+        } else {
+            eventTitle.setText("");
+            eventId.setText("");
+        }
         return view;
 
 
