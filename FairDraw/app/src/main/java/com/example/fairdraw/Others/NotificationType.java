@@ -4,7 +4,9 @@ public enum NotificationType {
     WIN,
     LOSE,
     WAITLIST,
-    REPLACE;
+    REPLACE,
+    OTHER;
+
     public String title(String eventTitle) {
         switch (this) {
             case WIN:
@@ -15,6 +17,8 @@ public enum NotificationType {
                 return "You have been added to the waitlist for " + eventTitle + ".";
             case REPLACE:
                 return "You have been replaced in the waitlist for " + eventTitle + ".";
+            case OTHER:
+                return "Notification";
             default:
                 return "Notification";
         }

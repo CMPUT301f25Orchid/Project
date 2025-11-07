@@ -37,10 +37,10 @@ import java.util.Map;
             rv.setLayoutManager(new LinearLayoutManager(this));
 
             adapter = new EntrantNotificationAdapter(new EntrantNotificationAdapter.OnAction() {
-                @Override public void onAcceptDecline(EntrantNotification n) {
+                @Override public void onAcceptDecline(EntrantNotification notification) {
                     // TODO: navigate to event details
                 }
-                @Override public void onItemClick(EntrantNotification n) {
+                @Override public void onItemClick(EntrantNotification notification) {
 
                 }
             });
@@ -81,15 +81,15 @@ import java.util.Map;
                 if (!(o instanceof Map)) continue;
                 Map<String, Object> m = (Map<String, Object>) o;
 
-                EntrantNotification n = new EntrantNotification();
-                n.type    = asStr(m.get("type"));
-                n.eventId = asStr(m.get("eventId"));
-                n.title   = asStr(m.get("title"));
+                EntrantNotification notification = new EntrantNotification();
+                notification.type    = asStr(m.get("type"));
+                notification.eventId = asStr(m.get("eventId"));
+                notification.title   = asStr(m.get("title"));
 
                 Object r  = m.get("read");
-                n.read    = (r instanceof Boolean) && (Boolean) r;
+                notification.read    = (r instanceof Boolean) && (Boolean) r;
 
-                out.add(n);
+                out.add(notification);
             }
             return out;
         }

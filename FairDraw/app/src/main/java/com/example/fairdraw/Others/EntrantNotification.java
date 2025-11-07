@@ -8,6 +8,7 @@ public class EntrantNotification implements Serializable {
     public String type;            // status such as "WIN", "LOSE"
     public String eventId;
     public String title;           // event title
+    public String message;
     public boolean read = false;
     public EntrantNotification() {}
     public EntrantNotification(NotificationType t, String eventId, String title) {
