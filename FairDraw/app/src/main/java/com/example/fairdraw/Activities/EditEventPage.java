@@ -113,9 +113,7 @@ public class EditEventPage extends Fragment {
         });
 
         // Return to Organizer Main Page
-        cancelEventEdit.setOnClickListener(v -> {
-            requireActivity().getSupportFragmentManager().popBackStack();
-        });
+        cancelEventEdit.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
         // Prefilling fields with event data
         if (event != null) {
             String openDate = dateFormat.format(event.getEventOpenRegDate());
