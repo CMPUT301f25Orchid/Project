@@ -46,16 +46,46 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Hero/banner image -->
-        <ImageView
-            android:id="@+id/heroImage"
+        <!-- HERO AREA WITH VIEW QR BUTTON -->
+        <FrameLayout
+            android:id="@+id/hero_container"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
-            app:layout_constraintDimensionRatio="16:9"
-            android:contentDescription="Event Banner"
-            android:background="@color/card_gray"/>
+            android:layout_height="150dp">
+
+            <!-- Hero/banner image -->
+            <ImageView
+                android:id="@+id/heroImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:contentDescription="Event Banner"
+                android:background="@color/card_gray" />
+
+            <!-- View QR Code pill button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnViewQrCode"
+                style="@style/Widget.Material3.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:layout_gravity="bottom|start"
+                android:layout_marginStart="12dp"
+                android:layout_marginBottom="10dp"
+                android:text="View QR Code"
+                android:textAllCaps="false"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif-medium"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                app:cornerRadius="50dp"
+                app:backgroundTint="@color/qr_button_blue"
+                android:textColor="@android:color/white"
+                app:icon="@drawable/ic_qr_code_24"
+                app:iconPadding="6dp"
+                app:iconGravity="textStart"
+                app:iconTint="@android:color/white" />
+            </FrameLayout>
+        <!-- END HERO AREA -->
 
         <!-- Title -->
         <TextView
@@ -86,15 +116,18 @@
             android:textStyle="bold"/>
 
         <!-- Details Grid -->
+
+
+        <!-- Waitlist CTA -->
         <GridLayout
             android:id="@+id/detailsGrid"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:columnCount="2"
             android:alignmentMode="alignMargins"
-            android:useDefaultMargins="false"
+            android:columnCount="2"
             android:paddingStart="16dp"
-            android:paddingEnd="16dp">
+            android:paddingEnd="16dp"
+            android:useDefaultMargins="false">
 
             <include
                 android:id="@+id/cell_location"
@@ -103,7 +136,7 @@
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:layout_gravity="fill_horizontal"
-                android:layout_margin="6dp"/>
+                android:layout_margin="6dp" />
 
             <include
                 android:id="@+id/cell_geolocation"
@@ -112,7 +145,7 @@
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:layout_gravity="fill_horizontal"
-                android:layout_margin="6dp"/>
+                android:layout_margin="6dp" />
 
             <include
                 android:id="@+id/cell_capacity"
@@ -121,7 +154,7 @@
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:layout_gravity="fill_horizontal"
-                android:layout_margin="6dp"/>
+                android:layout_margin="6dp" />
 
             <include
                 android:id="@+id/cell_reg_period"
@@ -130,7 +163,7 @@
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:layout_gravity="fill_horizontal"
-                android:layout_margin="6dp"/>
+                android:layout_margin="6dp" />
 
             <include
                 android:id="@+id/cell_price"
@@ -139,7 +172,7 @@
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:layout_gravity="fill_horizontal"
-                android:layout_margin="6dp"/>
+                android:layout_margin="6dp" />
 
             <include
                 android:id="@+id/cell_organizer"
@@ -148,7 +181,7 @@
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:layout_gravity="fill_horizontal"
-                android:layout_margin="6dp"/>
+                android:layout_margin="6dp" />
 
             <!-- If you want Schedule to span the full width (like your mock), span 2 columns -->
             <include
@@ -156,14 +189,12 @@
                 layout="@layout/item_event_detail"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
                 android:layout_columnSpan="2"
+                android:layout_columnWeight="1"
                 android:layout_gravity="fill_horizontal"
-                android:layout_margin="6dp"/>
+                android:layout_margin="6dp" />
         </GridLayout>
 
-
-        <!-- Waitlist CTA -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnWaitlist"
             style="@style/Widget.Material3.Button"

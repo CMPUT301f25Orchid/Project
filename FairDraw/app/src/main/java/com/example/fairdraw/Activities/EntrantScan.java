@@ -73,10 +73,12 @@ public class EntrantScan extends BaseTopBottomActivity {
         barcodeScanner = findViewById(R.id.barcodeScanner);
         barcodeScanner.setStatusText("");
         ensureCameraPermissionAndStart();
+        // Init shared top and bottom nav
+        initTopNav(BarType.ENTRANT);
         initBottomNav(BarType.ENTRANT, findViewById(R.id.home_bottom_nav_bar));
 
         BottomNavigationView bottomNav = findViewById(R.id.home_bottom_nav_bar);
-        bottomNav.setSelectedItemId(R.id.settings_activity);
+        if (bottomNav != null) bottomNav.setSelectedItemId(R.id.scan_activity);
     }
 
     private void ensureCameraPermissionAndStart() {

@@ -5,20 +5,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.fairdraw.Adapters.EventArrayAdapter;
-import com.example.fairdraw.DBs.EntrantDB;
 import com.example.fairdraw.Models.Event;
-import com.example.fairdraw.Others.EntrantNotification;
-import com.example.fairdraw.Others.NotificationType;
+import com.example.fairdraw.Others.BarType;
 import com.example.fairdraw.Others.OrganizerEventsDataHolder;
 import com.example.fairdraw.R;
 import com.example.fairdraw.ServiceUtility.DevicePrefsManager;
@@ -27,16 +23,13 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
  * Activity for the organizer main page.
  */
-public class OrganizerMainPage extends AppCompatActivity {
+public class OrganizerMainPage extends BaseTopBottomActivity {
     BottomNavigationView bottomNav;
     FrameLayout fragmentContainer;
     ListView eventList;
@@ -60,11 +53,12 @@ public class OrganizerMainPage extends AppCompatActivity {
         // Get User DeviceID
         final String deviceId = DevicePrefsManager.getDeviceId(this);
 
-        // Get entrant button to switch activities
-        findViewById(R.id.btnEntrant).setOnClickListener(v -> {
-            Intent intent = new Intent(this, EntrantHomeActivity.class);
-            startActivity(intent);
-        });
+        // Initialize shared top and bottom navigation
+        initTopNav(BarType.ORGANIZER);
+        initBottomNav(BarType.ORGANIZER, findViewById(R.id.home_bottom_nav_bar));
+        // Select the organizer home tab
+        com.google.android.material.bottomnavigation.BottomNavigationView bottomNavView = findViewById(R.id.home_bottom_nav_bar);
+        if (bottomNavView != null) bottomNavView.setSelectedItemId(R.id.home_activity);
 
         // Populate event list with database data
         db = FirebaseFirestore.getInstance();
@@ -98,18 +92,7 @@ public class OrganizerMainPage extends AppCompatActivity {
         });
         eventList.setAdapter(eventAdapter);
 
-        // Move to Create Event Page
-        bottomNav = findViewById(R.id.home_bottom_nav_bar);
-        bottomNav.setOnItemSelectedListener(item -> {
-            int id = item.getItemId();
-            if (id == R.id.create_activity) {
-                OrganizerEventsDataHolder.setDataList(dataList);
-                OrganizerEventsDataHolder.setEventAdapter(eventAdapter);
-                Intent intent = new Intent(OrganizerMainPage.this, CreateEventPage.class);
-                startActivity(intent);
-            }
-            return true;
-        });
+        // bottom nav handled by BaseTopBottomActivity.initBottomNav
     }
 
     // Define how to open a the even edit Fragment

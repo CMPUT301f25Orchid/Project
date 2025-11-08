@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,11 +23,15 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.example.fairdraw.DBs.EventDB;
 import com.example.fairdraw.Models.Event;
+import com.example.fairdraw.Others.EventState;
 import com.example.fairdraw.Others.OrganizerEventsDataHolder;
 import com.example.fairdraw.R;
+import com.example.fairdraw.ServiceUtility.DeepLinkUtil;
 import com.example.fairdraw.ServiceUtility.DevicePrefsManager;
 import com.example.fairdraw.ServiceUtility.FirebaseImageStorageService;
+import com.example.fairdraw.ServiceUtility.QrUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.zxing.BarcodeFormat;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
@@ -146,23 +151,51 @@ public class CreateEventPage extends AppCompatActivity {
                         event.setWaitingListLimit(limit);
                     }
                     if (bannerPhoto != null){
-                        event.setPosterPath(bannerPhoto.toString());
                         FirebaseImageStorageService storageService = new FirebaseImageStorageService();
-                        storageService.uploadEventPoster(event.getUuid(), bannerPhoto);
+                        storageService.uploadEventPoster(event.getUuid(), bannerPhoto).addOnSuccessListener(uri -> {
+                            Log.d("CreateEventPage", "Banner photo uploaded for event: " + event.getUuid());
+                        }).addOnFailureListener(e -> {
+                            Log.e("CreateEventPage", "Error uploading banner photo for event: " + event.getUuid(), e);
+                        });
                     }
-                    //Make QR code **SUBJECT TO CHANGE**
-                    String qrText = event.getTitle().concat(" - ").concat(event.getDescription());
-                    BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
-                    Bitmap bitmap = barcodeEncoder.encodeBitmap(qrText, BarcodeFormat.QR_CODE, 400, 400);
-                    event.setQrSlug(bitmap.toString());
 
-                    // Upload event to database and return to organizer main page
+                    //Make QR code using DeepLinkUtil
+                    Bundle extras = new Bundle();
+                    extras.putString("event_id", event.getUuid());
+                    Uri deepLinkUri = DeepLinkUtil.buildLink(EntrantEventDetails.class, extras);
+                    Bitmap qr;
+                    try {
+                        qr = QrUtil.generate(deepLinkUri.toString(), 800);
+                        // Save QR code to Firebase Storage
+                        FirebaseImageStorageService storageService = new FirebaseImageStorageService();
+                        storageService.uploadEventQr(event.getUuid(), qr, 90, 1000000).addOnSuccessListener(uri -> {
+                            Log.d("CreateEventPage", "QR code uploaded for event: " + event.getUuid());
+                        }).addOnFailureListener(e -> {
+                            Log.e("CreateEventPage", "Error uploading QR code for event: " + event.getUuid(), e);
+                        });
+                    } catch (Exception e) {
+                        Log.e("CreateEventPage", "Error generating QR code for event: " + event.getUuid(), e);
+                    }
+
+                    event.setState(EventState.PUBLISHED);
+
                     OrganizerEventsDataHolder.addEvent(event);
-
+                    // Save event to database
+                    EventDB.addEvent(event, (ok) -> {
+                        if (!ok) {
+                            Log.e("CreateEventPage", "Error saving event to database: " + event.getUuid());
+                        }
+                    });
+                    Log.d("CreateEventPage", "Event created: " + event.getUuid());
                 }
                 catch (Exception e) {
-                    Toast.makeText(this, "Invalid date format", Toast.LENGTH_SHORT).show();
+                    Log.e("CreateEventPage", "Error creating event", e);
+                    Toast.makeText(this, "Error creating event: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
+
+                // Return to Organizer Main Page
+                Intent intent = new Intent(CreateEventPage.this, OrganizerMainPage.class);
+                startActivity(intent);
             }
         });
         // Handle upload poster image button click

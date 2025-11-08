@@ -10,14 +10,15 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.example.fairdraw.DBs.EventDB;
+import com.example.fairdraw.Fragments.QrCodeFragment;
 import com.example.fairdraw.ServiceUtility.DevicePrefsManager;
 import com.example.fairdraw.ServiceUtility.FirebaseImageStorageService;
 import com.example.fairdraw.Models.Event;
 import com.example.fairdraw.R;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.firestore.ListenerRegistration;
 
@@ -26,13 +27,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class EntrantEventDetails extends AppCompatActivity {
+public class EntrantEventDetails extends BaseTopBottomActivity {
 
     // --- Views ---
     private TextView tvTitle;
     private TextView tvSummary;
     private ImageView heroImage;
     private GridLayout detailsGrid;
+    private MaterialButton btnViewQrCode;
     private MaterialButton btnWaitlist;
 
     // ---- Date & money formatters ----
@@ -57,36 +59,19 @@ public class EntrantEventDetails extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_entrant_event_details);
 
-        // Init bottom nav (do manually here since not extending base activity)
-        View bottomNav = findViewById(R.id.home_bottom_nav_bar);
+        // Initialize common top and bottom navigation using BaseTopBottomActivity helpers
+        initTopNav(com.example.fairdraw.Others.BarType.ENTRANT);
+        initBottomNav(com.example.fairdraw.Others.BarType.ENTRANT, findViewById(R.id.home_bottom_nav_bar));
 
-        // Home button
-        bottomNav.findViewById(R.id.home_activity).setOnClickListener(v -> {
-            finish();
-        });
-
-        // events button TODO
-        bottomNav.findViewById(R.id.events_activity).setOnClickListener(v -> {
-            // no-op, already here
-        });
-
-        // scan button
-        bottomNav.findViewById(R.id.scan_activity).setOnClickListener(v -> {
-            // Launch scan activity
-            Intent intent = new Intent(this, EntrantScan.class);
-            startActivity(intent);
-        });
-
-        // notifications button
-        bottomNav.findViewById(R.id.notifications_activity).setOnClickListener(v -> {
-            Intent intent = new Intent(this, EntrantNotificationsActivity.class);
-            startActivity(intent);
-        });
+        // Ensure the correct bottom tab is selected (events/details)
+        BottomNavigationView bottomNav = findViewById(R.id.home_bottom_nav_bar);
+        if (bottomNav != null) bottomNav.setSelectedItemId(R.id.events_activity);
 
         // grab views
         tvTitle     = findViewById(R.id.tvTitle);
         tvSummary   = findViewById(R.id.tvSummary);
         heroImage   = findViewById(R.id.heroImage);
+        btnViewQrCode = findViewById(R.id.btnViewQrCode);
         detailsGrid = findViewById(R.id.detailsGrid);
         btnWaitlist = findViewById(R.id.btnWaitlist);
 
@@ -112,8 +97,12 @@ public class EntrantEventDetails extends AppCompatActivity {
                 onWaitlist[0] = false;
                 btnWaitlist.setText("Join Lottery Waitlist");
             }
-
             bindEvent(event);
+
+            btnViewQrCode.setOnClickListener(v -> {
+                QrCodeFragment qrFragment = QrCodeFragment.newInstance(eventId,event.getTitle());
+                qrFragment.show(getSupportFragmentManager(), "QrCodeFragment");
+            });
         });
 
         storageService = new FirebaseImageStorageService();
@@ -187,7 +176,7 @@ public class EntrantEventDetails extends AppCompatActivity {
         bindCell(R.id.cell_reg_period,
                 R.drawable.ic_event_24,
                 "Registration Period",
-                buildDateRange(new Date(), e.getRegPeriod()));
+                buildDateRange(e.getEventOpenRegDate(), e.getEventCloseRegDate()));
 
         bindCell(R.id.cell_price,
                 R.drawable.ic_attach_money_24,
@@ -202,7 +191,7 @@ public class EntrantEventDetails extends AppCompatActivity {
         bindCell(R.id.cell_schedule,
                 R.drawable.ic_schedule_24,
                 "Schedule",
-                safe(e.getTime().toString(), "—"));
+                safe((e.getTime() == null ? "—" : e.getTime().toString()), "—"));
 
         // Add a placeholder bitmap saying loading for event poster
         heroImage.setImageResource(R.drawable.loading);

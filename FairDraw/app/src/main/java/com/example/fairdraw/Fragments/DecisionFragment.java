@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,8 +23,9 @@ import com.example.fairdraw.R;
 import com.example.fairdraw.ServiceUtility.DevicePrefsManager;
 
 public class DecisionFragment extends DialogFragment {
-    private EntrantNotification notification;
+    private static EntrantNotification notification;
     public DecisionFragment newInstance(EntrantNotification notification){
+        DecisionFragment.notification = notification;
         DecisionFragment fragment = new DecisionFragment();
         Bundle args = new Bundle();
         String eventName = notification.title;
@@ -42,13 +44,17 @@ public class DecisionFragment extends DialogFragment {
             View view = inflater.inflate(R.layout.entrant_decision_fragment, null);
 
             TextView eventNameText = view.findViewById(R.id.dialog_event);
+            assert getArguments() != null;
             String eventName = getArguments().getString("eventName");
+            assert eventName != null;
             eventNameText.setText(eventName.toUpperCase());
             View btnAccept = view.findViewById(R.id.accept_button);
             View btnDecline = view.findViewById(R.id.decline_button);
 
             btnDecline.setOnClickListener(v -> {
-                EventDB.getEvent(notification.eventId, new EventDB.GetEventCallback() {
+                Toast.makeText(getContext(), "You have declined the invitation", Toast.LENGTH_SHORT).show();
+                Log.d("DecisionFragment", "User declined the invitation for event: " + eventName);
+                EventDB.getEvent(DecisionFragment.notification.eventId, new EventDB.GetEventCallback() {
                     @Override
                     public void onCallback(Event event) {
                         if (event == null) {
@@ -56,7 +62,8 @@ public class DecisionFragment extends DialogFragment {
                             return;
                         }
 
-                        event.cancelLotteryWinner(notification.eventId);
+                        String userId = DevicePrefsManager.getDeviceId(getContext());
+                        event.cancelLotteryWinner(userId);
                         EventDB.updateEvent(event, new EventDB.UpdateEventCallback() {
                             @Override
                             public void onCallback(boolean success) {
@@ -70,6 +77,7 @@ public class DecisionFragment extends DialogFragment {
             });
 
             btnAccept.setOnClickListener(v -> {
+                Log.d("DecisionFragment", "Accept button clicked for eventId: " + notification.eventId);
                 EventDB.getEvent(notification.eventId, new EventDB.GetEventCallback() {
                     @Override
                     public void onCallback(Event event) {
@@ -78,12 +86,18 @@ public class DecisionFragment extends DialogFragment {
                             return;
                         }
 
-                        event.acceptLotteryWinner(notification.eventId);
+                        String userId = DevicePrefsManager.getDeviceId(getContext());
+                        event.acceptLotteryWinner(userId);
                         EventDB.updateEvent(event, new EventDB.UpdateEventCallback() {
                             @Override
                             public void onCallback(boolean success) {
                                 if (success) {
                                     Toast.makeText(getContext(), "You have been added to the enrolled list", Toast.LENGTH_SHORT).show();
+                                    Log.d("DecisionFragment", "Successfully updated event for accepting invitation");
+                                }
+                                else {
+                                    Toast.makeText(getContext(), "Failed to accept invitation", Toast.LENGTH_SHORT).show();
+                                    Log.e("DecisionFragment", "Failed to update event for accepting invitation");
                                 }
                             }
                         });

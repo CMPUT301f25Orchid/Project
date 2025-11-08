@@ -30,7 +30,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 import java.util.Calendar;
-public class EntrantHomeActivity extends BaseTopBottomActivity {
+public class EntrantHomeActivity extends AppCompatActivity {
 
     private LinearLayout eventListContainer;
     private ListenerRegistration eventListener;
@@ -63,7 +63,32 @@ public class EntrantHomeActivity extends BaseTopBottomActivity {
             startActivity(intent);
         });
 
-        initBottomNav(BarType.ENTRANT, findViewById(R.id.home_bottom_nav_bar));
+        View home = findViewById(R.id.home_activity);
+        View myEvents = findViewById(R.id.events_activity);
+        View scan = findViewById(R.id.scan_activity);
+        View notifications = findViewById(R.id.notifications_activity);
+
+        home.setOnClickListener(v -> {
+            // Send to EntrantHomeActivity
+            Intent intent = new Intent(this, EntrantHomeActivity.class);
+            startActivity(intent);
+        });
+
+        myEvents.setOnClickListener(v -> {
+            // TODO: Send to EntrantEventsActivity
+        });
+
+        scan.setOnClickListener(v -> {
+            // Send to EntrantScan
+            Intent intent = new Intent(this, EntrantScan.class);
+            startActivity(intent);
+        });
+
+        notifications.setOnClickListener(v -> {
+            // Send to EntrantNotificationsActivity
+            Intent intent = new Intent(this, EntrantNotificationsActivity.class);
+            startActivity(intent);
+        });
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
