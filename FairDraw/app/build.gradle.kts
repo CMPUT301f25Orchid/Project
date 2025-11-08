@@ -1,4 +1,6 @@
 import org.gradle.api.tasks.javadoc.Javadoc
+import org.gradle.api.tasks.compile.JavaCompile
+import org.gradle.external.javadoc.StandardJavadocDocletOptions
 
 plugins {
     alias(libs.plugins.android.application)
@@ -36,21 +38,27 @@ android {
 }
 
 tasks.register<Javadoc>("androidJavadoc") {
-    // Don’t fail CI because of missing comments/warnings
-    isFailOnError = false
+    // Use the same sources & classpath as the debug Java compile
+    val javaCompile = tasks.named("compileDebugJavaWithJavac", JavaCompile::class).get()
 
-    // Use the main Java source set from the Android config
-    val mainSourceSet = android.sourceSets.getByName("main")
-    setSource(mainSourceSet.java.srcDirs)
+    dependsOn(javaCompile)
 
-    // Classpath = Android boot classpath + debug compile classpath
-    val bootClasspath = android.bootClasspath
-    val debugClasspath = configurations.getByName("debugCompileClasspath")
+    // Sources (includes anything the debug variant compiles)
+    source = javaCompile.source
 
-    classpath = files(bootClasspath) + debugClasspath
+    // Classpath: whatever debug compile uses + Android boot classpath
+    classpath = javaCompile.classpath + files(android.bootClasspath)
 
-    // Where you want the HTML dumped.
+    // Where to put the generated docs
     setDestinationDir(file("$rootDir/docs/javadoc"))
+
+    // Make Javadoc less strict / nicer
+    (options as StandardJavadocDocletOptions).apply {
+        encoding = "UTF-8"
+        charSet = "UTF-8"
+        addStringOption("Xdoclint:none", "-quiet")
+        links("https://developer.android.com/reference/")
+    }
 }
 
 
