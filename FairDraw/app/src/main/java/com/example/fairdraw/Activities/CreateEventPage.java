@@ -1,5 +1,6 @@
 package com.example.fairdraw.Activities;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -7,9 +8,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
+import android.text.InputType;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -21,6 +24,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import com.example.fairdraw.DBs.EventDB;
@@ -99,6 +103,40 @@ public class CreateEventPage extends AppCompatActivity {
         eventLimit = inputLayout.findViewById(R.id.event_limit);
         eventGeolocation = inputLayout.findViewById(R.id.event_geolocation);
         bottomNavInclude = findViewById(R.id.create_bottom_nav_bar);
+
+        // --- New: attach DatePickerDialogs to date EditTexts and disable keyboard input ---
+        View.OnClickListener dateClickListener = v -> {
+            final EditText et = (EditText) v;
+            Calendar c = Calendar.getInstance();
+            try {
+                Date parsed = dateFormat.parse(et.getText().toString());
+                if (parsed != null) c.setTime(parsed);
+            } catch (Exception ignored) {
+            }
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+
+            DatePickerDialog dpd = new DatePickerDialog(CreateEventPage.this,
+                    (DatePicker view, int y, int m, int d) -> {
+                        Calendar chosen = Calendar.getInstance();
+                        chosen.set(y, m, d);
+                        et.setText(dateFormat.format(chosen.getTime()));
+                    }, year, month, day);
+            dpd.show();
+        };
+
+        // Disable keyboard entry and show calendar on click/focus for all date fields
+        EditText[] dateFields = new EditText[]{eventRegistrationOpenDate, eventRegistrationCloseDate, eventStartDate, eventEndDate};
+        for (EditText field : dateFields) {
+            field.setInputType(InputType.TYPE_NULL);
+            field.setFocusable(false);
+            field.setOnClickListener(dateClickListener);
+            field.setOnFocusChangeListener((v, hasFocus) -> {
+                if (hasFocus) v.performClick();
+            });
+        }
+        // --- End date picker setup ---
 
         // Initialize activity result launcher to get photo from gallery
         launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),

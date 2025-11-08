@@ -18,12 +18,14 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.bumptech.glide.Glide;
 import com.example.fairdraw.DBs.EventDB;
 import com.example.fairdraw.Fragments.FilterEventsDialogFragment;
 import com.example.fairdraw.Models.Event;
 import com.example.fairdraw.Others.BarType;
 import com.example.fairdraw.Others.EventState;
 import com.example.fairdraw.R;
+import com.example.fairdraw.ServiceUtility.FirebaseImageStorageService;
 import com.google.firebase.firestore.ListenerRegistration;
 
 import java.text.SimpleDateFormat;
@@ -209,6 +211,17 @@ public class EntrantHomeActivity extends AppCompatActivity {
                 Intent intent = new Intent(EntrantHomeActivity.this, EntrantEventDetails.class);
                 intent.putExtra("event_id", event.getUuid());
                 startActivity(intent);
+            });
+
+            // Try to fetch the Bitmap for the event image
+            FirebaseImageStorageService storageService = new FirebaseImageStorageService();
+            storageService.getEventPosterDownloadUrl(event.getUuid()).addOnSuccessListener(uri -> {
+                Glide.with(this)
+                        .load(uri)
+                        .placeholder(R.drawable.swimming)
+                        .into(eventImage);
+            }).addOnFailureListener(e -> {
+                Log.e("EntrantHomeActivity", "Failed to load image for event " + event.getUuid(), e);
             });
 
             // Add card to layout

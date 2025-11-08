@@ -2,6 +2,7 @@ package com.example.fairdraw.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.GridLayout;
 import android.widget.ImageView;
@@ -222,6 +223,7 @@ public class EntrantEventDetails extends BaseTopBottomActivity {
             } else {
                 // Handle error
                 Toast.makeText(this, "Failed to load event poster", Toast.LENGTH_SHORT).show();
+                Log.e("EntrantEventDetails", "Error loading event poster", urlTask.getException());
             }
         });
     }
