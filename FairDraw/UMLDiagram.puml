@@ -47,6 +47,10 @@ class com.example.fairdraw.Activities.BaseTopBottomActivity {
 class com.example.fairdraw.Adapters.EventArrayAdapter {
 + getView(arg0 : int, arg1 : View, arg2 : ViewGroup) : View
 }
+interface com.example.fairdraw.Adapters.EventArrayAdapter$EditEventListener {
+}
+interface com.example.fairdraw.Adapters.EventArrayAdapter$EventCardClickedListener {
+}
 class com.example.fairdraw.Adapters.EntrantNotificationAdapter {
 + setItems(arg0 : List<EntrantNotification>) : void
 + getItemCount() : int
@@ -356,6 +360,8 @@ com.example.fairdraw.DBs.EntrantDB +.. com.example.fairdraw.DBs.EntrantDB$PushNo
 com.example.fairdraw.DBs.EntrantDB +.. com.example.fairdraw.DBs.EntrantDB$NotificationsListener
 androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.BaseTopBottomActivity
 android.widget.ArrayAdapter <|-- com.example.fairdraw.Adapters.EventArrayAdapter
+com.example.fairdraw.Adapters.EventArrayAdapter +.. com.example.fairdraw.Adapters.EventArrayAdapter$EditEventListener
+com.example.fairdraw.Adapters.EventArrayAdapter +.. com.example.fairdraw.Adapters.EventArrayAdapter$EventCardClickedListener
 com.example.fairdraw.Adapters.Adapter <|-- com.example.fairdraw.Adapters.EntrantNotificationAdapter
 com.example.fairdraw.Adapters.EntrantNotificationAdapter +.. com.example.fairdraw.Adapters.EntrantNotificationAdapter$OnAction
 com.example.fairdraw.Adapters.EntrantNotificationAdapter +.. com.example.fairdraw.Adapters.EntrantNotificationAdapter$ViewHolder

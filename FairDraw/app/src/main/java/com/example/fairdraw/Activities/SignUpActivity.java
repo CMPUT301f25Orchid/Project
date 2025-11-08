@@ -1,5 +1,7 @@
 package com.example.fairdraw.Activities;
 
+import static com.example.fairdraw.DBs.OrganizerDB.getOrganizerCollection;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -13,7 +15,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.fairdraw.R;
 import com.example.fairdraw.DBs.UserDB;
 import com.example.fairdraw.ServiceUtility.DevicePrefsManager;
-import com.example.fairdraw.ServiceUtility.GatePrefs;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.example.fairdraw.Models.*;
@@ -56,13 +57,15 @@ public class SignUpActivity extends AppCompatActivity {
             final String deviceId = DevicePrefsManager.getDeviceId(this);
             User user = new User(name, email, phone, deviceId, /*fcmToken*/ null);
 
+            // Add deviceID to organizer database
+            getOrganizerCollection().document(user.getDeviceId()).set(user);
+
             UserDB.upsertUser(user, (ok, e) -> {
                 if (!ok) {
                     String msg = (e != null) ? e.getMessage() : "Unknown error";
                     Toast.makeText(this, "Failed to create account: " + msg, Toast.LENGTH_LONG).show();
                     return;
                 }
-                GatePrefs.setKnownExists(this, true);
                 intent = new Intent(this, ProfileActivity.class);
                 intent.putExtra("deviceId", deviceId);
                 startActivity(intent);

@@ -5,8 +5,10 @@ import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,27 +22,10 @@ import com.example.fairdraw.Others.EntrantNotification;
 import com.example.fairdraw.R;
 import com.example.fairdraw.ServiceUtility.DevicePrefsManager;
 
-/**
- * DialogFragment that displays a decision dialog for an entrant notification.
- *
- * <p>This dialog lets a notified entrant accept or decline a lottery win. It
- * reads the event information from the fragment arguments and updates the
- * event document via {@link EventDB} when the user accepts or declines.</p>
- */
 public class DecisionFragment extends DialogFragment {
-    private EntrantNotification notification;
-
-    /**
-     * Create a new DecisionFragment pre-populated with the given notification.
-     *
-     * <p>Callers should pass the returned fragment to a FragmentManager to show
-     * it. The method stores event name, id and the local user id in the
-     * fragment arguments.</p>
-     *
-     * @param notification the entrant notification that triggered this dialog
-     * @return a configured DecisionFragment instance
-     */
+    private static EntrantNotification notification;
     public DecisionFragment newInstance(EntrantNotification notification){
+        DecisionFragment.notification = notification;
         DecisionFragment fragment = new DecisionFragment();
         Bundle args = new Bundle();
         String eventName = notification.title;
@@ -50,85 +35,84 @@ public class DecisionFragment extends DialogFragment {
         args.putString("eventId", eventId);
         args.putString("userId", userId);
         fragment.setArguments(args);
-        // Keep the original notification object available on the fragment instance
-        fragment.notification = notification;
         return fragment;
     }
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+            LayoutInflater inflater = requireActivity().getLayoutInflater();
+            View view = inflater.inflate(R.layout.entrant_decision_fragment, null);
 
-    /**
-     * Create the dialog shown to the user.
-     *
-     * <p>This method inflates the {@code R.layout.entrant_decision_fragment}
-     * layout, wires up the accept/decline buttons and updates the Event via
-     * {@link EventDB} based on the user's choice.</p>
-     *
-     * @param savedInstanceState saved state bundle, if any
-     * @return the created Dialog instance
-     */
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        LayoutInflater inflater = requireActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.entrant_decision_fragment, null);
+            TextView eventNameText = view.findViewById(R.id.dialog_event);
+            assert getArguments() != null;
+            String eventName = getArguments().getString("eventName");
+            assert eventName != null;
+            eventNameText.setText(eventName.toUpperCase());
+            View btnAccept = view.findViewById(R.id.accept_button);
+            View btnDecline = view.findViewById(R.id.decline_button);
 
-        TextView eventNameText = view.findViewById(R.id.dialog_event);
-        String eventName = (getArguments() != null) ? getArguments().getString("eventName") : null;
-        eventNameText.setText(eventName != null ? eventName.toUpperCase() : "");
-        View btnAccept = view.findViewById(R.id.accept_button);
-        View btnDecline = view.findViewById(R.id.decline_button);
-
-        btnDecline.setOnClickListener(v -> {
-            EventDB.getEvent(notification.eventId, new EventDB.GetEventCallback() {
-                @Override
-                public void onCallback(Event event) {
-                    if (event == null) {
-                        Toast.makeText(getContext(), "Event not found", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    event.cancelLotteryWinner(notification.eventId);
-                    EventDB.updateEvent(event, new EventDB.UpdateEventCallback() {
-                        @Override
-                        public void onCallback(boolean success) {
-                            if (success) {
-                                Toast.makeText(getContext(), "You have been removed from the invited list", Toast.LENGTH_SHORT).show();
-                            }
+            btnDecline.setOnClickListener(v -> {
+                Toast.makeText(getContext(), "You have declined the invitation", Toast.LENGTH_SHORT).show();
+                Log.d("DecisionFragment", "User declined the invitation for event: " + eventName);
+                EventDB.getEvent(DecisionFragment.notification.eventId, new EventDB.GetEventCallback() {
+                    @Override
+                    public void onCallback(Event event) {
+                        if (event == null) {
+                            Toast.makeText(getContext(), "Event not found", Toast.LENGTH_SHORT).show();
+                            return;
                         }
-                    });
-                }
-            });
-        });
 
-        btnAccept.setOnClickListener(v -> {
-            EventDB.getEvent(notification.eventId, new EventDB.GetEventCallback() {
-                @Override
-                public void onCallback(Event event) {
-                    if (event == null) {
-                        Toast.makeText(getContext(), "Event not found", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    event.acceptLotteryWinner(notification.eventId);
-                    EventDB.updateEvent(event, new EventDB.UpdateEventCallback() {
-                        @Override
-                        public void onCallback(boolean success) {
-                            if (success) {
-                                Toast.makeText(getContext(), "You have been added to the enrolled list", Toast.LENGTH_SHORT).show();
+                        String userId = DevicePrefsManager.getDeviceId(getContext());
+                        event.cancelLotteryWinner(userId);
+                        EventDB.updateEvent(event, new EventDB.UpdateEventCallback() {
+                            @Override
+                            public void onCallback(boolean success) {
+                                if (success) {
+                                    Toast.makeText(getContext(), "You have been removed from the invited list", Toast.LENGTH_SHORT).show();
+                                }
                             }
-                        }
-                    });
-                }
+                        });
+                    }
+                });
             });
-        });
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setView(view);
+            btnAccept.setOnClickListener(v -> {
+                Log.d("DecisionFragment", "Accept button clicked for eventId: " + notification.eventId);
+                EventDB.getEvent(notification.eventId, new EventDB.GetEventCallback() {
+                    @Override
+                    public void onCallback(Event event) {
+                        if (event == null) {
+                            Toast.makeText(getContext(), "Event not found", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
 
-        Dialog dialog = builder.create();
-        if (dialog.getWindow() != null) {
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        }
-        dialog.setCanceledOnTouchOutside(true);
-        return dialog;
+                        String userId = DevicePrefsManager.getDeviceId(getContext());
+                        event.acceptLotteryWinner(userId);
+                        EventDB.updateEvent(event, new EventDB.UpdateEventCallback() {
+                            @Override
+                            public void onCallback(boolean success) {
+                                if (success) {
+                                    Toast.makeText(getContext(), "You have been added to the enrolled list", Toast.LENGTH_SHORT).show();
+                                    Log.d("DecisionFragment", "Successfully updated event for accepting invitation");
+                                }
+                                else {
+                                    Toast.makeText(getContext(), "Failed to accept invitation", Toast.LENGTH_SHORT).show();
+                                    Log.e("DecisionFragment", "Failed to update event for accepting invitation");
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+            builder.setView(view);
+
+            Dialog dialog = builder.create();
+            if (dialog.getWindow() != null) {
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            }
+            dialog.setCanceledOnTouchOutside(true);
+            return dialog;
     }
 }

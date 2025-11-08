@@ -192,6 +192,7 @@ public class EditEventPage extends Fragment {
                         event.setPosterPath(bannerPhoto.toString());
                     }
                     OrganizerEventsDataHolder.updateEvent(event, index);
+                    requireActivity().getSupportFragmentManager().popBackStack();
                 }
                 catch (Exception e) {
                     Toast.makeText(v.getContext(), "Invalid date format", Toast.LENGTH_SHORT).show();

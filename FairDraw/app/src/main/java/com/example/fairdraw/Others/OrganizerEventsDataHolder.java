@@ -1,114 +1,120 @@
 package com.example.fairdraw.Others;
 
-import android.widget.Toast;
+import android.util.Log;
 
 import com.example.fairdraw.Adapters.EventArrayAdapter;
-import com.example.fairdraw.DBs.EventDB;
-
 import com.example.fairdraw.Models.Event;
+
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
- * A singleton-like holder for the organizer's events and the shared adapter used to
- * display them in the UI.
- * <p>
- * Provides simple utility methods to add, update, and remove events while keeping
- * the local list, the UI adapter, and the remote database in sync.
+ * A singleton class that holds the event data for the organizer.
  */
-public class OrganizerEventsDataHolder {
-    private static ArrayList<Event> dataList = new ArrayList<>();
-    public static EventArrayAdapter eventAdapter = null;
+public final class OrganizerEventsDataHolder {
+    private static final String TAG = "OrganizerEventsDataHolder";
+    private static final List<Event> events = Collections.synchronizedList(new ArrayList<>());
+    private static EventArrayAdapter adapter;
+
+    private OrganizerEventsDataHolder() {}
 
     /**
-     * Returns the current in-memory list of events for the organizer.
-     *
-     * @return mutable list of Event objects backing the UI
+     * Get the list of events.
+     * @return
+     *      A copy of the list of events.
+     */
+    public static List<Event> getEvents() {
+        // return a copy to avoid external modification
+        synchronized (events) {
+            return new ArrayList<>(events);
+        }
+    }
+
+    /**
+     * Backwards-compatible: original code expects an ArrayList (getDataList()).
+     * Return the internal list reference as an ArrayList for existing callers that rely on direct modification.
+     * NOTE: callers who modify the returned list should be careful; prefer getEvents() for a safe copy.
      */
     public static ArrayList<Event> getDataList() {
-        return dataList;
+        synchronized (events) {
+            return new ArrayList<>(events);
+        }
     }
 
     /**
-     * Set the data list for the app. Replaces any existing list reference.
-     *
-     * @param dataList This is the list of organizer events that will be displayed in the app.
+     * Backwards-compatible setter used by OrganizerMainPage to set the data list reference.
+     * We'll copy elements into our internal synchronized list to preserve thread-safety.
      */
     public static void setDataList(ArrayList<Event> dataList) {
-        OrganizerEventsDataHolder.dataList = dataList;
+        synchronized (events) {
+            events.clear();
+            if (dataList != null) events.addAll(dataList);
+        }
+        // notify adapter if available
+        if (adapter != null) {
+            try { adapter.notifyDataSetChanged(); } catch (Exception ex) { Log.e(TAG, "Error notifying adapter", ex); }
+        }
     }
 
     /**
-     * Set the EventArrayAdapter used to display the events in the UI.
-     *
-     * @param eventAdapter adapter instance to use for rendering the list
+     * Set the event adapter for the app.
+     * @param a This is the adapter that will be used to display the events in the app.
      */
-    public static void setEventAdapter(EventArrayAdapter eventAdapter) {
-        OrganizerEventsDataHolder.eventAdapter = eventAdapter;
+    public static void setAdapter(EventArrayAdapter a) {
+        adapter = a;
     }
 
     /**
-     * Get the currently set EventArrayAdapter used by the UI.
-     *
-     * @return the EventArrayAdapter or null if none has been set
+     * Backwards-compatible name used in codebase: setEventAdapter
      */
-    public static EventArrayAdapter getEventAdapter() {
-        return eventAdapter;
+    public static void setEventAdapter(EventArrayAdapter a) {
+        setAdapter(a);
     }
 
     /**
-     * Add an event to the data list and persist it to Firestore.
-     * <p>
-     * The method updates the remote database asynchronously and updates the
-     * local list and the adapter immediately. Callers should ensure an adapter
-     * is set before invoking this method to avoid NPEs.
-     *
+     * Add an event to the data list.
      * @param event The new event that needs to be added
      */
     public static void addEvent(Event event) {
-        EventDB.addEvent(event, success -> {
-            if (!success) {
-                System.out.println("Failed to add event");
+        if (event == null) return;
+        events.add(event);
+
+        if (adapter != null) {
+            try {
+                adapter.notifyDataSetChanged();
+            } catch (Exception ex) {
+                Log.e(TAG, "Error notifying adapter", ex);
             }
-            else{
-                Toast.makeText(eventAdapter.getContext(), "Event added successfully", Toast.LENGTH_SHORT).show();
-            }
-        });
-        dataList.add(event);
-        eventAdapter.notifyDataSetChanged();
+        } else {
+            Log.w(TAG, "Adapter is null; event added to list only");
+        }
     }
 
     /**
-     * Update an event in the data list and persist the change to Firestore.
-     *
-     * @param event The event that is replacing the old event
-     * @param index The index of the event that needs to be updated
+     * Update an existing event at the provided index. Backwards-compatible with existing callers.
      */
-    public static void updateEvent(Event event , int index) {
-        EventDB.updateEvent(event, success -> {
-            if (!success) {
-                System.out.println("Failed to update event");
-            } else{
-                Toast.makeText(eventAdapter.getContext(), "Event updated successfully", Toast.LENGTH_SHORT).show();
+    public static void updateEvent(Event event, int index) {
+        if (event == null) return;
+        synchronized (events) {
+            if (index < 0 || index >= events.size()) {
+                Log.w(TAG, "updateEvent: index out of bounds: " + index);
+                return;
             }
-        });
-        dataList.set(index, event);
-        eventAdapter.notifyDataSetChanged();
+            events.set(index, event);
+        }
+        if (adapter != null) {
+            try { adapter.notifyDataSetChanged(); } catch (Exception ex) { Log.e(TAG, "Error notifying adapter", ex); }
+        }
     }
 
     /**
-     * Remove an event from the data list, delete it from Firestore, and update the UI.
-     *
-     * @param event The event that needs to be removed
+     * Clear all events from the data list.
      */
-    public static void removeEvent(Event event) {
-        EventDB.deleteEvent(event.getUuid().toString(), success -> {
-            if (!success) {
-                System.out.println("Failed to delete event");
-            }else{
-                Toast.makeText(eventAdapter.getContext(), "Event successfully removed", Toast.LENGTH_SHORT).show();
-            }
-        });
-        dataList.remove(event);
-        eventAdapter.notifyDataSetChanged();
+    public static void clear() {
+        events.clear();
+        if (adapter != null) {
+            try { adapter.notifyDataSetChanged(); } catch (Exception ex) { Log.e(TAG, "Error notifying adapter", ex); }
+        }
     }
 }

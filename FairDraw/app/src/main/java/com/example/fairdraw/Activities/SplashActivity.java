@@ -30,22 +30,13 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
 
         String deviceId = DevicePrefsManager.getDeviceId(this);
-        // Check if the user exists in the database and set the gate preference accordingly
-        if (GatePrefs.getKnownExists(this)) {
-            startActivity(new Intent(this, ProfileActivity.class));
-            finish();
-            UserDB.userExists(deviceId, ((exists, e) -> {
-                if (e == null) GatePrefs.setKnownExists(this, exists);
-            }));
-        }
-
         UserDB.userExists(deviceId, ((exists, e) -> {
             if (e != null) {
                 Log.d("SplashActivity", "Error checking if user exists:");
                 startActivity(new Intent(this, SignUpActivity.class));
             }
             else if (exists) {
-                Log.d("SplashActivity", "User exists, redirecting to ProfileActivity:");
+                Log.d("SplashActivity", "User exists, redirecting to EntrantHomeActivity:");
                 intent = new Intent(this, EntrantHomeActivity.class);
                 intent.putExtra("deviceId", deviceId);
                 startActivity(intent);

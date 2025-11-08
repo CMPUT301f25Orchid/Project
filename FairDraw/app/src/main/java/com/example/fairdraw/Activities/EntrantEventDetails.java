@@ -1,5 +1,6 @@
 package com.example.fairdraw.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.GridLayout;
@@ -9,14 +10,15 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.example.fairdraw.DBs.EventDB;
+import com.example.fairdraw.Fragments.QrCodeFragment;
 import com.example.fairdraw.ServiceUtility.DevicePrefsManager;
 import com.example.fairdraw.ServiceUtility.FirebaseImageStorageService;
 import com.example.fairdraw.Models.Event;
 import com.example.fairdraw.R;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.firestore.ListenerRegistration;
 
@@ -25,19 +27,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-/**
- * Activity that displays detailed information for a single Event to an entrant.
- * <p>
- * It listens to real-time updates for the event document and allows the user to
- * join or leave the lottery/waitlist for the event.
- */
-public class EntrantEventDetails extends AppCompatActivity {
+public class EntrantEventDetails extends BaseTopBottomActivity {
 
     // --- Views ---
     private TextView tvTitle;
     private TextView tvSummary;
     private ImageView heroImage;
     private GridLayout detailsGrid;
+    private MaterialButton btnViewQrCode;
     private MaterialButton btnWaitlist;
 
     // ---- Date & money formatters ----
@@ -56,25 +53,25 @@ public class EntrantEventDetails extends AppCompatActivity {
         ((TextView) cell.findViewById(R.id.subtitle)).setText(subtitle);
     }
 
-    /**
-     * Activity lifecycle entry point. Reads the event_id extra, subscribes to realtime updates
-     * and initializes UI controls including the waitlist button.
-     *
-     * Expected Intent extras:
-     *  - "event_id": String UUID of the event document
-     *
-     * @param savedInstanceState saved state bundle
-     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_entrant_event_details);
 
+        // Initialize common top and bottom navigation using BaseTopBottomActivity helpers
+        initTopNav(com.example.fairdraw.Others.BarType.ENTRANT);
+        initBottomNav(com.example.fairdraw.Others.BarType.ENTRANT, findViewById(R.id.home_bottom_nav_bar));
+
+        // Ensure the correct bottom tab is selected (events/details)
+        BottomNavigationView bottomNav = findViewById(R.id.home_bottom_nav_bar);
+        if (bottomNav != null) bottomNav.setSelectedItemId(R.id.events_activity);
+
         // grab views
         tvTitle     = findViewById(R.id.tvTitle);
         tvSummary   = findViewById(R.id.tvSummary);
         heroImage   = findViewById(R.id.heroImage);
+        btnViewQrCode = findViewById(R.id.btnViewQrCode);
         detailsGrid = findViewById(R.id.detailsGrid);
         btnWaitlist = findViewById(R.id.btnWaitlist);
 
@@ -100,8 +97,12 @@ public class EntrantEventDetails extends AppCompatActivity {
                 onWaitlist[0] = false;
                 btnWaitlist.setText("Join Lottery Waitlist");
             }
-
             bindEvent(event);
+
+            btnViewQrCode.setOnClickListener(v -> {
+                QrCodeFragment qrFragment = QrCodeFragment.newInstance(eventId,event.getTitle());
+                qrFragment.show(getSupportFragmentManager(), "QrCodeFragment");
+            });
         });
 
         storageService = new FirebaseImageStorageService();
@@ -175,7 +176,7 @@ public class EntrantEventDetails extends AppCompatActivity {
         bindCell(R.id.cell_reg_period,
                 R.drawable.ic_event_24,
                 "Registration Period",
-                buildDateRange(new Date(), e.getRegPeriod()));
+                buildDateRange(e.getEventOpenRegDate(), e.getEventCloseRegDate()));
 
         bindCell(R.id.cell_price,
                 R.drawable.ic_attach_money_24,
@@ -190,7 +191,7 @@ public class EntrantEventDetails extends AppCompatActivity {
         bindCell(R.id.cell_schedule,
                 R.drawable.ic_schedule_24,
                 "Schedule",
-                safe(e.getTime().toString(), "—"));
+                safe((e.getTime() == null ? "—" : e.getTime().toString()), "—"));
 
         // Add a placeholder bitmap saying loading for event poster
         heroImage.setImageResource(R.drawable.loading);

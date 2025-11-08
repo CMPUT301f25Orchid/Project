@@ -2,7 +2,9 @@ package com.example.fairdraw.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -28,7 +30,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 import java.util.Calendar;
-public class EntrantHomeActivity extends BaseTopBottomActivity {
+public class EntrantHomeActivity extends AppCompatActivity {
 
     private LinearLayout eventListContainer;
     private ListenerRegistration eventListener;
@@ -41,21 +43,52 @@ public class EntrantHomeActivity extends BaseTopBottomActivity {
     private int currentAvailabilityFilter = -1;
 
 
-    /**
-     * Activity that shows a list of events to entrants with filtering options.
-     * <p>
-     * The activity listens to a real-time Event list from {@link EventDB} and
-     * updates the UI as events change. Users can open filters to refine the displayed events.
-     *
-     * @param savedInstanceState saved bundle
-     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_entrant_home);
 
-        initBottomNav(BarType.ENTRANT, findViewById(R.id.home_bottom_nav_bar));
+        // Initialize top and bottom navigation bars
+        // For now do top nav manually here
+        View entrantBtn = findViewById(R.id.btnEntrant);
+        entrantBtn.setOnClickListener(v ->{
+            Toast.makeText(this, "You are already on the Entrant Home page.", Toast.LENGTH_SHORT).show();
+        });
+
+        View organizerBtn = findViewById(R.id.btnOrganizer);
+        organizerBtn.setOnClickListener(v ->{
+            Log.d("OrganizerMainPage", "Organizer button clicked");
+            Intent intent = new Intent(this, OrganizerMainPage.class);
+            startActivity(intent);
+        });
+
+        View home = findViewById(R.id.home_activity);
+        View myEvents = findViewById(R.id.events_activity);
+        View scan = findViewById(R.id.scan_activity);
+        View notifications = findViewById(R.id.notifications_activity);
+
+        home.setOnClickListener(v -> {
+            // Send to EntrantHomeActivity
+            Intent intent = new Intent(this, EntrantHomeActivity.class);
+            startActivity(intent);
+        });
+
+        myEvents.setOnClickListener(v -> {
+            // TODO: Send to EntrantEventsActivity
+        });
+
+        scan.setOnClickListener(v -> {
+            // Send to EntrantScan
+            Intent intent = new Intent(this, EntrantScan.class);
+            startActivity(intent);
+        });
+
+        notifications.setOnClickListener(v -> {
+            // Send to EntrantNotificationsActivity
+            Intent intent = new Intent(this, EntrantNotificationsActivity.class);
+            startActivity(intent);
+        });
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -109,9 +142,6 @@ public class EntrantHomeActivity extends BaseTopBottomActivity {
             });
             dialog.show(getSupportFragmentManager(), "filter_dialog");
         });
-
-
-
     }
 
     @Override
@@ -123,10 +153,8 @@ public class EntrantHomeActivity extends BaseTopBottomActivity {
         }
     }
 
-
     /**
-     * Render a list of Event cards into the event list container.
-     * @param events list of events to display
+     * Adds eventscard.xml for each Event
      */
     private void displayEvents(List<Event> events) {
         eventListContainer.removeAllViews(); // Clear previous views to prevent duplicates
@@ -138,13 +166,14 @@ public class EntrantHomeActivity extends BaseTopBottomActivity {
             CardView cardView = (CardView) inflater.inflate(R.layout.eventscard, eventListContainer, false);
 
             // Bind views
-            TextView titleView = cardView.findViewById(R.id.eventTitle);
-            TextView locationView = cardView.findViewById(R.id.eventLocation);
-            TextView dateView = cardView.findViewById(R.id.eventDate);
-            TextView capacityView = cardView.findViewById(R.id.eventCapacity);
-            TextView priceView = cardView.findViewById(R.id.eventPrice);
+            TextView titleView = cardView.findViewById(R.id.event_content_title);
+            TextView locationView = cardView.findViewById(R.id.event_content_location);
+            TextView dateView = cardView.findViewById(R.id.event_content_date);
+            TextView capacityView = cardView.findViewById(R.id.event_content_capacity);
+            TextView priceView = cardView.findViewById(R.id.event_content_price);
             TextView statusView = cardView.findViewById(R.id.eventStatus);
-            Button viewDetailsButton = cardView.findViewById(R.id.viewDetailsButton);
+            Button joinBtn = cardView.findViewById(R.id.event_edit_button);
+            Button viewDetailsButton = cardView.findViewById(R.id.view_details_button);
             ImageView eventImage = cardView.findViewById(R.id.eventImage);
 
             // Set values
@@ -187,12 +216,6 @@ public class EntrantHomeActivity extends BaseTopBottomActivity {
         }
     }
 
-    /**
-     * Apply the currently selected filters to the stored event list and update UI.
-     * @param status status filter ("All", "Open", "Closed")
-     * @param interest text filter to match in description
-     * @param availability integer day-of-week filter or -1 for no filter
-     */
     private void applyFilters(String status, String interest, int availability) {
         if (allEvents == null) return;
 
@@ -242,9 +265,6 @@ public class EntrantHomeActivity extends BaseTopBottomActivity {
         }
     }
 
-    /**
-     * Shows a simple message when no events match the filters.
-     */
     private void showNoEventsMessage() {
         eventListContainer.removeAllViews(); // Clear previous views
         TextView emptyView = new TextView(this);

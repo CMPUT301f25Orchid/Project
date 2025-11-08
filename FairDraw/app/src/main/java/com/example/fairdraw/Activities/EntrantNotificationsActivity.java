@@ -3,7 +3,6 @@ package com.example.fairdraw.Activities;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -13,25 +12,14 @@ import com.example.fairdraw.Fragments.DecisionFragment;
 import com.example.fairdraw.Models.Entrant;
 import com.example.fairdraw.Others.EntrantNotification;
 import com.example.fairdraw.ServiceUtility.DevicePrefsManager;
-import com.example.fairdraw.Others.EntrantNotification;
 import com.example.fairdraw.Adapters.EntrantNotificationAdapter;
 import com.example.fairdraw.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.ListenerRegistration;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 
-
-/**
- * Displays entrant notifications stored under entrants/{deviceId}.notifications.
- * <p>
- * The activity listens to the Entrant document for the current device id and binds
- * the list of notifications to a RecyclerView adapter.
- */
+/** Entrant screen: listens to entrants/{deviceId}.notifications and displays them. */
 public final class EntrantNotificationsActivity extends BaseTopBottomActivity {
     private ListenerRegistration reg;
     private EntrantNotificationAdapter adapter;
@@ -54,10 +42,14 @@ public final class EntrantNotificationsActivity extends BaseTopBottomActivity {
             }
         });
         rv.setAdapter(adapter);
+
+        // Setup the top and bottom bars
+        // Use shared helpers from BaseTopBottomActivity
+        initTopNav(BarType.ENTRANT);
         initBottomNav(BarType.ENTRANT, findViewById(R.id.home_bottom_nav_bar));
 
         BottomNavigationView bottomNav = findViewById(R.id.home_bottom_nav_bar);
-        bottomNav.setSelectedItemId(R.id.notifications_activity);
+        if (bottomNav != null) bottomNav.setSelectedItemId(R.id.notifications_activity);
 
     }
 
@@ -87,7 +79,6 @@ public final class EntrantNotificationsActivity extends BaseTopBottomActivity {
     }
 
     // --- helpers ---
-
 
 
 
