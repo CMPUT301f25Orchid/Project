@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.example.fairdraw.Activities"},{"l":"com.example.fairdraw.Adapters"},{"l":"com.example.fairdraw.DBs"},{"l":"com.example.fairdraw.Fragments"},{"l":"com.example.fairdraw.Models"},{"l":"com.example.fairdraw.Others"},{"l":"com.example.fairdraw.ServiceUtility"}];updateSearchResults();
