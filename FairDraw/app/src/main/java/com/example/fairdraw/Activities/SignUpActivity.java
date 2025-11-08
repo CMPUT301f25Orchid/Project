@@ -19,6 +19,10 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.example.fairdraw.Models.*;
 
+/**
+ * Screen used to create a new user account. Collects basic user info and writes a
+ * {@link com.example.fairdraw.Models.User} to Firestore using {@link UserDB#upsertUser}.
+ */
 public class SignUpActivity extends AppCompatActivity {
 
     private TextInputEditText nameEt, emailEt, phoneEt;
@@ -26,6 +30,10 @@ public class SignUpActivity extends AppCompatActivity {
 
     Intent intent;
 
+    /**
+     * Activity entry point. Wires the sign up form and submits user data to the database.
+     * @param savedInstanceState saved state
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

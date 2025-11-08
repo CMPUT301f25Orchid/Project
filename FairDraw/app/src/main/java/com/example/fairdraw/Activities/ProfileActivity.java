@@ -27,6 +27,9 @@ public class ProfileActivity extends AppCompatActivity {
     private Button editButton, returnButton, deleteAccButton, viewHistoryButton;
     private TextView nameTextView, usernameTextView, emailTextView, phoneTextView;
 
+    /**
+     * Activity that displays a user's profile information. Expects a "deviceId" string extra.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,5 +93,3 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 }
-
-

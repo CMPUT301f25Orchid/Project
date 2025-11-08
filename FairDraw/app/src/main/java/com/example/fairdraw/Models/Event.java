@@ -11,6 +11,14 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+/**
+ * Represents an event created in the application. An Event contains metadata such as title,
+ * description, capacity, registration windows and lists that manage the lottery/waiting
+ * list workflow (waitingList, invitedList, enrolledList, cancelledList).
+ * <p>
+ * The class provides utility methods to draw lottery winners, replace winners when they
+ * decline, and accept or cancel winners.
+ */
 public class Event implements Serializable {
 
     private String uuid;
@@ -45,6 +53,20 @@ public class Event implements Serializable {
     // List of user IDs who declined their invitation or cancelled their attendance.
     private List<String> cancelledList;
 
+    /**
+     * Creates a new Event with the required fields. A UUID will be generated for the event.
+     *
+     * @param title      human-readable title of the event
+     * @param description brief description of the event
+     * @param capacity   maximum number of attendees allowed
+     * @param regPeriod  generic registration period date (legacy field)
+     * @param time       scheduled time of the event
+     * @param location   textual location of the event
+     * @param organizer  organizer id or name
+     * @param price      ticket price (nullable for free events)
+     * @param posterPath path or url to the event poster image
+     * @param qrSlug     identifier used for QR check-ins or short-links
+     */
     public Event(String title, String description, Integer capacity, Date regPeriod,
                  Date time, String location, String organizer, Float price,
                  String posterPath, String qrSlug) {
@@ -65,6 +87,26 @@ public class Event implements Serializable {
         this.cancelledList = new ArrayList<>();
     }
 
+    /**
+     * Extended constructor supporting optional scheduling, registration windows and geolocation.
+     *
+     * @param title            title of the event
+     * @param description      description of the event
+     * @param capacity         maximum attendees
+     * @param waitingListLimit maximum waiting list size (nullable)
+     * @param regPeriod        generic registration period date
+     * @param openRegDate      registration open date
+     * @param closeRegDate     registration close date
+     * @param time             scheduled time
+     * @param startDate        event start date
+     * @param endDate          event end date
+     * @param location         event location string
+     * @param organizer        event organizer id or name
+     * @param price            ticket price
+     * @param geolocation      whether geolocation is required
+     * @param posterPath       poster image path or url
+     * @param qrSlug           QR slug for check-in
+     */
     public Event(String title, String description, Integer capacity, Integer waitingListLimit, Date regPeriod,
                  Date openRegDate, Date closeRegDate, Date time, Date startDate, Date endDate,
                  String location, String organizer, Float price, Boolean geolocation,
@@ -77,6 +119,9 @@ public class Event implements Serializable {
         this.geolocation = geolocation;
         this.waitingListLimit = waitingListLimit;
     }
+    /**
+     * No-argument constructor required for Firestore deserialization.
+     */
     public Event() {
         // Required for Firestore deserialization
     }

@@ -38,6 +38,9 @@ import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 /**
  * Activity for creating a new event.
+ * <p>
+ * Presents a form collecting event details and uploads a new Event object into
+ * {@link com.example.fairdraw.Others.OrganizerEventsDataHolder} when the user confirms.
  */
 public class CreateEventPage extends AppCompatActivity {
 
@@ -63,6 +66,10 @@ public class CreateEventPage extends AppCompatActivity {
 
 
 
+    /**
+     * Activity lifecycle entry point. Sets up views, result launchers and click handlers.
+     * @param savedInstanceState previously saved state or null
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

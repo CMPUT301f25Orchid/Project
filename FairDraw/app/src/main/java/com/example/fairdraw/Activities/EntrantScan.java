@@ -26,6 +26,12 @@ import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 
 import java.util.List;
 
+/**
+ * Activity that provides a continuous barcode/QR code scanner for entrants.
+ * <p>
+ * Handles runtime camera permission, starts a continuous decode callback and
+ * routes scanned content (as a URL) to an ACTION_VIEW Intent.
+ */
 public class EntrantScan extends BaseTopBottomActivity {
 
     private DecoratedBarcodeView barcodeScanner;
@@ -59,6 +65,10 @@ public class EntrantScan extends BaseTopBottomActivity {
         }
     };
 
+    /**
+     * Setup UI and request camera permission if needed.
+     * @param savedInstanceState saved state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +91,9 @@ public class EntrantScan extends BaseTopBottomActivity {
         if (bottomNav != null) bottomNav.setSelectedItemId(R.id.scan_activity);
     }
 
+    /**
+     * Verify camera permission and request it if not already granted.
+     */
     private void ensureCameraPermissionAndStart() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -90,6 +103,9 @@ public class EntrantScan extends BaseTopBottomActivity {
         }
     }
 
+    /**
+     * Begins continuous decoding and resumes the scanner view.
+     */
     private void startScanning() {
         handled = false;
         barcodeScanner.decodeContinuous(callback);

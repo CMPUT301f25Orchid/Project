@@ -7,8 +7,16 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+/**
+ * Minimal test activity used to display all Intent extras for debugging deep links.
+ * The UI is generated programmatically and lists each extra key/value pair.
+ */
 public class TestDeepLinkActivity extends AppCompatActivity {
 
+    /**
+     * Build a small scrollable UI showing all extras received via the Intent.
+     * @param savedInstanceState saved state
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
