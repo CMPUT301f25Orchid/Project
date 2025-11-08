@@ -32,6 +32,12 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 import java.util.Calendar;
+
+/**
+ * EntrantHomeActivity displays the home screen for entrants, showing a list of events
+ * and allowing navigation to other parts of the app such as the organizer page, scan page,
+ * and notifications. It also handles filtering of events based on user-selected criteria.
+ */
 public class EntrantHomeActivity extends AppCompatActivity {
 
     private LinearLayout eventListContainer;

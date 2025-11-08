@@ -1,3 +1,5 @@
+import org.gradle.api.tasks.javadoc.Javadoc
+
 plugins {
     alias(libs.plugins.android.application)
 //    id("com.android.application")
@@ -32,6 +34,25 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 }
+
+tasks.register<Javadoc>("androidJavadoc") {
+    // Don’t fail CI because of missing comments/warnings
+    isFailOnError = false
+
+    // Use the main Java source set from the Android config
+    val mainSourceSet = android.sourceSets.getByName("main")
+    setSource(mainSourceSet.java.srcDirs)
+
+    // Classpath = Android boot classpath + debug compile classpath
+    val bootClasspath = android.bootClasspath
+    val debugClasspath = configurations.getByName("debugCompileClasspath")
+
+    classpath = files(bootClasspath) + debugClasspath
+
+    // Where you want the HTML dumped.
+    setDestinationDir(file("$rootDir/docs/javadoc"))
+}
+
 
 dependencies {
 

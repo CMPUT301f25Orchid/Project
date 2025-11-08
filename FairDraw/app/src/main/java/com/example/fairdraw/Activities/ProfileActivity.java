@@ -19,6 +19,10 @@ import com.example.fairdraw.Models.User;
 import com.example.fairdraw.R;
 import com.example.fairdraw.ServiceUtility.DevicePrefsManager;
 
+/**
+ * ProfileActivity displays the user's profile information and allows editing and
+ * deletion of the account. It expects a "deviceId" string extra to fetch the user data.
+ */
 public class ProfileActivity extends AppCompatActivity {
 
     private static final String TAG = "ProfileActivity";

@@ -29,6 +29,10 @@ import com.example.fairdraw.Fragments.SendNotificationDialogFragment;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * OrganizerManageEvent class allows organizers to manage event details,
+ * view and manage entrants, and send notifications.
+ */
 public class OrganizerManageEvent extends BaseTopBottomActivity {
 
     String eventId;
@@ -107,6 +111,11 @@ public class OrganizerManageEvent extends BaseTopBottomActivity {
         });
     }
 
+    /**
+     * Binds the event data to the UI components.
+     *
+     * @param e The event object containing event details.
+     */
     public void bindEvent(Event e) {
         // Show hero image
         storageService.getEventPosterDownloadUrl(eventId).addOnCompleteListener(urlTask -> {

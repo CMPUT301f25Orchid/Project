@@ -13,7 +13,6 @@ import java.util.Set;
 /**
  * Small helper Activity that routes app-specific deep links to an internal Activity class.
  *
-
  * The 'dest' query parameter must be the fully qualified Activity class name. All other
  * query parameters are copied into the forwarded Intent as String extras.
  */

@@ -71,6 +71,14 @@ public class FilterEventsDialogFragment extends DialogFragment {
         this.listener = listener;
     }
 
+    /**
+     * Create the dialog UI used to pick filters. Reads the arguments (if any)
+     * to pre-select the controls and notifies the {@link FilterListener}
+     * when the user taps Apply or Clear.
+     *
+     * @param savedInstanceState saved bundle provided by the system (may be null)
+     * @return a configured {@link Dialog} displaying filter controls
+     */
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {

@@ -8,9 +8,7 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -174,14 +172,11 @@ public class EntrantDB {
                 .addOnFailureListener(e -> {
                     // Doc/field missing -> create it
                     Map<String, List<EntrantNotification>> init =
-                            Collections.singletonMap("notifications", Arrays.asList(notification));
+                            Collections.singletonMap("notifications", Collections.singletonList(notification));
 
                     ref.set(init, SetOptions.merge())
                             .addOnSuccessListener(v2 -> { if (callB != null) callB.onCallback(true, null); })
                             .addOnFailureListener(e2 -> { if (callB != null) callB.onCallback(false, e2); });
                 });
     }
-    
-
-    ;
 }

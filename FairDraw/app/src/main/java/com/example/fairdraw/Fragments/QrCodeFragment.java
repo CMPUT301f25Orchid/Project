@@ -35,6 +35,15 @@ import java.io.FileOutputStream;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * DialogFragment that displays a QR code image for an event and allows the
+ * user to download the QR image to their device.
+ *
+ * <p>The fragment fetches the QR image from Firebase Storage using the
+ * {@link com.example.fairdraw.ServiceUtility.FirebaseImageStorageService} and
+ * displays it with Glide. The QR image may be saved to the Pictures/FairDraw
+ * folder on the device; for Android Q+ the MediaStore API is used.</p>
+ */
 public class QrCodeFragment extends DialogFragment {
 
     private static final String ARG_EVENT_ID = "event_id";
@@ -47,6 +56,13 @@ public class QrCodeFragment extends DialogFragment {
     private ImageButton btnClose;
     private TextView tvQrEventName;
 
+    /**
+     * Create a new instance of QrCodeFragment for the supplied event.
+     *
+     * @param eventId id of the event whose QR code will be shown
+     * @param eventName friendly event name to display in the dialog
+     * @return configured QrCodeFragment
+     */
     public static QrCodeFragment newInstance(String eventId, String eventName) {
         QrCodeFragment fragment = new QrCodeFragment();
         Bundle args = new Bundle();
@@ -56,6 +72,14 @@ public class QrCodeFragment extends DialogFragment {
         return fragment;
     }
 
+    /**
+     * Inflate the fragment layout.
+     *
+     * @param inflater layout inflater
+     * @param container parent view container
+     * @param savedInstanceState saved state bundle
+     * @return inflated view
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -64,12 +88,20 @@ public class QrCodeFragment extends DialogFragment {
         return inflater.inflate(R.layout.fragment_qr_code, container, false);
     }
 
+    /**
+     * Initialize UI controls, load the QR image, and wire up button handlers.
+     *
+     * @param view created view hierarchy
+     * @param savedInstanceState saved state bundle
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         if (getArguments() != null) {
             eventId = getArguments().getString(ARG_EVENT_ID);
+            // Ensure eventName is also populated from the arguments if provided
+            eventName = getArguments().getString(ARG_EVENT_NAME);
         }
 
         imgQrCode = view.findViewById(R.id.imgQrCode);
@@ -137,6 +169,8 @@ public class QrCodeFragment extends DialogFragment {
     /**
      * Save a bitmap to the user's Pictures/FairDraw folder. Uses MediaStore on Android Q+ and
      * falls back to writing to external storage on older devices and triggers a media scan.
+     *
+     * @param bitmap the QR bitmap to save
      */
     private void saveBitmapToGallery(Bitmap bitmap) {
         String filename = "fairdraw_qr_" + (eventId != null ? eventId : "") + "_" + System.currentTimeMillis() + ".png";
@@ -189,6 +223,11 @@ public class QrCodeFragment extends DialogFragment {
         }
     }
 
+    /**
+     * Return the dialog theme used for this fragment's Dialog.
+     *
+     * @return resource id of the dialog theme
+     */
     @Override
     public int getTheme() {
         // Use existing AppDialog style which is defined in styles.xml

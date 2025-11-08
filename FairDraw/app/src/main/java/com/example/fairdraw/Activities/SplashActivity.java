@@ -15,6 +15,13 @@ import com.example.fairdraw.ServiceUtility.DevicePrefsManager;
 import com.example.fairdraw.ServiceUtility.GatePrefs;
 import com.example.fairdraw.R;
 
+/**
+ * Launcher activity that determines whether the app should route to the sign-up flow or the
+ * entrant home experience based on whether a user document exists for the current device.
+ *
+ * It performs a quick asynchronous check against {@link UserDB} and starts either
+ * {@link SignUpActivity} or {@link EntrantHomeActivity} accordingly.
+ */
 public class SplashActivity extends AppCompatActivity {
 
     Intent intent;

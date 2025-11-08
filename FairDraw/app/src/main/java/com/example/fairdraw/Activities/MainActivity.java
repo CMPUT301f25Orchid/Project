@@ -35,11 +35,11 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Small developer/test {@link AppCompatActivity} used as a playground for wiring image uploads
- * and creating seed notifications. Not part of the production UX but useful during development.
- * <p>
- * Provides buttons to pick an image from the gallery and upload it as either an entrant avatar
- * or an event poster, and to open various sample screens.
+ * Developer playground activity used during development to test image uploads, notifications and
+ * navigation to various screens. Not part of the primary user experience.
+ *
+ * Includes helpers to pick an image from the gallery and upload it to Firebase Storage via
+ * {@link com.example.fairdraw.ServiceUtility.FirebaseImageStorageService}.
  */
 public class MainActivity extends AppCompatActivity {
 

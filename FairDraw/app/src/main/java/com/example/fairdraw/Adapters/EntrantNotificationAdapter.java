@@ -165,7 +165,7 @@ public class EntrantNotificationAdapter extends RecyclerView.Adapter<EntrantNoti
 
     /**
      * Resolve a raw type string into a {@link NotificationType} enum. If the
-     * provided value is not a known enum constant, defaults to {@code WIN}.
+     * provided value is not a known enum constant, defaults to {@code OTHER}.
      *
      * @param s raw string value from the notification
      * @return resolved NotificationType (never null)
@@ -214,4 +214,3 @@ public class EntrantNotificationAdapter extends RecyclerView.Adapter<EntrantNoti
         }
     }
 }
-
