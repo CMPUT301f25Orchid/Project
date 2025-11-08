@@ -16,6 +16,9 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import com.example.fairdraw.DBs.UserDB;
+import com.example.fairdraw.Models.User;
+
 /**
  * Instrumented tests for the {@link UserDB} class.
  * These tests cover the basic CRUD operations for users in Firestore.

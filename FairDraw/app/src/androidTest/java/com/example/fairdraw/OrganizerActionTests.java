@@ -17,6 +17,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import com.example.fairdraw.Activities.OrganizerMainPage;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;

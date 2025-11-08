@@ -15,6 +15,9 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import com.example.fairdraw.DBs.AdminDB;
+import com.example.fairdraw.Models.Admin;
+
 @RunWith(AndroidJUnit4.class)
 public class AdminDBTest {
 
