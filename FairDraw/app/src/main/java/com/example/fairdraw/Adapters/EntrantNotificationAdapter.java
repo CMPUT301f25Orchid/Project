@@ -53,6 +53,7 @@ public class EntrantNotificationAdapter extends RecyclerView.Adapter<EntrantNoti
     private static final int viewLost        = 2;
     private static final int viewWaitJoined = 3;
     private static final int viewWaitLeft   = 4;
+    private static final int viewOther      = 5;
 
     private final List<EntrantNotification> items = new ArrayList<>();
     private final OnAction actions;
@@ -100,7 +101,8 @@ public class EntrantNotificationAdapter extends RecyclerView.Adapter<EntrantNoti
             case "LOSE":     return viewLost;
             case "WAITLIST": return viewWaitJoined;
             case "REPLACE":  return viewWaitLeft;
-            default:         return viewWon;
+            case "OTHER":    return viewOther;
+            default:         return viewOther;
         }
     }
 
@@ -126,6 +128,9 @@ public class EntrantNotificationAdapter extends RecyclerView.Adapter<EntrantNoti
             case viewWaitJoined:
                 v = inf.inflate(R.layout.items_notification_wait_joined, parent, false);
                 break;
+            case viewOther:
+                v = inf.inflate(R.layout.item_notification_other, parent, false);
+                break;
             case viewLost:
             default:
                 v = inf.inflate(R.layout.item_notification_lost, parent, false);
@@ -144,11 +149,13 @@ public class EntrantNotificationAdapter extends RecyclerView.Adapter<EntrantNoti
         EntrantNotification notification = items.get(position);
 
         String event = (notification.title == null || notification.title.isEmpty()) ? "this event" : "“" + notification.title + "”";
+        NotificationType nt = resolveType(notification.type);
         String msg;
-        if (resolveType(notification.type) != NotificationType.OTHER) {
-            msg = resolveType(notification.type).title(event);
+        if (nt != NotificationType.OTHER) {
+            msg = nt.title(event);
         } else {
-            msg = notification.message;
+            // show organizer-provided message if available; otherwise fall back to a generic title
+            msg = (notification.message == null || notification.message.isEmpty()) ? nt.title(event) : notification.message;
         }
 
         if (h.msg != null) h.msg.setText(msg);
@@ -165,7 +172,7 @@ public class EntrantNotificationAdapter extends RecyclerView.Adapter<EntrantNoti
      */
     private static NotificationType resolveType(String s) {
         try { return NotificationType.valueOf(s); }
-        catch (Exception ignore) { return NotificationType.WIN; }
+        catch (Exception ignore) { return NotificationType.OTHER; }
     }
 
     /**
@@ -185,7 +192,7 @@ public class EntrantNotificationAdapter extends RecyclerView.Adapter<EntrantNoti
          */
         public ViewHolder(@NonNull View v) {
             super(v);
-            msg = pickOne(v, R.id.tvMessageWon, R.id.tvMessageLost, R.id.tvMessageWaitJoined, R.id.tvMessageWaitLeft);
+            msg = pickOne(v, R.id.tvMessageWon, R.id.tvMessageLost, R.id.tvMessageWaitJoined, R.id.tvMessageWaitLeft, R.id.tvMessageOther);
             cta = v.findViewById(R.id.btnAcceptDecline);
         }
 
@@ -207,3 +214,4 @@ public class EntrantNotificationAdapter extends RecyclerView.Adapter<EntrantNoti
         }
     }
 }
+

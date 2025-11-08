@@ -24,7 +24,7 @@ import com.example.fairdraw.ServiceUtility.FirebaseImageStorageService;
 import com.example.fairdraw.Others.ListItemEntrant;
 import com.example.fairdraw.Models.Event;
 import com.example.fairdraw.R;
-import com.example.fairdraw.SendNotificationDialogFragment;
+import com.example.fairdraw.Fragments.SendNotificationDialogFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -191,9 +191,10 @@ public class OrganizerManageEvent extends BaseTopBottomActivity {
                         targetEntrants = e.getWaitingList();
                         break;
                 }
-
+                EntrantNotification notification = new EntrantNotification(NotificationType.OTHER, eventId1, "No title");
+                notification.message = message;
                 for (String entrantId : targetEntrants) {
-                    EntrantDB.pushNotificationToUser(entrantId, new EntrantNotification(NotificationType.OTHER, eventId1, message), (ok, ex) -> {
+                    EntrantDB.pushNotificationToUser(entrantId, notification, (ok, ex) -> {
                         if (ok) {
                             Log.d("OrganizerManageEvent", "Custom notification sent to entrant ID: " + entrantId);
                         } else {

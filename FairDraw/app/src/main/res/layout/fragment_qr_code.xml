@@ -31,10 +31,10 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:padding="2dp"
                 android:contentDescription="Close"
-                android:tint="@android:color/darker_gray"
                 app:srcCompat="@drawable/ic_close_24"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:tint="@android:color/darker_gray" />
 
             <!-- Title -->
             <TextView
