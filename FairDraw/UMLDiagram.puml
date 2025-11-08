@@ -299,19 +299,19 @@ interface com.example.fairdraw.DBs.EventDB$RemoveFromWaitlistCallback {
 }
 interface com.example.fairdraw.DBs.EventDB$AddToWaitlistCallback {
 }
-class com.example.fairdraw.SendNotificationDialogFragment {
+class com.example.fairdraw.Fragments.SendNotificationDialogFragment {
 + {static} newInstance(arg0 : String) : SendNotificationDialogFragment
 + setListener(arg0 : Listener) : void
 + onStart() : void
 + onCreateView(arg0 : LayoutInflater, arg1 : ViewGroup, arg2 : Bundle) : View
 + onCreate(arg0 : Bundle) : void
 }
-enum com.example.fairdraw.Audience {
+enum com.example.fairdraw.Fragments.Audience {
 +  WAITING_LIST
 +  SELECTED
 +  CANCELLED
 }
-interface com.example.fairdraw.SendNotificationDialogFragment$Listener {
+interface com.example.fairdraw.Fragments.SendNotificationDialogFragment$Listener {
 }
 class com.example.fairdraw.Others.EntrantNotification {
 + type : String
@@ -415,8 +415,8 @@ com.example.fairdraw.DBs.EventDB +.. com.example.fairdraw.DBs.EventDB$UpdateEven
 com.example.fairdraw.DBs.EventDB +.. com.example.fairdraw.DBs.EventDB$DeleteEventCallback
 com.example.fairdraw.DBs.EventDB +.. com.example.fairdraw.DBs.EventDB$RemoveFromWaitlistCallback
 com.example.fairdraw.DBs.EventDB +.. com.example.fairdraw.DBs.EventDB$AddToWaitlistCallback
-androidx.fragment.app.DialogFragment <|-- com.example.fairdraw.SendNotificationDialogFragment
-com.example.fairdraw.SendNotificationDialogFragment +.. com.example.fairdraw.SendNotificationDialogFragment$Listener
+androidx.fragment.app.DialogFragment <|-- com.example.fairdraw.Fragments.SendNotificationDialogFragment
+com.example.fairdraw.Fragments.SendNotificationDialogFragment +.. com.example.fairdraw.Fragments.SendNotificationDialogFragment$Listener
 java.io.Serializable <|.. com.example.fairdraw.Others.EntrantNotification
 androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.TestDeepLinkActivity
 androidx.fragment.app.Fragment <|-- com.example.fairdraw.Activities.EditEventPage
