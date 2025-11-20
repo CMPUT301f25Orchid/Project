@@ -130,6 +130,12 @@ class com.example.fairdraw.Models.Event {
 + setEnrolledList(arg0 : List<String>) : void
 + getCancelledList() : List<String>
 + setCancelledList(arg0 : List<String>) : void
++ isEnrolled(arg0 : String) : boolean
++ isInvited(arg0 : String) : boolean
++ isOnWaitingList(arg0 : String) : boolean
++ canJoinWaitingList(arg0 : String) : boolean
++ getJoinWaitlistButtonText(arg0 : String) : int
++ isJoinWaitlistButtonEnabled(arg0 : String) : boolean
 + drawLotteryWinners() : List<String>
 + replaceLotteryWinner(arg0 : String) : String
 + cancelLotteryWinner(arg0 : String) : void
