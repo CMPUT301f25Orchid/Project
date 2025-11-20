@@ -8,4 +8,13 @@
     <string name="email">Email</string>
     <string name="phone_number">Phone number</string>
     <string name="create_account">Create Account</string>
+
+    <!-- Waitlist button labels -->
+    <string name="join_lottery_waitlist">Join Lottery Waitlist</string>
+    <string name="leave_lottery_waitlist">Leave Lottery Waitlist</string>
+    <string name="already_registered">Already Registered</string>
+    <string name="invitation_sent">Invitation Sent</string>
+    <string name="on_waitlist">On Waiting List</string>
+    <string name="waitlist_full">Waitlist Full</string>
+    <string name="unavailable">Unavailable</string>
 </resources>

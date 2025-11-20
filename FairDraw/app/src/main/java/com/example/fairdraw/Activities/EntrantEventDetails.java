@@ -1,17 +1,14 @@
 package com.example.fairdraw.Activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.example.fairdraw.DBs.EventDB;
@@ -41,7 +38,6 @@ public class EntrantEventDetails extends BaseTopBottomActivity {
     private TextView tvTitle;
     private TextView tvSummary;
     private ImageView heroImage;
-    private GridLayout detailsGrid;
     private MaterialButton btnViewQrCode;
     private MaterialButton btnWaitlist;
 
@@ -52,6 +48,8 @@ public class EntrantEventDetails extends BaseTopBottomActivity {
     private ListenerRegistration eventListener;
     FirebaseImageStorageService storageService;
     final boolean[] onWaitlist = {false};
+    // Keep a reference to the last received Event so click handlers can consult helper methods immediately
+    private Event currentEvent;
 
 
     private void bindCell(int includeId, int iconRes, String title, String subtitle) {
@@ -89,7 +87,6 @@ public class EntrantEventDetails extends BaseTopBottomActivity {
         tvSummary   = findViewById(R.id.tvSummary);
         heroImage   = findViewById(R.id.heroImage);
         btnViewQrCode = findViewById(R.id.btnViewQrCode);
-        detailsGrid = findViewById(R.id.detailsGrid);
         btnWaitlist = findViewById(R.id.btnWaitlist);
 
         // 1) get the eventId from intent
@@ -106,14 +103,26 @@ public class EntrantEventDetails extends BaseTopBottomActivity {
                 Toast.makeText(this, "Unable to load event.", Toast.LENGTH_LONG).show();
                 return;
             }
-            // Check waitlist status
-            if (event.getWaitingList().contains(DevicePrefsManager.getDeviceId(this))) {
-                onWaitlist[0] = true;
-                btnWaitlist.setText("Leave Lottery Waitlist");
+            // Cache the latest event for use in click callbacks
+            currentEvent = event;
+            // Determine device id and use Event helper methods to set button state/text
+            String deviceId = DevicePrefsManager.getDeviceId(this);
+
+            // Track whether we're on the waiting list so the click handler can toggle correctly
+            onWaitlist[0] = event.isOnWaitingList(deviceId);
+
+            // If user is on the waiting list we want to allow them to leave, so enable the button in that case.
+            if (onWaitlist[0]) {
+                // When on the waiting list we present a leave action (enabled)
+                btnWaitlist.setText(getString(R.string.leave_lottery_waitlist));
+                btnWaitlist.setEnabled(true);
             } else {
-                onWaitlist[0] = false;
-                btnWaitlist.setText("Join Lottery Waitlist");
+                // Use the Event helpers for other states (enrolled/invited/full/available)
+                int resId = event.getJoinWaitlistButtonText(deviceId);
+                btnWaitlist.setText(getString(resId));
+                btnWaitlist.setEnabled(event.isJoinWaitlistButtonEnabled(deviceId));
             }
+
             bindEvent(event);
 
             btnViewQrCode.setOnClickListener(v -> {
@@ -126,12 +135,25 @@ public class EntrantEventDetails extends BaseTopBottomActivity {
 
         // 3) setup waitlist button
         btnWaitlist.setOnClickListener(v -> {
+            // Guard: don't run if button is disabled (e.g., already enrolled/invited and not allowed)
+            if (!btnWaitlist.isEnabled()) return;
+
             if (onWaitlist[0]) {
                 // Remove from waitlist
                 EventDB.removeFromWaitlist(eventId, DevicePrefsManager.getDeviceId(this), success -> {
                     if (success) {
                         onWaitlist[0] = false;
-                        btnWaitlist.setText("Join Lottery Waitlist");
+                        // After removal, try to use the cached event to determine the correct label/state
+                        String deviceId = DevicePrefsManager.getDeviceId(this);
+                        if (currentEvent != null) {
+                            int newRes = currentEvent.getJoinWaitlistButtonText(deviceId);
+                            btnWaitlist.setText(getString(newRes));
+                            btnWaitlist.setEnabled(currentEvent.isJoinWaitlistButtonEnabled(deviceId));
+                        } else {
+                            // Fallback until realtime listener refreshes
+                            btnWaitlist.setText(getString(R.string.join_lottery_waitlist));
+                            btnWaitlist.setEnabled(true);
+                        }
                         Toast.makeText(this, "Removed from waitlist", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(this, "Failed to remove from waitlist", Toast.LENGTH_SHORT).show();
@@ -143,7 +165,15 @@ public class EntrantEventDetails extends BaseTopBottomActivity {
                 EventDB.addToWaitlist(eventId, DevicePrefsManager.getDeviceId(this), success -> {
                     if (success) {
                         onWaitlist[0] = true;
-                        btnWaitlist.setText("Leave Lottery Waitlist");
+                        // After adding, use cached event if available to determine label/state.
+                        if (currentEvent != null) {
+                            // The cached event won't yet reflect the addition; present a leave affordance.
+                            btnWaitlist.setText(getString(R.string.leave_lottery_waitlist));
+                            btnWaitlist.setEnabled(true);
+                        } else {
+                            btnWaitlist.setText(getString(R.string.leave_lottery_waitlist));
+                            btnWaitlist.setEnabled(true);
+                        }
                         Toast.makeText(this, "Added to waitlist", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(this, "Failed to add to waitlist", Toast.LENGTH_SHORT).show();
@@ -183,7 +213,7 @@ public class EntrantEventDetails extends BaseTopBottomActivity {
         bindCell(R.id.cell_geolocation,
                 R.drawable.ic_place_24,
                 "Geolocation Requirement",
-                true ? "Required" : "Not Required");
+                (e.getGeolocation() != null && e.getGeolocation()) ? "Required" : "Not Required");
 
         bindCell(R.id.cell_capacity,
                 R.drawable.ic_people_24,
@@ -268,10 +298,7 @@ public class EntrantEventDetails extends BaseTopBottomActivity {
         // handle numeric or string
         if (e.getPrice() == null) return "—";
         try {
-            if (e.getPrice() != null) {
-                return moneyFmt.format(((Number) e.getPrice()).doubleValue());
-            }
-            return e.getPrice().toString();
+            return moneyFmt.format(e.getPrice().doubleValue());
         } catch (Exception ex) {
             return e.getPrice().toString();
         }

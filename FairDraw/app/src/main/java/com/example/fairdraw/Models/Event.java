@@ -1,6 +1,8 @@
 package com.example.fairdraw.Models;
 
 import com.example.fairdraw.Others.EventState;
+import com.example.fairdraw.R;
+import androidx.annotation.StringRes;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -495,6 +497,81 @@ public class Event implements Serializable {
      */
     public void setCancelledList(List<String> cancelledList) {
         this.cancelledList = cancelledList;
+    }
+
+    // --- New helper methods to support UI button state/text ---
+
+    /**
+     * Ensure internal lists are non-null so callers don't have to check.
+     */
+    private void ensureListsInitialized() {
+        if (waitingList == null) waitingList = new ArrayList<>();
+        if (invitedList == null) invitedList = new ArrayList<>();
+        if (enrolledList == null) enrolledList = new ArrayList<>();
+        if (cancelledList == null) cancelledList = new ArrayList<>();
+    }
+
+    /**
+     * Returns true if the given deviceId is already enrolled (registered) for the event.
+     */
+    public boolean isEnrolled(String deviceId) {
+        ensureListsInitialized();
+        if (deviceId == null) return false;
+        return enrolledList.contains(deviceId);
+    }
+
+    /**
+     * Returns true if the given deviceId has been invited (won the lottery) for the event.
+     */
+    public boolean isInvited(String deviceId) {
+        ensureListsInitialized();
+        if (deviceId == null) return false;
+        return invitedList.contains(deviceId);
+    }
+
+    /**
+     * Returns true if the given deviceId is already on the waiting list.
+     */
+    public boolean isOnWaitingList(String deviceId) {
+        ensureListsInitialized();
+        if (deviceId == null) return false;
+        return waitingList.contains(deviceId);
+    }
+
+    /**
+     * Returns whether the provided deviceId is allowed to join the lottery waiting list.
+     * False if the user is already enrolled, already invited, already on the waiting list,
+     * the waiting list limit has been reached (when configured), or the provided id is null.
+     */
+    public boolean canJoinWaitingList(String deviceId) {
+        ensureListsInitialized();
+        if (deviceId == null) return false;
+        if (isEnrolled(deviceId) || isInvited(deviceId) || isOnWaitingList(deviceId)) return false;
+        if (waitingListLimit != null && waitingListLimit >= 0 && waitingList.size() >= waitingListLimit) return false;
+        return true;
+    }
+
+    /**
+     * Returns the appropriate string resource id to display on the Join Lottery Waitlist button for the
+     * given deviceId. Resource ids map to localized UI strings.
+     */
+    @StringRes
+    public int getJoinWaitlistButtonText(String deviceId) {
+        ensureListsInitialized();
+        if (deviceId == null) return R.string.unavailable;
+        if (isEnrolled(deviceId)) return R.string.already_registered;
+        if (isInvited(deviceId)) return R.string.invitation_sent;
+        if (isOnWaitingList(deviceId)) return R.string.on_waitlist;
+        if (waitingListLimit != null && waitingListLimit >= 0 && waitingList.size() >= waitingListLimit) return R.string.waitlist_full;
+        return R.string.join_lottery_waitlist;
+    }
+
+    /**
+     * Convenience method for UI: whether the Join Lottery Waitlist button should be enabled
+     * for the provided deviceId.
+     */
+    public boolean isJoinWaitlistButtonEnabled(String deviceId) {
+        return canJoinWaitingList(deviceId);
     }
 
     /**
