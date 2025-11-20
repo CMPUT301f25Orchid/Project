@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">FairDraw</string>
     <string name="history">HISTORY</string>
+    <string name="notification_icon_announce">📣</string>
+    <string name="notification_organizer_message">Organizer message</string>
     <string name="return_to_profile">RETURN TO PROFILE</string>
     <string name="full_name">Full name</string>
     <string name="email">Email</string>

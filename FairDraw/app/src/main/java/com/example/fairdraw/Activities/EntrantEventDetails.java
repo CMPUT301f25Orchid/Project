@@ -1,6 +1,8 @@
 package com.example.fairdraw.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.GridLayout;
 import android.widget.ImageView;
@@ -13,9 +15,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.example.fairdraw.DBs.EventDB;
+import com.example.fairdraw.Fragments.QrCodeFragment;
+import com.example.fairdraw.ServiceUtility.DevicePrefsManager;
 import com.example.fairdraw.ServiceUtility.FirebaseImageStorageService;
 import com.example.fairdraw.Models.Event;
 import com.example.fairdraw.R;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.firestore.ListenerRegistration;
 
@@ -24,13 +29,20 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class EntrantEventDetails extends AppCompatActivity {
+/**
+ * Activity that displays detailed information for a single Event to an entrant.
+ * <p>
+ * It listens to real-time updates for the event document and allows the user to
+ * join or leave the lottery/waitlist for the event.
+ */
+public class EntrantEventDetails extends BaseTopBottomActivity {
 
     // --- Views ---
     private TextView tvTitle;
     private TextView tvSummary;
     private ImageView heroImage;
     private GridLayout detailsGrid;
+    private MaterialButton btnViewQrCode;
     private MaterialButton btnWaitlist;
 
     // ---- Date & money formatters ----
@@ -39,6 +51,7 @@ public class EntrantEventDetails extends AppCompatActivity {
 
     private ListenerRegistration eventListener;
     FirebaseImageStorageService storageService;
+    final boolean[] onWaitlist = {false};
 
 
     private void bindCell(int includeId, int iconRes, String title, String subtitle) {
@@ -48,16 +61,34 @@ public class EntrantEventDetails extends AppCompatActivity {
         ((TextView) cell.findViewById(R.id.subtitle)).setText(subtitle);
     }
 
+    /**
+     * Activity lifecycle entry point. Reads the event_id extra, subscribes to realtime updates
+     * and initializes UI controls including the waitlist button.
+     *
+     * Expected Intent extras:
+     *  - "event_id": String UUID of the event document
+     *
+     * @param savedInstanceState saved state bundle
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_entrant_event_details);
 
+        // Initialize common top and bottom navigation using BaseTopBottomActivity helpers
+        initTopNav(com.example.fairdraw.Others.BarType.ENTRANT);
+        initBottomNav(com.example.fairdraw.Others.BarType.ENTRANT, findViewById(R.id.home_bottom_nav_bar));
+
+        // Ensure the correct bottom tab is selected (events/details)
+        BottomNavigationView bottomNav = findViewById(R.id.home_bottom_nav_bar);
+        if (bottomNav != null) bottomNav.setSelectedItemId(R.id.events_activity);
+
         // grab views
         tvTitle     = findViewById(R.id.tvTitle);
         tvSummary   = findViewById(R.id.tvSummary);
         heroImage   = findViewById(R.id.heroImage);
+        btnViewQrCode = findViewById(R.id.btnViewQrCode);
         detailsGrid = findViewById(R.id.detailsGrid);
         btnWaitlist = findViewById(R.id.btnWaitlist);
 
@@ -75,17 +106,50 @@ public class EntrantEventDetails extends AppCompatActivity {
                 Toast.makeText(this, "Unable to load event.", Toast.LENGTH_LONG).show();
                 return;
             }
+            // Check waitlist status
+            if (event.getWaitingList().contains(DevicePrefsManager.getDeviceId(this))) {
+                onWaitlist[0] = true;
+                btnWaitlist.setText("Leave Lottery Waitlist");
+            } else {
+                onWaitlist[0] = false;
+                btnWaitlist.setText("Join Lottery Waitlist");
+            }
             bindEvent(event);
+
+            btnViewQrCode.setOnClickListener(v -> {
+                QrCodeFragment qrFragment = QrCodeFragment.newInstance(eventId,event.getTitle());
+                qrFragment.show(getSupportFragmentManager(), "QrCodeFragment");
+            });
         });
 
         storageService = new FirebaseImageStorageService();
 
-        // 3) button toggle (we’ll later connect to real waitlist status)
-        final boolean[] onWaitlist = {false};
+        // 3) setup waitlist button
         btnWaitlist.setOnClickListener(v -> {
-            onWaitlist[0] = !onWaitlist[0];
-            btnWaitlist.setSelected(onWaitlist[0]);
-            btnWaitlist.setText(onWaitlist[0] ? "Leave Waitlist" : "Join Lottery Waitlist");
+            if (onWaitlist[0]) {
+                // Remove from waitlist
+                EventDB.removeFromWaitlist(eventId, DevicePrefsManager.getDeviceId(this), success -> {
+                    if (success) {
+                        onWaitlist[0] = false;
+                        btnWaitlist.setText("Join Lottery Waitlist");
+                        Toast.makeText(this, "Removed from waitlist", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "Failed to remove from waitlist", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+            else {
+                // Add to waitlist
+                EventDB.addToWaitlist(eventId, DevicePrefsManager.getDeviceId(this), success -> {
+                    if (success) {
+                        onWaitlist[0] = true;
+                        btnWaitlist.setText("Leave Lottery Waitlist");
+                        Toast.makeText(this, "Added to waitlist", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "Failed to add to waitlist", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
         });
     }
 
@@ -129,7 +193,7 @@ public class EntrantEventDetails extends AppCompatActivity {
         bindCell(R.id.cell_reg_period,
                 R.drawable.ic_event_24,
                 "Registration Period",
-                buildDateRange(new Date(), e.getRegPeriod()));
+                buildDateRange(e.getEventOpenRegDate(), e.getEventCloseRegDate()));
 
         bindCell(R.id.cell_price,
                 R.drawable.ic_attach_money_24,
@@ -144,7 +208,7 @@ public class EntrantEventDetails extends AppCompatActivity {
         bindCell(R.id.cell_schedule,
                 R.drawable.ic_schedule_24,
                 "Schedule",
-                safe(e.getTime().toString(), "—"));
+                safe((e.getTime() == null ? "—" : e.getTime().toString()), "—"));
 
         // Add a placeholder bitmap saying loading for event poster
         heroImage.setImageResource(R.drawable.loading);
@@ -159,6 +223,7 @@ public class EntrantEventDetails extends AppCompatActivity {
             } else {
                 // Handle error
                 Toast.makeText(this, "Failed to load event poster", Toast.LENGTH_SHORT).show();
+                Log.e("EntrantEventDetails", "Error loading event poster", urlTask.getException());
             }
         });
     }

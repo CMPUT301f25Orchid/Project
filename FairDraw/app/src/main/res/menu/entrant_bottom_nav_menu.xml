@@ -10,7 +10,7 @@
         android:icon="@drawable/nav_events_symbol_black"/>
     <item
         android:title="Scan"
-        android:id="@+id/settings_activity"
+        android:id="@+id/scan_activity"
         android:icon="@drawable/nav_qr_symbol_black"/>
     <item
         android:title="Notifications"

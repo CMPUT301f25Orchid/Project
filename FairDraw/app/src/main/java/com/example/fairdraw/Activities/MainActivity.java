@@ -34,6 +34,13 @@ import com.google.android.gms.tasks.Task;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Developer playground activity used during development to test image uploads, notifications and
+ * navigation to various screens. Not part of the primary user experience.
+ *
+ * Includes helpers to pick an image from the gallery and upload it to Firebase Storage via
+ * {@link com.example.fairdraw.ServiceUtility.FirebaseImageStorageService}.
+ */
 public class MainActivity extends AppCompatActivity {
 
     private ImageView previewImage;
@@ -65,6 +72,10 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
+    /**
+     * Activity entry point. Sets up UI, click handlers and seeds a demo Entrant document.
+     * @param savedInstanceState previous state bundle
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -147,6 +158,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Push a set of dummy notifications to the given device id. Intended for testing/demo.
+     * @param deviceId device id to push notifications to
+     */
     private void seedDummyNotifications(String deviceId) {
         List<EntrantNotification> dummies = Arrays.asList(
                 new EntrantNotification(NotificationType.WIN,      "evt_swim",  "Swimming Lessons"),
@@ -154,8 +169,8 @@ public class MainActivity extends AppCompatActivity {
                 new EntrantNotification(NotificationType.WAITLIST, "evt_ball",  "Basketball Camp"),
                 new EntrantNotification(NotificationType.REPLACE,  "evt_piano", "Piano Basics")
         );
-        for (EntrantNotification n : dummies) {
-            EntrantDB.pushNotificationToUser(deviceId, n, (ok, e) -> {
+        for (EntrantNotification notification : dummies) {
+            EntrantDB.pushNotificationToUser(deviceId, notification, (ok, e) -> {
                 if (!ok) {
                     Toast.makeText(this, "Seed failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -164,11 +179,15 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, "Seed request sent to entrants/" + deviceId, Toast.LENGTH_SHORT).show();
     }
 
-
+    /**
+     * Attach listeners to an upload Task to show success/failure to the user.
+     * @param task the upload task returning a download Uri on success
+     * @param label short label used in the success toast (e.g. "Entrant" or "Event")
+     */
     private void handleUploadTask(Task<Uri> task, String label) {
         task.addOnSuccessListener(uri -> {
-            Toast.makeText(this, label + " uploaded!\nURL:\n" + uri, Toast.LENGTH_LONG).show();
-            // Tip: save uri.toString() to Firestore if you want to reference it later
+            Toast.makeText(this, label + " uploaded!\nURL:\notification" + uri, Toast.LENGTH_LONG).show();
+
         }).addOnFailureListener(e -> {
             Toast.makeText(this, "Upload failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
         });

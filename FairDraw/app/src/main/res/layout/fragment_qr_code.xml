@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/qrFragmentRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#80000000">
+
+    <!-- Center card -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/qrCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_gravity="center"
+        app:cardCornerRadius="20dp"
+        app:cardUseCompatPadding="true"
+        app:strokeWidth="0dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <!-- Close button (X) -->
+            <ImageButton
+                android:id="@+id/btnCloseQr"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="2dp"
+                android:contentDescription="Close"
+                app:srcCompat="@drawable/ic_close_24"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:tint="@android:color/darker_gray" />
+
+            <!-- Title -->
+            <TextView
+                android:id="@+id/tvQrTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Event QR Code"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-medium"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btnCloseQr"
+                app:layout_constraintHorizontal_bias="0" />
+
+            <!-- Optional: Event name -->
+            <TextView
+                android:id="@+id/tvQrEventName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="SWIMMING LESSONS FOR BEGINNERS"
+                android:textSize="12sp"
+                android:textColor="@android:color/darker_gray"
+                app:layout_constraintTop_toBottomOf="@id/tvQrTitle"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <!-- QR Code Image -->
+            <ImageView
+                android:id="@+id/imgQrCode"
+                android:layout_width="220dp"
+                android:layout_height="220dp"
+                android:layout_marginTop="16dp"
+                android:contentDescription="QR Code"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                app:layout_constraintTop_toBottomOf="@id/tvQrEventName"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <!-- Download button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDownloadQr"
+                style="@style/Widget.Material3.Button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Download QR Code"
+                android:textAllCaps="false"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif-medium"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                app:cornerRadius="14dp"
+                app:backgroundTint="@color/qr_button_blue"
+                android:textColor="@android:color/white"
+                app:icon="@drawable/ic_download_24"
+                app:iconTint="@android:color/white"
+                app:iconPadding="8dp"
+                app:iconGravity="textStart"
+                app:layout_constraintTop_toBottomOf="@id/imgQrCode"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <!-- Helper text -->
+            <TextView
+                android:id="@+id/tvQrHint"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="4dp"
+                android:text="Show this code at check-in or share it if needed."
+                android:textSize="11sp"
+                android:textColor="@android:color/darker_gray"
+                android:gravity="center"
+                app:layout_constraintTop_toBottomOf="@id/btnDownloadQr"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</FrameLayout>

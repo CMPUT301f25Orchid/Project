@@ -1,13 +1,11 @@
 package com.example.fairdraw.ServiceUtility;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
@@ -25,6 +23,7 @@ public class FirebaseImageStorageService {
     private static final String EVENTS_DIR   = "events";
     private static final String PROFILE_NAME = "profile.jpg";
     private static final String POSTER_NAME  = "poster.jpg";
+    private static final String QR_NAME      = "qr.png";
 
     private final FirebaseStorage storage;
 
@@ -50,6 +49,14 @@ public class FirebaseImageStorageService {
                 .child(POSTER_NAME);
     }
 
+    // QR storage reference for events
+    private StorageReference eventQrRef(@NonNull String eventId) {
+        return storage.getReference()
+                .child(EVENTS_DIR)
+                .child(eventId)
+                .child(QR_NAME);
+    }
+
     // ---------- Public API: Entrant Profile ----------
 
     /**
@@ -67,7 +74,7 @@ public class FirebaseImageStorageService {
                                           int jpegQuality,
                                           int maxBytes) {
         byte[] data = compressBitmapToJpegBytes(bitmap, jpegQuality, maxBytes);
-        return putBytesAndGetUrl(entrantProfileRef(entrantId), data, "image/jpeg");
+        return putBytesAndGetUrl(entrantProfileRef(entrantId), data, "image/*");
     }
 
     /**
@@ -78,7 +85,7 @@ public class FirebaseImageStorageService {
      * @return A Task containing the download URL of the uploaded image.
      */
     public Task<Uri> uploadEntrantProfile(@NonNull String entrantId, @NonNull Uri fileUri) {
-        return putFileAndGetUrl(entrantProfileRef(entrantId), fileUri, "image/jpeg");
+        return putFileAndGetUrl(entrantProfileRef(entrantId), fileUri, "image/*");
     }
 
     /**
@@ -139,7 +146,7 @@ public class FirebaseImageStorageService {
                                        int jpegQuality,
                                        int maxBytes) {
         byte[] data = compressBitmapToJpegBytes(bitmap, jpegQuality, maxBytes);
-        return putBytesAndGetUrl(eventPosterRef(eventId), data, "image/jpeg");
+        return putBytesAndGetUrl(eventPosterRef(eventId), data, "image/*");
     }
 
     /**
@@ -150,7 +157,7 @@ public class FirebaseImageStorageService {
      * @return A Task containing the download URL of the uploaded image.
      */
     public Task<Uri> uploadEventPoster(@NonNull String eventId, @NonNull Uri fileUri) {
-        return putFileAndGetUrl(eventPosterRef(eventId), fileUri, "image/jpeg");
+        return putFileAndGetUrl(eventPosterRef(eventId), fileUri, "image/*");
     }
 
     /**
@@ -194,6 +201,82 @@ public class FirebaseImageStorageService {
         return exists(eventPosterRef(eventId));
     }
 
+    // ---------- Public API: Event QR (new) ----------
+
+    /**
+     * Uploads an event QR image from a Bitmap. Prefers PNG encoding; falls back to JPEG if PNG exceeds maxBytes.
+     *
+     * @param eventId     The ID of the event.
+     * @param bitmap      The QR image as a Bitmap.
+     * @param jpegQuality The initial JPEG compression quality (used only if PNG is too large).
+     * @param maxBytes    The maximum allowed size of the compressed image in bytes.
+     * @return A Task containing the download URL of the uploaded QR image.
+     */
+    public Task<Uri> uploadEventQr(@NonNull String eventId,
+                                   @NonNull Bitmap bitmap,
+                                   int jpegQuality,
+                                   int maxBytes) {
+        byte[] data = compressBitmapToPngBytes(bitmap, maxBytes);
+        // If PNG exceeded maxBytes, compressBitmapToPngBytes will fall back to JPEG compression already.
+        if (data.length > maxBytes) {
+            // As a final attempt, re-encode with provided jpegQuality limits
+            data = compressBitmapToJpegBytes(bitmap, jpegQuality, maxBytes);
+        }
+        return putBytesAndGetUrl(eventQrRef(eventId), data, "image/png");
+    }
+
+    /**
+     * Uploads an event QR image from a file Uri.
+     *
+     * @param eventId The ID of the event.
+     * @param fileUri The URI of the QR image file.
+     * @return A Task containing the download URL of the uploaded QR image.
+     */
+    public Task<Uri> uploadEventQr(@NonNull String eventId, @NonNull Uri fileUri) {
+        return putFileAndGetUrl(eventQrRef(eventId), fileUri, "image/png");
+    }
+
+    /**
+     * Gets the download URL for an event QR image.
+     *
+     * @param eventId The ID of the event.
+     * @return A Task containing the download URL.
+     */
+    public Task<Uri> getEventQrDownloadUrl(@NonNull String eventId) {
+        return eventQrRef(eventId).getDownloadUrl();
+    }
+
+    /**
+     * Downloads an event QR image as a byte array.
+     *
+     * @param eventId          The ID of the event.
+     * @param maxDownloadBytes The maximum number of bytes to download.
+     * @return A Task containing the image data as a byte array.
+     */
+    public Task<byte[]> getEventQrBytes(@NonNull String eventId, long maxDownloadBytes) {
+        return eventQrRef(eventId).getBytes(maxDownloadBytes);
+    }
+
+    /**
+     * Deletes an event QR image.
+     *
+     * @param eventId The ID of the event.
+     * @return A Task that completes when the deletion is finished.
+     */
+    public Task<Void> deleteEventQr(@NonNull String eventId) {
+        return eventQrRef(eventId).delete();
+    }
+
+    /**
+     * Checks if an event QR image exists.
+     *
+     * @param eventId The ID of the event.
+     * @return A Task containing true if the QR image exists, false otherwise.
+     */
+    public Task<Boolean> eventQrExists(@NonNull String eventId) {
+        return exists(eventQrRef(eventId));
+    }
+
     // ---------- Internals ----------
     private Task<Uri> putBytesAndGetUrl(StorageReference ref, byte[] data, String contentType) {
         StorageMetadata metadata = new StorageMetadata.Builder()
@@ -202,7 +285,11 @@ public class FirebaseImageStorageService {
 
         UploadTask upload = ref.putBytes(data, metadata);
         return upload.continueWithTask(task -> {
-            if (!task.isSuccessful()) throw task.getException();
+            if (!task.isSuccessful()) {
+                Exception e = (Exception) task.getException();
+                if (e != null) throw e;
+                throw new Exception("Upload task failed");
+            }
             return ref.getDownloadUrl();
         });
     }
@@ -214,7 +301,11 @@ public class FirebaseImageStorageService {
 
         UploadTask upload = ref.putFile(fileUri, metadata);
         return upload.continueWithTask(task -> {
-            if (!task.isSuccessful()) throw task.getException();
+            if (!task.isSuccessful()) {
+                Exception e = (Exception) task.getException();
+                if (e != null) throw e;
+                throw new Exception("Upload task failed");
+            }
             return ref.getDownloadUrl();
         });
     }
@@ -240,5 +331,17 @@ public class FirebaseImageStorageService {
             }
         } while (true);
         return out;
+    }
+
+    /**
+     * Try PNG encoding first (lossless). If PNG bytes exceed maxBytes, fall back to JPEG compression.
+     */
+    private byte[] compressBitmapToPngBytes(@NonNull Bitmap bitmap, int maxBytes) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] png = baos.toByteArray();
+        if (png.length <= maxBytes) return png;
+        // Fallback: convert to JPEG with progressive quality reductions
+        return compressBitmapToJpegBytes(bitmap, 90, maxBytes);
     }
 }

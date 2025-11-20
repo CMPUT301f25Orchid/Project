@@ -20,6 +20,10 @@ import com.example.fairdraw.R;
 import com.example.fairdraw.ServiceUtility.DevicePrefsManager;
 import com.google.firebase.firestore.ListenerRegistration;
 
+/**
+ * ProfileActivity displays the user's profile information and allows editing and
+ * deletion of the account. It expects a "deviceId" string extra to fetch the user data.
+ */
 public class ProfileActivity extends AppCompatActivity {
 
     private static final String TAG = "ProfileActivity";
@@ -30,6 +34,9 @@ public class ProfileActivity extends AppCompatActivity {
 
     private ListenerRegistration userListener;
 
+    /**
+     * Activity that displays a user's profile information. Expects a "deviceId" string extra.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -137,5 +144,3 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 }
-
-

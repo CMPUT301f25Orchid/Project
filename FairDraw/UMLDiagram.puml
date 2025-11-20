@@ -43,9 +43,14 @@ interface com.example.fairdraw.DBs.EntrantDB$NotificationsListener {
 }
 class com.example.fairdraw.Activities.BaseTopBottomActivity {
 # initBottomNav(arg0 : BarType, arg1 : BottomNavigationView) : void
+# initTopNav(arg0 : BarType) : void
 }
 class com.example.fairdraw.Adapters.EventArrayAdapter {
 + getView(arg0 : int, arg1 : View, arg2 : ViewGroup) : View
+}
+interface com.example.fairdraw.Adapters.EventArrayAdapter$EditEventListener {
+}
+interface com.example.fairdraw.Adapters.EventArrayAdapter$EventCardClickedListener {
 }
 class com.example.fairdraw.Adapters.EntrantNotificationAdapter {
 + setItems(arg0 : List<EntrantNotification>) : void
@@ -69,11 +74,12 @@ class com.example.fairdraw.Activities.EntrantNotificationsActivity {
 # onStart() : void
 # onStop() : void
 }
-class com.example.fairdraw.FilterEventsDialogFragment {
+class com.example.fairdraw.Fragments.FilterEventsDialogFragment {
++ {static} newInstance(arg0 : String, arg1 : String, arg2 : int) : FilterEventsDialogFragment
 + setFilterListener(arg0 : FilterListener) : void
 + onCreateDialog(arg0 : Bundle) : Dialog
 }
-interface com.example.fairdraw.FilterEventsDialogFragment$FilterListener {
+interface com.example.fairdraw.Fragments.FilterEventsDialogFragment$FilterListener {
 }
 class com.example.fairdraw.Activities.OrganizerManageEvent {
 # onCreate(arg0 : Bundle) : void
@@ -126,6 +132,8 @@ class com.example.fairdraw.Models.Event {
 + setCancelledList(arg0 : List<String>) : void
 + drawLotteryWinners() : List<String>
 + replaceLotteryWinner(arg0 : String) : String
++ cancelLotteryWinner(arg0 : String) : void
++ acceptLotteryWinner(arg0 : String) : void
 }
 class com.example.fairdraw.Models.User {
 + getName() : String
@@ -178,6 +186,7 @@ class com.example.fairdraw.Activities.ProfileActivity {
 }
 class com.example.fairdraw.Activities.EntrantHomeActivity {
 # onCreate(arg0 : Bundle) : void
+# onDestroy() : void
 }
 class com.example.fairdraw.Activities.MainActivity {
 # onCreate(arg0 : Bundle) : void
@@ -195,6 +204,12 @@ class com.example.fairdraw.ServiceUtility.FirebaseImageStorageService {
 + getEventPosterBytes(arg0 : String, arg1 : long) : Task<byte[]>
 + deleteEventPoster(arg0 : String) : Task<Void>
 + eventPosterExists(arg0 : String) : Task<Boolean>
++ uploadEventQr(arg0 : String, arg1 : Bitmap, arg2 : int, arg3 : int) : Task<Uri>
++ uploadEventQr(arg0 : String, arg1 : Uri) : Task<Uri>
++ getEventQrDownloadUrl(arg0 : String) : Task<Uri>
++ getEventQrBytes(arg0 : String, arg1 : long) : Task<byte[]>
++ deleteEventQr(arg0 : String) : Task<Void>
++ eventQrExists(arg0 : String) : Task<Boolean>
 }
 class com.example.fairdraw.ServiceUtility.DevicePrefsManager {
 + {static} getDeviceId(arg0 : Context) : String
@@ -211,6 +226,10 @@ class com.example.fairdraw.Models.Entrant {
 + removeNotification(arg0 : EntrantNotification) : void
 + getNotifications() : ArrayList<EntrantNotification>
 + setNotifications(arg0 : ArrayList<EntrantNotification>) : void
+}
+class com.example.fairdraw.Fragments.DecisionFragment {
++ newInstance(arg0 : EntrantNotification) : DecisionFragment
++ onCreateDialog(arg0 : Bundle) : Dialog
 }
 class com.example.fairdraw.Adapters.EntrantListArrayAdapter {
 + onCreateViewHolder(arg0 : ViewGroup, arg1 : int) : EntrantViewHolder
@@ -262,6 +281,9 @@ class com.example.fairdraw.DBs.EventDB {
 + {static} updateEvent(arg0 : Event, arg1 : UpdateEventCallback) : void
 + {static} deleteEvent(arg0 : String, arg1 : DeleteEventCallback) : void
 + {static} getEvents(arg0 : GetEventsCallback) : void
++ {static} listenToEvents(arg0 : GetEventsCallback) : ListenerRegistration
++ {static} removeFromWaitlist(arg0 : String, arg1 : String, arg2 : RemoveFromWaitlistCallback) : void
++ {static} addToWaitlist(arg0 : String, arg1 : String, arg2 : AddToWaitlistCallback) : void
 }
 interface com.example.fairdraw.DBs.EventDB$GetEventCallback {
 }
@@ -273,24 +295,29 @@ interface com.example.fairdraw.DBs.EventDB$UpdateEventCallback {
 }
 interface com.example.fairdraw.DBs.EventDB$DeleteEventCallback {
 }
-class com.example.fairdraw.SendNotificationDialogFragment {
+interface com.example.fairdraw.DBs.EventDB$RemoveFromWaitlistCallback {
+}
+interface com.example.fairdraw.DBs.EventDB$AddToWaitlistCallback {
+}
+class com.example.fairdraw.Fragments.SendNotificationDialogFragment {
 + {static} newInstance(arg0 : String) : SendNotificationDialogFragment
 + setListener(arg0 : Listener) : void
 + onStart() : void
 + onCreateView(arg0 : LayoutInflater, arg1 : ViewGroup, arg2 : Bundle) : View
 + onCreate(arg0 : Bundle) : void
 }
-enum com.example.fairdraw.Audience {
+enum com.example.fairdraw.Fragments.Audience {
 +  WAITING_LIST
 +  SELECTED
 +  CANCELLED
 }
-interface com.example.fairdraw.SendNotificationDialogFragment$Listener {
+interface com.example.fairdraw.Fragments.SendNotificationDialogFragment$Listener {
 }
 class com.example.fairdraw.Others.EntrantNotification {
 + type : String
 + eventId : String
 + title : String
++ message : String
 + read : boolean
 }
 class com.example.fairdraw.Activities.TestDeepLinkActivity {
@@ -301,6 +328,7 @@ enum com.example.fairdraw.Others.NotificationType {
 +  LOSE
 +  WAITLIST
 +  REPLACE
++  OTHER
 + title(arg0 : String) : String
 }
 class com.example.fairdraw.Activities.EditEventPage {
@@ -311,14 +339,14 @@ class com.example.fairdraw.Activities.OrganizerMainPage {
 # onCreate(arg0 : Bundle) : void
 }
 class com.example.fairdraw.Others.OrganizerEventsDataHolder {
-+ {static} EventArrayAdapter eventAdapter
++ {static} getEvents() : List<Event>
 + {static} getDataList() : ArrayList<Event>
 + {static} setDataList(arg0 : ArrayList<Event>) : void
++ {static} setAdapter(arg0 : EventArrayAdapter) : void
 + {static} setEventAdapter(arg0 : EventArrayAdapter) : void
-+ {static} getEventAdapter() : EventArrayAdapter
 + {static} addEvent(arg0 : Event) : void
 + {static} updateEvent(arg0 : Event, arg1 : int) : void
-+ {static} removeEvent(arg0 : Event) : void
++ {static} clear() : void
 }
 class com.example.fairdraw.Activities.CreateEventPage {
 # onCreate(arg0 : Bundle) : void
@@ -326,11 +354,17 @@ class com.example.fairdraw.Activities.CreateEventPage {
 class com.example.fairdraw.Activities.DeepLinkRouterActivity {
 # onCreate(arg0 : Bundle) : void
 }
+class com.example.fairdraw.Fragments.QrCodeFragment {
++ {static} newInstance(arg0 : String, arg1 : String) : QrCodeFragment
++ onCreateView(arg0 : LayoutInflater, arg1 : ViewGroup, arg2 : Bundle) : View
++ onViewCreated(arg0 : View, arg1 : Bundle) : void
++ getTheme() : int
+}
 
 
 java.io.Serializable <|.. com.example.fairdraw.Models.Organizer
 java.io.Serializable <|.. com.example.fairdraw.Models.Admin
-androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.EntrantEventDetails
+com.example.fairdraw.Activities.BaseTopBottomActivity <|-- com.example.fairdraw.Activities.EntrantEventDetails
 com.example.fairdraw.DBs.EntrantDB +.. com.example.fairdraw.DBs.EntrantDB$GetEntrantCallback
 com.example.fairdraw.DBs.EntrantDB +.. com.example.fairdraw.DBs.EntrantDB$AddEntrantCallback
 com.example.fairdraw.DBs.EntrantDB +.. com.example.fairdraw.DBs.EntrantDB$UpdateEntrantCallback
@@ -339,15 +373,17 @@ com.example.fairdraw.DBs.EntrantDB +.. com.example.fairdraw.DBs.EntrantDB$PushNo
 com.example.fairdraw.DBs.EntrantDB +.. com.example.fairdraw.DBs.EntrantDB$NotificationsListener
 androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.BaseTopBottomActivity
 android.widget.ArrayAdapter <|-- com.example.fairdraw.Adapters.EventArrayAdapter
+com.example.fairdraw.Adapters.EventArrayAdapter +.. com.example.fairdraw.Adapters.EventArrayAdapter$EditEventListener
+com.example.fairdraw.Adapters.EventArrayAdapter +.. com.example.fairdraw.Adapters.EventArrayAdapter$EventCardClickedListener
 com.example.fairdraw.Adapters.Adapter <|-- com.example.fairdraw.Adapters.EntrantNotificationAdapter
 com.example.fairdraw.Adapters.EntrantNotificationAdapter +.. com.example.fairdraw.Adapters.EntrantNotificationAdapter$OnAction
 com.example.fairdraw.Adapters.EntrantNotificationAdapter +.. com.example.fairdraw.Adapters.EntrantNotificationAdapter$ViewHolder
 com.example.fairdraw.Adapters.ViewHolder <|-- com.example.fairdraw.Adapters.EntrantNotificationAdapter$ViewHolder
-androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.EntrantScan
-androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.EntrantNotificationsActivity
-androidx.fragment.app.DialogFragment <|-- com.example.fairdraw.FilterEventsDialogFragment
-com.example.fairdraw.FilterEventsDialogFragment +.. com.example.fairdraw.FilterEventsDialogFragment$FilterListener
-androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.OrganizerManageEvent
+com.example.fairdraw.Activities.BaseTopBottomActivity <|-- com.example.fairdraw.Activities.EntrantScan
+com.example.fairdraw.Activities.BaseTopBottomActivity <|-- com.example.fairdraw.Activities.EntrantNotificationsActivity
+androidx.fragment.app.DialogFragment <|-- com.example.fairdraw.Fragments.FilterEventsDialogFragment
+com.example.fairdraw.Fragments.FilterEventsDialogFragment +.. com.example.fairdraw.Fragments.FilterEventsDialogFragment$FilterListener
+com.example.fairdraw.Activities.BaseTopBottomActivity <|-- com.example.fairdraw.Activities.OrganizerManageEvent
 java.io.Serializable <|.. com.example.fairdraw.Models.Event
 java.io.Serializable <|.. com.example.fairdraw.Models.User
 com.example.fairdraw.DBs.OrganizerDB +.. com.example.fairdraw.DBs.OrganizerDB$GetOrganizerCallback
@@ -359,9 +395,10 @@ com.example.fairdraw.DBs.UserDB +.. com.example.fairdraw.DBs.UserDB$ExistsCallba
 com.example.fairdraw.DBs.UserDB +.. com.example.fairdraw.DBs.UserDB$WriteCallback
 com.example.fairdraw.DBs.UserDB +.. com.example.fairdraw.DBs.UserDB$DeleteCallback
 androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.ProfileActivity
-com.example.fairdraw.Activities.BaseTopBottomActivity <|-- com.example.fairdraw.Activities.EntrantHomeActivity
+androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.EntrantHomeActivity
 androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.MainActivity
 java.io.Serializable <|.. com.example.fairdraw.Models.Entrant
+androidx.fragment.app.DialogFragment <|-- com.example.fairdraw.Fragments.DecisionFragment
 com.example.fairdraw.Adapters.Adapter <|-- com.example.fairdraw.Adapters.EntrantListArrayAdapter
 com.example.fairdraw.Adapters.EntrantListArrayAdapter +.. com.example.fairdraw.Adapters.EntrantListArrayAdapter$EntrantViewHolder
 com.example.fairdraw.Adapters.ViewHolder <|-- com.example.fairdraw.Adapters.EntrantListArrayAdapter$EntrantViewHolder
@@ -376,12 +413,15 @@ com.example.fairdraw.DBs.EventDB +.. com.example.fairdraw.DBs.EventDB$GetEventsC
 com.example.fairdraw.DBs.EventDB +.. com.example.fairdraw.DBs.EventDB$AddEventCallback
 com.example.fairdraw.DBs.EventDB +.. com.example.fairdraw.DBs.EventDB$UpdateEventCallback
 com.example.fairdraw.DBs.EventDB +.. com.example.fairdraw.DBs.EventDB$DeleteEventCallback
-androidx.fragment.app.DialogFragment <|-- com.example.fairdraw.SendNotificationDialogFragment
-com.example.fairdraw.SendNotificationDialogFragment +.. com.example.fairdraw.SendNotificationDialogFragment$Listener
+com.example.fairdraw.DBs.EventDB +.. com.example.fairdraw.DBs.EventDB$RemoveFromWaitlistCallback
+com.example.fairdraw.DBs.EventDB +.. com.example.fairdraw.DBs.EventDB$AddToWaitlistCallback
+androidx.fragment.app.DialogFragment <|-- com.example.fairdraw.Fragments.SendNotificationDialogFragment
+com.example.fairdraw.Fragments.SendNotificationDialogFragment +.. com.example.fairdraw.Fragments.SendNotificationDialogFragment$Listener
 java.io.Serializable <|.. com.example.fairdraw.Others.EntrantNotification
 androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.TestDeepLinkActivity
 androidx.fragment.app.Fragment <|-- com.example.fairdraw.Activities.EditEventPage
-androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.OrganizerMainPage
+com.example.fairdraw.Activities.BaseTopBottomActivity <|-- com.example.fairdraw.Activities.OrganizerMainPage
 androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.CreateEventPage
 androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.DeepLinkRouterActivity
+androidx.fragment.app.DialogFragment <|-- com.example.fairdraw.Fragments.QrCodeFragment
 @enduml

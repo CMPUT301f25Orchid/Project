@@ -1,14 +1,18 @@
 package com.example.fairdraw.Activities;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
+import android.text.InputType;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -20,17 +24,27 @@ import androidx.core.view.WindowInsetsCompat;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
+import com.example.fairdraw.DBs.EventDB;
 import com.example.fairdraw.Models.Event;
+import com.example.fairdraw.Others.EventState;
 import com.example.fairdraw.Others.OrganizerEventsDataHolder;
 import com.example.fairdraw.R;
+import com.example.fairdraw.ServiceUtility.DeepLinkUtil;
+import com.example.fairdraw.ServiceUtility.DevicePrefsManager;
+import com.example.fairdraw.ServiceUtility.FirebaseImageStorageService;
+import com.example.fairdraw.ServiceUtility.QrUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.zxing.BarcodeFormat;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 /**
  * Activity for creating a new event.
+ * <p>
+ * Presents a form collecting event details and uploads a new Event object into
+ * {@link com.example.fairdraw.Others.OrganizerEventsDataHolder} when the user confirms.
  */
 public class CreateEventPage extends AppCompatActivity {
 
@@ -56,6 +70,10 @@ public class CreateEventPage extends AppCompatActivity {
 
 
 
+    /**
+     * Activity lifecycle entry point. Sets up views, result launchers and click handlers.
+     * @param savedInstanceState previously saved state or null
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +84,8 @@ public class CreateEventPage extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        // Get DeviceId
+        final String deviceID = DevicePrefsManager.getDeviceId(this);
 
         // Initialize view variables
         confirmCreateEvent = findViewById(R.id.confirm_create_event);
@@ -83,6 +103,40 @@ public class CreateEventPage extends AppCompatActivity {
         eventLimit = inputLayout.findViewById(R.id.event_limit);
         eventGeolocation = inputLayout.findViewById(R.id.event_geolocation);
         bottomNavInclude = findViewById(R.id.create_bottom_nav_bar);
+
+        // --- New: attach DatePickerDialogs to date EditTexts and disable keyboard input ---
+        View.OnClickListener dateClickListener = v -> {
+            final EditText et = (EditText) v;
+            Calendar c = Calendar.getInstance();
+            try {
+                Date parsed = dateFormat.parse(et.getText().toString());
+                if (parsed != null) c.setTime(parsed);
+            } catch (Exception ignored) {
+            }
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+
+            DatePickerDialog dpd = new DatePickerDialog(CreateEventPage.this,
+                    (DatePicker view, int y, int m, int d) -> {
+                        Calendar chosen = Calendar.getInstance();
+                        chosen.set(y, m, d);
+                        et.setText(dateFormat.format(chosen.getTime()));
+                    }, year, month, day);
+            dpd.show();
+        };
+
+        // Disable keyboard entry and show calendar on click/focus for all date fields
+        EditText[] dateFields = new EditText[]{eventRegistrationOpenDate, eventRegistrationCloseDate, eventStartDate, eventEndDate};
+        for (EditText field : dateFields) {
+            field.setInputType(InputType.TYPE_NULL);
+            field.setFocusable(false);
+            field.setOnClickListener(dateClickListener);
+            field.setOnFocusChangeListener((v, hasFocus) -> {
+                if (hasFocus) v.performClick();
+            });
+        }
+        // --- End date picker setup ---
 
         // Initialize activity result launcher to get photo from gallery
         launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
@@ -136,26 +190,57 @@ public class CreateEventPage extends AppCompatActivity {
                             null,
                             null
                     );
+                    event.setOrganizer(deviceID);
                     if (!eventLimit.getText().toString().isEmpty()){
                         Integer limit = Integer.parseInt(eventLimit.getText().toString());
-                        System.out.println(limit);
                         event.setWaitingListLimit(limit);
                     }
                     if (bannerPhoto != null){
-                        event.setPosterPath(bannerPhoto.toString());
+                        FirebaseImageStorageService storageService = new FirebaseImageStorageService();
+                        storageService.uploadEventPoster(event.getUuid(), bannerPhoto).addOnSuccessListener(uri -> {
+                            Log.d("CreateEventPage", "Banner photo uploaded for event: " + event.getUuid());
+                        }).addOnFailureListener(e -> {
+                            Log.e("CreateEventPage", "Error uploading banner photo for event: " + event.getUuid(), e);
+                        });
                     }
-                    String qrText = event.getTitle().concat(" - ").concat(event.getDescription());
-                    BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
-                    Bitmap bitmap = barcodeEncoder.encodeBitmap(qrText, BarcodeFormat.QR_CODE, 400, 400);
-                    event.setQrSlug(bitmap.toString());
 
-                    // Upload event to database and return to organizer main page
+                    //Make QR code using DeepLinkUtil
+                    Bundle extras = new Bundle();
+                    extras.putString("event_id", event.getUuid());
+                    Uri deepLinkUri = DeepLinkUtil.buildLink(EntrantEventDetails.class, extras);
+                    Bitmap qr;
+                    try {
+                        qr = QrUtil.generate(deepLinkUri.toString(), 800);
+                        // Save QR code to Firebase Storage
+                        FirebaseImageStorageService storageService = new FirebaseImageStorageService();
+                        storageService.uploadEventQr(event.getUuid(), qr, 90, 1000000).addOnSuccessListener(uri -> {
+                            Log.d("CreateEventPage", "QR code uploaded for event: " + event.getUuid());
+                        }).addOnFailureListener(e -> {
+                            Log.e("CreateEventPage", "Error uploading QR code for event: " + event.getUuid(), e);
+                        });
+                    } catch (Exception e) {
+                        Log.e("CreateEventPage", "Error generating QR code for event: " + event.getUuid(), e);
+                    }
+
+                    event.setState(EventState.PUBLISHED);
+
                     OrganizerEventsDataHolder.addEvent(event);
-
+                    // Save event to database
+                    EventDB.addEvent(event, (ok) -> {
+                        if (!ok) {
+                            Log.e("CreateEventPage", "Error saving event to database: " + event.getUuid());
+                        }
+                    });
+                    Log.d("CreateEventPage", "Event created: " + event.getUuid());
                 }
                 catch (Exception e) {
-                    Toast.makeText(this, "Invalid date format", Toast.LENGTH_SHORT).show();
+                    Log.e("CreateEventPage", "Error creating event", e);
+                    Toast.makeText(this, "Error creating event: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
+
+                // Return to Organizer Main Page
+                Intent intent = new Intent(CreateEventPage.this, OrganizerMainPage.class);
+                startActivity(intent);
             }
         });
         // Handle upload poster image button click

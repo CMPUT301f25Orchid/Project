@@ -72,8 +72,10 @@ public class UserDB {
 
     /**
      * Asynchronously retrieves a User object from the database.
+     *
      * @param deviceId The device ID of the user to retrieve.
-     * @param cb The callback to be invoked with the result.
+     * @param cb The callback to be invoked with the result. On success: cb.onCallback(user, null).
+     *           If the document doesn't exist: cb.onCallback(null, null). On failure: cb.onCallback(null, exception).
      */
     public static void getUserOrNull(String deviceId, GetUserCallback cb) {
         getUserCollection().document(deviceId).get()
@@ -110,8 +112,10 @@ public class UserDB {
 
     /**
      * Asynchronously checks if a user with the given device ID exists in the database.
+     *
      * @param deviceId The device ID to check.
-     * @param cb The callback to be invoked with the result.
+     * @param cb The callback to be invoked with the result. On success: cb.onCallback(exists, null).
+     *           On failure: cb.onCallback(false, exception).
      */
     public static void userExists(String deviceId, ExistsCallback cb) {
         getUserCollection().document(deviceId).get()
@@ -124,8 +128,10 @@ public class UserDB {
      * Creates or updates a user in the database.
      * If a user with the same device ID already exists, it will be updated.
      * Otherwise, a new user will be created.
+     *
      * @param user The User object to upsert.
-     * @param cb The callback to be invoked with the result.
+     * @param cb The callback to be invoked with the result. On success: cb.onCallback(true, null).
+     *           On failure: cb.onCallback(false, exception).
      */
     public static void upsertUser(User user, WriteCallback cb) {
         getUserCollection().document(user.getDeviceId()).set(user)
@@ -136,7 +142,8 @@ public class UserDB {
     /**
      * Deletes a user from the database.
      * @param deviceId The device ID of the user to delete.
-     * @param cb The callback to be invoked with the result.
+     * @param cb The callback to be invoked with the result. On success: cb.onCallback(true, null).
+     *           On failure: cb.onCallback(false, exception).
      */
     public static void deleteUser(String deviceId, DeleteCallback cb) {
         getUserCollection().document(deviceId).delete()

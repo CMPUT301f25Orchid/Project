@@ -16,7 +16,9 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.fairdraw.Others.BarType;
 import com.example.fairdraw.R;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.zxing.ResultPoint;
 import com.journeyapps.barcodescanner.BarcodeCallback;
 import com.journeyapps.barcodescanner.BarcodeResult;
@@ -24,7 +26,13 @@ import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 
 import java.util.List;
 
-public class EntrantScan extends AppCompatActivity {
+/**
+ * Activity that provides a continuous barcode/QR code scanner for entrants.
+ * <p>
+ * Handles runtime camera permission, starts a continuous decode callback and
+ * routes scanned content (as a URL) to an ACTION_VIEW Intent.
+ */
+public class EntrantScan extends BaseTopBottomActivity {
 
     private DecoratedBarcodeView barcodeScanner;
     private boolean handled; // prevent double navigation
@@ -57,6 +65,10 @@ public class EntrantScan extends AppCompatActivity {
         }
     };
 
+    /**
+     * Setup UI and request camera permission if needed.
+     * @param savedInstanceState saved state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,8 +83,17 @@ public class EntrantScan extends AppCompatActivity {
         barcodeScanner = findViewById(R.id.barcodeScanner);
         barcodeScanner.setStatusText("");
         ensureCameraPermissionAndStart();
+        // Init shared top and bottom nav
+        initTopNav(BarType.ENTRANT);
+        initBottomNav(BarType.ENTRANT, findViewById(R.id.home_bottom_nav_bar));
+
+        BottomNavigationView bottomNav = findViewById(R.id.home_bottom_nav_bar);
+        if (bottomNav != null) bottomNav.setSelectedItemId(R.id.scan_activity);
     }
 
+    /**
+     * Verify camera permission and request it if not already granted.
+     */
     private void ensureCameraPermissionAndStart() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -82,6 +103,9 @@ public class EntrantScan extends AppCompatActivity {
         }
     }
 
+    /**
+     * Begins continuous decoding and resumes the scanner view.
+     */
     private void startScanning() {
         handled = false;
         barcodeScanner.decodeContinuous(callback);
