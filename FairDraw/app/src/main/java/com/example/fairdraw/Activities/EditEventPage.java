@@ -29,7 +29,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * A simple {@link Fragment} subclass used to edit an event.
+ * Fragment used to edit an existing {@link com.example.fairdraw.Models.Event}.
+ * <p>
+ * The fragment expects an integer argument named "position" which refers to the index of the
+ * event in {@link com.example.fairdraw.Others.OrganizerEventsDataHolder#getDataList()}.
+ * The fragment pre-fills the form with the event data and writes updates back via
+ * {@link com.example.fairdraw.Others.OrganizerEventsDataHolder#updateEvent(Event, int)}.
  */
 public class EditEventPage extends Fragment {
 
@@ -54,6 +59,9 @@ public class EditEventPage extends Fragment {
     Event event = null;
     Integer index;
 
+    /**
+     * Required empty public constructor which attaches the fragment layout.
+     */
     public EditEventPage() {
         // Required empty public constructor
         super(R.layout.fragment_edit_event_page);
@@ -66,6 +74,14 @@ public class EditEventPage extends Fragment {
         return inflater.inflate(R.layout.fragment_edit_event_page, container, false);
 
     }
+
+    /**
+     * Called after the fragment view has been created. Binds views, pre-fills fields with
+     * event data and attaches click listeners for uploading images and saving changes.
+     *
+     * @param view the root view for the fragment
+     * @param savedInstanceState saved state bundle
+     */
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
@@ -176,6 +192,7 @@ public class EditEventPage extends Fragment {
                         event.setPosterPath(bannerPhoto.toString());
                     }
                     OrganizerEventsDataHolder.updateEvent(event, index);
+                    requireActivity().getSupportFragmentManager().popBackStack();
                 }
                 catch (Exception e) {
                     Toast.makeText(v.getContext(), "Invalid date format", Toast.LENGTH_SHORT).show();

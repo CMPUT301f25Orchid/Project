@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Simple QR-code style icon made from filled squares. Size: 24dp. Uses project text_primary color. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Top-left finder square -->
+    <path
+        android:fillColor="@color/text_primary"
+        android:pathData="M2,2h6v6H2z" />
+    <path
+        android:fillColor="@color/white"
+        android:pathData="M4,4h2v2H4z" />
+
+    <!-- Top-right finder square -->
+    <path
+        android:fillColor="@color/text_primary"
+        android:pathData="M16,2h6v6h-6z" />
+    <path
+        android:fillColor="@color/white"
+        android:pathData="M18,4h2v2h-2z" />
+
+    <!-- Bottom-left finder square -->
+    <path
+        android:fillColor="@color/text_primary"
+        android:pathData="M2,16h6v6H2z" />
+    <path
+        android:fillColor="@color/white"
+        android:pathData="M4,18h2v2H4z" />
+
+    <!-- Inner QR modules (randomized pattern to look like QR) -->
+    <path android:fillColor="@color/text_primary" android:pathData="M10,4h2v2h-2z" />
+    <path android:fillColor="@color/text_primary" android:pathData="M13,4h1v1h-1z" />
+    <path android:fillColor="@color/text_primary" android:pathData="M10,7h1v1h-1z" />
+    <path android:fillColor="@color/text_primary" android:pathData="M12,7h2v2h-2z" />
+    <path android:fillColor="@color/text_primary" android:pathData="M15,9h1v1h-1z" />
+    <path android:fillColor="@color/text_primary" android:pathData="M7,10h1v1h-1z" />
+    <path android:fillColor="@color/text_primary" android:pathData="M11,11h2v2h-2z" />
+    <path android:fillColor="@color/text_primary" android:pathData="M16,13h1v1h-1z" />
+    <path android:fillColor="@color/text_primary" android:pathData="M9,14h1v1h-1z" />
+    <path android:fillColor="@color/text_primary" android:pathData="M14,16h2v2h-2z" />
+    <path android:fillColor="@color/text_primary" android:pathData="M18,18h1v1h-1z" />
+</vector>

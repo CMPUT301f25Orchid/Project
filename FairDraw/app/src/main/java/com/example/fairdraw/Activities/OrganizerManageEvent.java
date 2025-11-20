@@ -8,7 +8,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -16,18 +15,25 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.fairdraw.DBs.EntrantDB;
 import com.example.fairdraw.DBs.EventDB;
 import com.example.fairdraw.Adapters.EntrantListArrayAdapter;
+import com.example.fairdraw.Others.EntrantNotification;
+import com.example.fairdraw.Others.NotificationType;
 import com.example.fairdraw.ServiceUtility.FirebaseImageStorageService;
 import com.example.fairdraw.Others.ListItemEntrant;
 import com.example.fairdraw.Models.Event;
 import com.example.fairdraw.R;
-import com.example.fairdraw.SendNotificationDialogFragment;
+import com.example.fairdraw.Fragments.SendNotificationDialogFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrganizerManageEvent extends AppCompatActivity {
+/**
+ * OrganizerManageEvent class allows organizers to manage event details,
+ * view and manage entrants, and send notifications.
+ */
+public class OrganizerManageEvent extends BaseTopBottomActivity {
 
     String eventId;
     Event event;
@@ -51,6 +57,20 @@ public class OrganizerManageEvent extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_organizer_manage_event);
         eventId = getIntent().getStringExtra("eventId");
+
+        // Setup the top and bottom edge-to-edge insets
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.top_bar), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
+        // Initialize shared top and bottom navigation
+        initTopNav(com.example.fairdraw.Others.BarType.ORGANIZER);
+        initBottomNav(com.example.fairdraw.Others.BarType.ORGANIZER, findViewById(R.id.home_bottom_nav_bar));
+        // Select the organizer home tab (manager pages belong to organizer section)
+        com.google.android.material.bottomnavigation.BottomNavigationView bottomNav = findViewById(R.id.home_bottom_nav_bar);
+        if (bottomNav != null) bottomNav.setSelectedItemId(R.id.home_activity);
 
         // If no event id is provided, finish the activity
         if (eventId == null || eventId.isEmpty()) {
@@ -91,6 +111,11 @@ public class OrganizerManageEvent extends AppCompatActivity {
         });
     }
 
+    /**
+     * Binds the event data to the UI components.
+     *
+     * @param e The event object containing event details.
+     */
     public void bindEvent(Event e) {
         // Show hero image
         storageService.getEventPosterDownloadUrl(eventId).addOnCompleteListener(urlTask -> {
@@ -110,6 +135,37 @@ public class OrganizerManageEvent extends AppCompatActivity {
         tvDescription.setText((e.getDescription() == null || e.getDescription().isEmpty()) ? "No description provided" : e.getDescription());
 
         // Draw and invite button logic later
+        btnDrawAndInvite.setOnClickListener(v -> {
+            Toast.makeText(this, "Draw and Invite clicked for event: " + eventId, Toast.LENGTH_SHORT).show();
+            EventDB.getEvent(eventId, (event) -> {
+                if (event != null) {
+                    // Perform draw and invite logic here
+                    Toast.makeText(this, "Drawing and inviting entrants...", Toast.LENGTH_SHORT).show();
+                    List<String> invitedEntrants = event.drawLotteryWinners();
+
+                    // Update the event in the database
+                    EventDB.updateEvent(event, success -> {
+                        if (success) {
+                            Toast.makeText(OrganizerManageEvent.this, "Entrants drawn and updated!", Toast.LENGTH_SHORT).show();
+                            // now send the win notifications to the invited entrants
+                            for (String entrantId : invitedEntrants) {
+                                EntrantDB.pushNotificationToUser(entrantId, new EntrantNotification(NotificationType.WIN, eventId, event.getTitle()), (ok, e1) -> {
+                                    if (ok) {
+                                        Log.d("OrganizerManageEvent", "Notification sent to entrant ID: " + entrantId);
+                                    } else {
+                                        Log.d("OrganizerManageEvent", "Failed to send notification to entrant ID: " + entrantId + " | " + (e1 != null ? e1.getMessage() : "Unknown error"));
+                                    }
+                                });
+                            }
+                        } else {
+                            Toast.makeText(OrganizerManageEvent.this, "Failed to update event after drawing.", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                } else {
+                    Toast.makeText(this, "Failed to retrieve event for drawing: ", Toast.LENGTH_LONG).show();
+                }
+            });
+        });
 
         // Show invited list
         buildEntrantItemRecyclerView(rvInvited, e.getInvitedList(), false);
@@ -130,6 +186,31 @@ public class OrganizerManageEvent extends AppCompatActivity {
             dialog.setListener((eventId1, audience, message) -> {
                 Toast.makeText(this,
                         "Send to " + audience + " | " + message, Toast.LENGTH_SHORT).show();
+
+                List<String> targetEntrants;
+                switch (audience) {
+                    case SELECTED:
+                        targetEntrants = e.getInvitedList();
+                        break;
+                    case CANCELLED:
+                        targetEntrants = e.getCancelledList();
+                        break;
+                    case WAITING_LIST:
+                    default:
+                        targetEntrants = e.getWaitingList();
+                        break;
+                }
+                EntrantNotification notification = new EntrantNotification(NotificationType.OTHER, eventId1, "No title");
+                notification.message = message;
+                for (String entrantId : targetEntrants) {
+                    EntrantDB.pushNotificationToUser(entrantId, notification, (ok, ex) -> {
+                        if (ok) {
+                            Log.d("OrganizerManageEvent", "Custom notification sent to entrant ID: " + entrantId);
+                        } else {
+                            Log.d("OrganizerManageEvent", "Failed to send custom notification to entrant ID: " + entrantId + " | " + (ex != null ? ex.getMessage() : "Unknown error"));
+                        }
+                    });
+                }
             });
 
             dialog.show(getSupportFragmentManager(), "SendNotificationDialog");

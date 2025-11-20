@@ -2,10 +2,8 @@ package com.example.fairdraw.Fragments;
 
 import android.app.Dialog;
 import android.os.Bundle;
-import android.service.autofill.Validators;
 import android.view.View;
 import android.widget.Button;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import androidx.annotation.NonNull;
@@ -14,8 +12,13 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.fairdraw.R;
-import java.util.Calendar;
 
+/**
+ * DialogFragment that displays filter controls for the events list.
+ *
+ * <p>Hosts can supply the current filter values via {@link #newInstance} and
+ * receive updates via {@link FilterListener}.</p>
+ */
 public class FilterEventsDialogFragment extends DialogFragment {
 
     private FilterListener listener;
@@ -23,12 +26,32 @@ public class FilterEventsDialogFragment extends DialogFragment {
     private static final String ARG_INTEREST = "current_interest";
     private static final String ARG_AVAILABILITY = "current_availability";
 
+    /**
+     * Listener invoked when filters are applied or cleared by the user.
+     */
     public interface FilterListener {
+        /**
+         * Called when the user applies new filters.
+         * @param status selected status filter ("All", "Open", "Closed")
+         * @param interest selected interest filter (string or "All")
+         * @param availability selected availability as an int, or -1 for any
+         */
         void onFiltersApplied(String status, String interest, int availability);
+
+        /**
+         * Called when the user clears all filters.
+         */
         void onFiltersCleared();
     }
 
-    // ✅ Use a static newInstance method to pass arguments
+    /**
+     * Create a new FilterEventsDialogFragment with optional current values.
+     *
+     * @param currentStatus current status filter, or "All"
+     * @param currentInterest current interest filter, or "All"
+     * @param currentAvailability current availability or -1 for any
+     * @return configured FilterEventsDialogFragment
+     */
     public static FilterEventsDialogFragment newInstance(String currentStatus, String currentInterest, int currentAvailability) {
         FilterEventsDialogFragment fragment = new FilterEventsDialogFragment();
         Bundle args = new Bundle();
@@ -39,10 +62,23 @@ public class FilterEventsDialogFragment extends DialogFragment {
         return fragment;
     }
 
+    /**
+     * Set a listener which will receive filter events.
+     *
+     * @param listener the FilterListener to notify
+     */
     public void setFilterListener(FilterListener listener) {
         this.listener = listener;
     }
 
+    /**
+     * Create the dialog UI used to pick filters. Reads the arguments (if any)
+     * to pre-select the controls and notifies the {@link FilterListener}
+     * when the user taps Apply or Clear.
+     *
+     * @param savedInstanceState saved bundle provided by the system (may be null)
+     * @return a configured {@link Dialog} displaying filter controls
+     */
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -71,9 +107,8 @@ public class FilterEventsDialogFragment extends DialogFragment {
         applyBtn.setOnClickListener(v -> {
             if (listener != null) {
 
-                RadioGroup sg = view.findViewById(R.id.statusGroup);
                 String status;
-                int checkedStatusId = sg.getCheckedRadioButtonId();
+                int checkedStatusId = statusGroup.getCheckedRadioButtonId();
                 if (checkedStatusId == R.id.statusOpen) {
                     status = "Open";
                 } else if (checkedStatusId == R.id.statusClosed) {

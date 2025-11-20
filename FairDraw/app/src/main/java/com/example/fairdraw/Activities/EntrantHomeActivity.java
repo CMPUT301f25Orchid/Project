@@ -2,6 +2,7 @@ package com.example.fairdraw.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -17,19 +18,27 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.bumptech.glide.Glide;
 import com.example.fairdraw.DBs.EventDB;
 import com.example.fairdraw.Fragments.FilterEventsDialogFragment;
 import com.example.fairdraw.Models.Event;
 import com.example.fairdraw.Others.BarType;
 import com.example.fairdraw.Others.EventState;
 import com.example.fairdraw.R;
+import com.example.fairdraw.ServiceUtility.FirebaseImageStorageService;
 import com.google.firebase.firestore.ListenerRegistration;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 import java.util.Calendar;
-public class EntrantHomeActivity extends BaseTopBottomActivity {
+
+/**
+ * EntrantHomeActivity displays the home screen for entrants, showing a list of events
+ * and allowing navigation to other parts of the app such as the organizer page, scan page,
+ * and notifications. It also handles filtering of events based on user-selected criteria.
+ */
+public class EntrantHomeActivity extends AppCompatActivity {
 
     private LinearLayout eventListContainer;
     private ListenerRegistration eventListener;
@@ -57,11 +66,37 @@ public class EntrantHomeActivity extends BaseTopBottomActivity {
 
         View organizerBtn = findViewById(R.id.btnOrganizer);
         organizerBtn.setOnClickListener(v ->{
+            Log.d("OrganizerMainPage", "Organizer button clicked");
             Intent intent = new Intent(this, OrganizerMainPage.class);
             startActivity(intent);
         });
 
-        initBottomNav(BarType.ENTRANT, findViewById(R.id.home_bottom_nav_bar));
+        View home = findViewById(R.id.home_activity);
+        View myEvents = findViewById(R.id.events_activity);
+        View scan = findViewById(R.id.scan_activity);
+        View notifications = findViewById(R.id.notifications_activity);
+
+        home.setOnClickListener(v -> {
+            // Send to EntrantHomeActivity
+            Intent intent = new Intent(this, EntrantHomeActivity.class);
+            startActivity(intent);
+        });
+
+        myEvents.setOnClickListener(v -> {
+            // TODO: Send to EntrantEventsActivity
+        });
+
+        scan.setOnClickListener(v -> {
+            // Send to EntrantScan
+            Intent intent = new Intent(this, EntrantScan.class);
+            startActivity(intent);
+        });
+
+        notifications.setOnClickListener(v -> {
+            // Send to EntrantNotificationsActivity
+            Intent intent = new Intent(this, EntrantNotificationsActivity.class);
+            startActivity(intent);
+        });
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -126,7 +161,6 @@ public class EntrantHomeActivity extends BaseTopBottomActivity {
         }
     }
 
-
     /**
      * Adds eventscard.xml for each Event
      */
@@ -140,13 +174,14 @@ public class EntrantHomeActivity extends BaseTopBottomActivity {
             CardView cardView = (CardView) inflater.inflate(R.layout.eventscard, eventListContainer, false);
 
             // Bind views
-            TextView titleView = cardView.findViewById(R.id.eventTitle);
-            TextView locationView = cardView.findViewById(R.id.eventLocation);
-            TextView dateView = cardView.findViewById(R.id.eventDate);
-            TextView capacityView = cardView.findViewById(R.id.eventCapacity);
-            TextView priceView = cardView.findViewById(R.id.eventPrice);
+            TextView titleView = cardView.findViewById(R.id.event_content_title);
+            TextView locationView = cardView.findViewById(R.id.event_content_location);
+            TextView dateView = cardView.findViewById(R.id.event_content_date);
+            TextView capacityView = cardView.findViewById(R.id.event_content_capacity);
+            TextView priceView = cardView.findViewById(R.id.event_content_price);
             TextView statusView = cardView.findViewById(R.id.eventStatus);
-            Button viewDetailsButton = cardView.findViewById(R.id.viewDetailsButton);
+            Button joinBtn = cardView.findViewById(R.id.event_edit_button);
+            Button viewDetailsButton = cardView.findViewById(R.id.view_details_button);
             ImageView eventImage = cardView.findViewById(R.id.eventImage);
 
             // Set values
@@ -182,6 +217,17 @@ public class EntrantHomeActivity extends BaseTopBottomActivity {
                 Intent intent = new Intent(EntrantHomeActivity.this, EntrantEventDetails.class);
                 intent.putExtra("event_id", event.getUuid());
                 startActivity(intent);
+            });
+
+            // Try to fetch the Bitmap for the event image
+            FirebaseImageStorageService storageService = new FirebaseImageStorageService();
+            storageService.getEventPosterDownloadUrl(event.getUuid()).addOnSuccessListener(uri -> {
+                Glide.with(this)
+                        .load(uri)
+                        .placeholder(R.drawable.swimming)
+                        .into(eventImage);
+            }).addOnFailureListener(e -> {
+                Log.e("EntrantHomeActivity", "Failed to load image for event " + event.getUuid(), e);
             });
 
             // Add card to layout

@@ -17,7 +17,12 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.fairdraw.DBs.UserDB;
 import com.example.fairdraw.Models.User;
 import com.example.fairdraw.R;
+import com.example.fairdraw.ServiceUtility.DevicePrefsManager;
 
+/**
+ * ProfileActivity displays the user's profile information and allows editing and
+ * deletion of the account. It expects a "deviceId" string extra to fetch the user data.
+ */
 public class ProfileActivity extends AppCompatActivity {
 
     private static final String TAG = "ProfileActivity";
@@ -26,6 +31,9 @@ public class ProfileActivity extends AppCompatActivity {
     private Button editButton, returnButton, deleteAccButton, viewHistoryButton;
     private TextView nameTextView, usernameTextView, emailTextView, phoneTextView;
 
+    /**
+     * Activity that displays a user's profile information. Expects a "deviceId" string extra.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +52,7 @@ public class ProfileActivity extends AppCompatActivity {
         viewHistoryButton = findViewById(R.id.btnViewHistory);
 
         //Getting the device ID passed from the previous activity
-        String deviceId = getIntent().getStringExtra("deviceId");
+        String deviceId = DevicePrefsManager.getDeviceId(this);
 
         if (deviceId != null && !deviceId.isEmpty()){
             //Fetching user data from Firestore based on the device ID
@@ -89,5 +97,3 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 }
-
-
