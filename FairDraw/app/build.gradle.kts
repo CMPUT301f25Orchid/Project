@@ -72,7 +72,10 @@ dependencies {
     implementation(libs.firebase.installations)
     implementation(libs.firebase.storage)
     implementation(libs.cardview)
+    testImplementation(libs.ext.junit)
     testImplementation(libs.junit)
+
+
     // Robolectric for JVM unit tests
     testImplementation("org.robolectric:robolectric:4.10.3")
     testImplementation("androidx.test:core:1.5.0")

@@ -1,6 +1,13 @@
 package com.example.fairdraw.Models;
+import com.example.fairdraw.DBs.EntrantDB;
+import com.example.fairdraw.Others.EntrantNotification;
+import com.example.fairdraw.Others.NotificationType;
 
+
+import com.example.fairdraw.DBs.EntrantDB;
+import com.example.fairdraw.Others.EntrantNotification;
 import com.example.fairdraw.Others.EventState;
+import com.example.fairdraw.Others.NotificationType;
 import com.example.fairdraw.R;
 import androidx.annotation.StringRes;
 
@@ -581,7 +588,10 @@ public class Event implements Serializable {
      */
     public List<String> drawLotteryWinners() {
         // Calculate how many new winners we need to draw.
+        ensureListsInitialized();
+        List<String> originalWaiting = new ArrayList<>(waitingList);
         int spotsToFill = capacity - enrolledList.size() - invitedList.size();
+
 
         // If there are no spots to fill, do nothing.
         if (spotsToFill <= 0) {
@@ -606,6 +616,29 @@ public class Event implements Serializable {
             List<String> remainingWaiting = new ArrayList<>(waitingList.subList(numToDraw, waitingList.size()));
             waitingList.clear();
             waitingList.addAll(remainingWaiting);
+        }
+
+        // send lose notifications to everyone who was waiting but is not invited
+        String eventId = uuid;
+        String eventTitle = (title == null || title.trim().isEmpty())
+                ? "this event"
+                : title;
+
+        for (String deviceId : originalWaiting) {
+            if (deviceId == null || deviceId.trim().isEmpty()) {
+                continue;
+            }
+            if (invitedList.contains(deviceId)) {
+                continue;
+            }
+
+            EntrantNotification n = new EntrantNotification(
+                    NotificationType.LOSE,
+                    eventId,
+                    eventTitle
+            );
+
+            EntrantDB.pushNotificationToUser(deviceId, n, null);
         }
 
         // Return a copy of the complete invited list.
