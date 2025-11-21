@@ -17,4 +17,7 @@
     <string name="on_waitlist">On Waiting List</string>
     <string name="waitlist_full">Waitlist Full</string>
     <string name="unavailable">Unavailable</string>
+
+    <!-- Error messages -->
+    <string name="error_updating_event">Failed to update event. Changes may not be saved.</string>
 </resources>

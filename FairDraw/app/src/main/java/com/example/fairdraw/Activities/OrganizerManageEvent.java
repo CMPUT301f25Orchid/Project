@@ -117,6 +117,8 @@ public class OrganizerManageEvent extends BaseTopBottomActivity {
      * @param e The event object containing event details.
      */
     public void bindEvent(Event e) {
+        event = e;
+
         // Show hero image
         storageService.getEventPosterDownloadUrl(eventId).addOnCompleteListener(urlTask -> {
             if (urlTask.isSuccessful()) {
@@ -222,7 +224,7 @@ public class OrganizerManageEvent extends BaseTopBottomActivity {
         for (String s : stringList) {
             entrantList.add(new ListItemEntrant(s));
         }
-        EntrantListArrayAdapter adapter = new EntrantListArrayAdapter(this, entrantList, hideCloseButton);
+        EntrantListArrayAdapter adapter = new EntrantListArrayAdapter(this, entrantList, hideCloseButton, event.getUuid());
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
     }

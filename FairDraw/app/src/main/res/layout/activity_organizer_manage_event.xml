@@ -49,7 +49,7 @@
             <ImageView
                 android:id="@+id/heroImage"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
+                android:layout_height="0dp"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
                 android:layout_marginTop="12dp"
@@ -109,138 +109,162 @@
                 android:background="@color/card_blue"
                 android:textColor="@android:color/white"/>
 
-            <!-- 3 columns: Invited / Cancelled / Registered -->
+            <!-- Two-by-two grid: Invited / Cancelled on top row, Registered / Waiting on bottom row -->
             <LinearLayout
-                android:id="@+id/threeListRow"
+                android:id="@+id/twoByTwoGrid"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:baselineAligned="false"
-                android:orientation="horizontal"
-                android:weightSum="3">
+                android:orientation="vertical"
+                android:baselineAligned="false">
 
-                <!-- Invited -->
+                <!-- Top row: Invited | Cancelled -->
                 <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="6dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/tvInvitedHeader"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Invited Entrants"
-                        android:textStyle="bold"
-                        android:textSize="14sp"/>
-
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="match_parent"
-                        android:layout_height="220dp"
-                        android:layout_marginTop="6dp"
-                        app:cardUseCompatPadding="true"
-                        app:cardBackgroundColor="@android:color/white"
-                        app:cardCornerRadius="10dp">
-
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/rvInvited"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:nestedScrollingEnabled="false"/>
-                    </androidx.cardview.widget.CardView>
-                </LinearLayout>
-
-                <!-- Cancelled -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="3dp"
-                    android:layout_marginEnd="3dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/tvCancelledHeader"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Cancelled Entrants"
-                        android:textStyle="bold"
-                        android:textSize="14sp"/>
-
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="match_parent"
-                        android:layout_height="220dp"
-                        android:layout_marginTop="6dp"
-                        app:cardUseCompatPadding="true"
-                        app:cardBackgroundColor="@android:color/white"
-                        app:cardCornerRadius="10dp">
-
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/rvCancelled"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:nestedScrollingEnabled="false"/>
-                    </androidx.cardview.widget.CardView>
-                </LinearLayout>
-
-                <!-- Registered -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="6dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/tvRegisteredHeader"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Registered Entrants"
-                        android:textStyle="bold"
-                        android:textSize="14sp"/>
-
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="match_parent"
-                        android:layout_height="220dp"
-                        android:layout_marginTop="6dp"
-                        app:cardUseCompatPadding="true"
-                        app:cardBackgroundColor="@android:color/white"
-                        app:cardCornerRadius="10dp">
-
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/rvRegistered"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:nestedScrollingEnabled="false"/>
-                    </androidx.cardview.widget.CardView>
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- Waiting List -->
-            <TextView
-                android:id="@+id/tvWaitingHeader"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="Waiting List"
-                android:textStyle="bold"
-                android:textSize="14sp"/>
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="220dp"
-                android:layout_marginTop="6dp"
-                app:cardUseCompatPadding="true"
-                app:cardBackgroundColor="@android:color/white"
-                app:cardCornerRadius="10dp">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvWaiting"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:nestedScrollingEnabled="false"/>
-            </androidx.cardview.widget.CardView>
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    android:layout_marginBottom="6dp">
+
+                    <!-- Invited -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="6dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tvInvitedHeader"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Invited Entrants"
+                            android:textStyle="bold"
+                            android:textSize="14sp"/>
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="220dp"
+                            android:layout_marginTop="6dp"
+                            app:cardUseCompatPadding="true"
+                            app:cardBackgroundColor="@android:color/white"
+                            app:cardCornerRadius="10dp">
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/rvInvited"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:nestedScrollingEnabled="false"/>
+                        </androidx.cardview.widget.CardView>
+                    </LinearLayout>
+
+                    <!-- Cancelled -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="6dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tvCancelledHeader"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Cancelled Entrants"
+                            android:textStyle="bold"
+                            android:textSize="14sp"/>
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="220dp"
+                            android:layout_marginTop="6dp"
+                            app:cardUseCompatPadding="true"
+                            app:cardBackgroundColor="@android:color/white"
+                            app:cardCornerRadius="10dp">
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/rvCancelled"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:nestedScrollingEnabled="false"/>
+                        </androidx.cardview.widget.CardView>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Bottom row: Registered | Waiting -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <!-- Registered -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="6dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tvRegisteredHeader"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Registered Entrants"
+                            android:textStyle="bold"
+                            android:textSize="14sp"/>
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="220dp"
+                            android:layout_marginTop="6dp"
+                            app:cardUseCompatPadding="true"
+                            app:cardBackgroundColor="@android:color/white"
+                            app:cardCornerRadius="10dp">
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/rvRegistered"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:nestedScrollingEnabled="false"/>
+                        </androidx.cardview.widget.CardView>
+                    </LinearLayout>
+
+                    <!-- Waiting List -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="6dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tvWaitingHeader"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="0dp"
+                            android:text="Waiting List"
+                            android:textStyle="bold"
+                            android:textSize="14sp"/>
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="220dp"
+                            android:layout_marginTop="6dp"
+                            app:cardUseCompatPadding="true"
+                            app:cardBackgroundColor="@android:color/white"
+                            app:cardCornerRadius="10dp">
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/rvWaiting"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:nestedScrollingEnabled="false"/>
+                        </androidx.cardview.widget.CardView>
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
 
             <!-- Action buttons -->
             <Button
