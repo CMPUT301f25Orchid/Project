@@ -97,6 +97,11 @@ public class EntrantHomeActivity extends AppCompatActivity {
             Intent intent = new Intent(this, EntrantNotificationsActivity.class);
             startActivity(intent);
         });
+        findViewById(R.id.imgAvatar).setOnClickListener(v -> {
+            // Send to ProfileActivity
+            Intent intent = new Intent(this, ProfileActivity.class);
+            startActivity(intent);
+        });
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
