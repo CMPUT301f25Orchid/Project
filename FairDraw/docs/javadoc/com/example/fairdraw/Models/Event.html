@@ -167,55 +167,66 @@ implements <a href="https://developer.android.com/reference/java/io/Serializable
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Cancels an invited winner by moving them from the invited list to the cancelled list.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://developer.android.com/reference/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#drawLotteryWinners()" class="member-name-link">drawLotteryWinners</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#canJoinWaitingList(java.lang.String)" class="member-name-link">canJoinWaitingList</a><wbr>(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;deviceId)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns whether the provided deviceId is allowed to join the lottery waiting list.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://developer.android.com/reference/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#drawLotteryWinners()" class="member-name-link">drawLotteryWinners</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Selects new lottery winners from the waiting list to fill the event up to its capacity.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://developer.android.com/reference/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCancelledList()" class="member-name-link">getCancelledList</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://developer.android.com/reference/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCancelledList()" class="member-name-link">getCancelledList</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the cancelled list (users who declined invitations or cancelled attendance).</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://developer.android.com/reference/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCapacity()" class="member-name-link">getCapacity</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://developer.android.com/reference/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCapacity()" class="member-name-link">getCapacity</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the event capacity (maximum number of attendees).</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getDescription()" class="member-name-link">getDescription</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getDescription()" class="member-name-link">getDescription</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the event description.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://developer.android.com/reference/java/util/Date.html" title="class or interface in java.util" class="external-link">Date</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getEndDate()" class="member-name-link">getEndDate</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://developer.android.com/reference/java/util/Date.html" title="class or interface in java.util" class="external-link">Date</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getEndDate()" class="member-name-link">getEndDate</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the end date for multi-day events.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://developer.android.com/reference/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getEnrolledList()" class="member-name-link">getEnrolledList</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://developer.android.com/reference/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getEnrolledList()" class="member-name-link">getEnrolledList</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the enrolled list (users who accepted and are confirmed attendees).</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://developer.android.com/reference/java/util/Date.html" title="class or interface in java.util" class="external-link">Date</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getEventCloseRegDate()" class="member-name-link">getEventCloseRegDate</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://developer.android.com/reference/java/util/Date.html" title="class or interface in java.util" class="external-link">Date</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getEventCloseRegDate()" class="member-name-link">getEventCloseRegDate</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the registration close date.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://developer.android.com/reference/java/util/Date.html" title="class or interface in java.util" class="external-link">Date</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getEventOpenRegDate()" class="member-name-link">getEventOpenRegDate</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://developer.android.com/reference/java/util/Date.html" title="class or interface in java.util" class="external-link">Date</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getEventOpenRegDate()" class="member-name-link">getEventOpenRegDate</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the registration open date.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://developer.android.com/reference/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getGeolocation()" class="member-name-link">getGeolocation</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://developer.android.com/reference/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getGeolocation()" class="member-name-link">getGeolocation</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns whether geolocation is required for this event.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://developer.android.com/reference/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getInvitedList()" class="member-name-link">getInvitedList</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://developer.android.com/reference/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getInvitedList()" class="member-name-link">getInvitedList</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the invited list (users who have been sent invitations).</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getJoinWaitlistButtonText(java.lang.String)" class="member-name-link">getJoinWaitlistButtonText</a><wbr>(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;deviceId)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the appropriate string resource id to display on the Join Lottery Waitlist button for the
+ given deviceId.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getLocation()" class="member-name-link">getLocation</a>()</code></div>
@@ -281,6 +292,27 @@ implements <a href="https://developer.android.com/reference/java/io/Serializable
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getWaitingListLimit()" class="member-name-link">getWaitingListLimit</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the maximum waiting list size for this event, if configured.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isEnrolled(java.lang.String)" class="member-name-link">isEnrolled</a><wbr>(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;deviceId)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns true if the given deviceId is already enrolled (registered) for the event.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isInvited(java.lang.String)" class="member-name-link">isInvited</a><wbr>(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;deviceId)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns true if the given deviceId has been invited (won the lottery) for the event.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isJoinWaitlistButtonEnabled(java.lang.String)" class="member-name-link">isJoinWaitlistButtonEnabled</a><wbr>(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;deviceId)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Convenience method for UI: whether the Join Lottery Waitlist button should be enabled
+ for the provided deviceId.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isOnWaitingList(java.lang.String)" class="member-name-link">isOnWaitingList</a><wbr>(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;deviceId)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns true if the given deviceId is already on the waiting list.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#replaceLotteryWinner(java.lang.String)" class="member-name-link">replaceLotteryWinner</a><wbr>(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;oldWinner)</code></div>
@@ -983,6 +1015,53 @@ implements <a href="https://developer.android.com/reference/java/io/Serializable
 <dt>Parameters:</dt>
 <dd><code>cancelledList</code> - list of device ids that are cancelled</dd>
 </dl>
+</section>
+</li>
+<li>
+<section class="detail" id="isEnrolled(java.lang.String)">
+<h3>isEnrolled</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isEnrolled</span><wbr><span class="parameters">(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;deviceId)</span></div>
+<div class="block">Returns true if the given deviceId is already enrolled (registered) for the event.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="isInvited(java.lang.String)">
+<h3>isInvited</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isInvited</span><wbr><span class="parameters">(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;deviceId)</span></div>
+<div class="block">Returns true if the given deviceId has been invited (won the lottery) for the event.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="isOnWaitingList(java.lang.String)">
+<h3>isOnWaitingList</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isOnWaitingList</span><wbr><span class="parameters">(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;deviceId)</span></div>
+<div class="block">Returns true if the given deviceId is already on the waiting list.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="canJoinWaitingList(java.lang.String)">
+<h3>canJoinWaitingList</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">canJoinWaitingList</span><wbr><span class="parameters">(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;deviceId)</span></div>
+<div class="block">Returns whether the provided deviceId is allowed to join the lottery waiting list.
+ False if the user is already enrolled, already invited, already on the waiting list,
+ the waiting list limit has been reached (when configured), or the provided id is null.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getJoinWaitlistButtonText(java.lang.String)">
+<h3>getJoinWaitlistButtonText</h3>
+<div class="member-signature"><span class="annotations">@StringRes
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getJoinWaitlistButtonText</span><wbr><span class="parameters">(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;deviceId)</span></div>
+<div class="block">Returns the appropriate string resource id to display on the Join Lottery Waitlist button for the
+ given deviceId. Resource ids map to localized UI strings.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="isJoinWaitlistButtonEnabled(java.lang.String)">
+<h3>isJoinWaitlistButtonEnabled</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isJoinWaitlistButtonEnabled</span><wbr><span class="parameters">(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;deviceId)</span></div>
+<div class="block">Convenience method for UI: whether the Join Lottery Waitlist button should be enabled
+ for the provided deviceId.</div>
 </section>
 </li>
 <li>
