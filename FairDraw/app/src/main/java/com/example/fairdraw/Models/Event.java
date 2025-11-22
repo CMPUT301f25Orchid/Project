@@ -412,7 +412,7 @@ public class Event implements Serializable {
     /**
      * Returns the current state of the event.
      *
-     * @return {@link com.example.fairdraw.Others.EventState} enum value
+     * @return {@link EventState} enum value
      */
     public EventState getState() {
         return state;
@@ -577,7 +577,7 @@ public class Event implements Serializable {
     /**
      * Selects new lottery winners from the waiting list to fill the event up to its capacity.
      * Existing invitees are preserved.
-     * @return A list containing all invited users (existing and new).
+     * @return A list of the new winners' device ids.
      */
     public List<String> drawLotteryWinners() {
         // Calculate how many new winners we need to draw.
@@ -591,12 +591,13 @@ public class Event implements Serializable {
         // Ensure we don't try to draw more people than are on the waiting list.
         int numToDraw = Math.min(spotsToFill, waitingList.size());
 
+        List<String> newWinners = Collections.emptyList();
         if (numToDraw > 0) {
             // Shuffle the waiting list to ensure fairness.
             Collections.shuffle(waitingList, random);
 
             // Take the new winners from the top of the shuffled list.
-            List<String> newWinners = waitingList.subList(0, numToDraw);
+            newWinners = new ArrayList<>(waitingList.subList(0, numToDraw));
 
             // Add the new winners to the invited list.
             invitedList.addAll(newWinners);
@@ -608,8 +609,8 @@ public class Event implements Serializable {
             waitingList.addAll(remainingWaiting);
         }
 
-        // Return a copy of the complete invited list.
-        return new ArrayList<>(invitedList);
+        // Return a copy of the new winners so we can send notifications.
+        return new ArrayList<>(newWinners);
     }
 
 

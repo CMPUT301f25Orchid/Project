@@ -277,12 +277,12 @@
                 android:background="#FFB0B0"/>
 
             <Button
-                android:id="@+id/btnSeeFinalEntrants"
+                android:id="@+id/btnDownloadFinalEntrants"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginTop="10dp"
                 android:textAllCaps="false"
-                android:text="See Final Entrants List"
+                android:text="Download Final Entrants CSV"
                 android:background="@color/status_won"
                 android:textColor="@android:color/black"/>
 
