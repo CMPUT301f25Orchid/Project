@@ -309,7 +309,9 @@ public class OrganizerManageEvent extends BaseTopBottomActivity {
         
         btnDownloadFinalEntrants.setOnClickListener(v -> {
             List<String> enrolled = e.getEnrolledList();
-            exportEnrolledEntrantsToCsv(enrolled, e.getTitle());
+            Intent intent = new Intent(OrganizerManageEvent.this, OrganizerExportActivity.class);
+            intent.putExtra("eventId", eventId);
+            startActivity(intent);
         });
 
     }

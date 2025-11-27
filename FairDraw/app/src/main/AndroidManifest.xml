@@ -49,6 +49,9 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".Activities.OrganizerExportActivity"
+            android:exported="false"/>
+        <activity
             android:name=".Activities.EntrantScan"
             android:exported="false" />
         <activity
