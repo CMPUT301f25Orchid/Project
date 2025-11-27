@@ -138,28 +138,34 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#deleteUser(java.lang.String,com.example.fairdraw.DBs.UserDB.DeleteCallback)" class="member-name-link">deleteUser</a><wbr>(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;deviceId,
- <a href="UserDB.DeleteCallback.html" title="interface in com.example.fairdraw.DBs">UserDB.DeleteCallback</a>&nbsp;cb)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.google.firebase.firestore.ListenerRegistration</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#addUserSnapshotListener(java.lang.String,com.example.fairdraw.DBs.UserDB.GetUserCallback)" class="member-name-link">addUserSnapshotListener</a><wbr>(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;deviceId,
+ <a href="UserDB.GetUserCallback.html" title="interface in com.example.fairdraw.DBs">UserDB.GetUserCallback</a>&nbsp;cb)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Adds a snapshot listener to a user document for real-time updates.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#deleteUser(java.lang.String,com.example.fairdraw.DBs.UserDB.DeleteCallback)" class="member-name-link">deleteUser</a><wbr>(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;deviceId,
+ <a href="UserDB.DeleteCallback.html" title="interface in com.example.fairdraw.DBs">UserDB.DeleteCallback</a>&nbsp;cb)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Deletes a user from the database.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getUserOrNull(java.lang.String,com.example.fairdraw.DBs.UserDB.GetUserCallback)" class="member-name-link">getUserOrNull</a><wbr>(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;deviceId,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getUserOrNull(java.lang.String,com.example.fairdraw.DBs.UserDB.GetUserCallback)" class="member-name-link">getUserOrNull</a><wbr>(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;deviceId,
  <a href="UserDB.GetUserCallback.html" title="interface in com.example.fairdraw.DBs">UserDB.GetUserCallback</a>&nbsp;cb)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Asynchronously retrieves a User object from the database.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#upsertUser(com.example.fairdraw.Models.User,com.example.fairdraw.DBs.UserDB.WriteCallback)" class="member-name-link">upsertUser</a><wbr>(<a href="../Models/User.html" title="class in com.example.fairdraw.Models">User</a>&nbsp;user,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#upsertUser(com.example.fairdraw.Models.User,com.example.fairdraw.DBs.UserDB.WriteCallback)" class="member-name-link">upsertUser</a><wbr>(<a href="../Models/User.html" title="class in com.example.fairdraw.Models">User</a>&nbsp;user,
  <a href="UserDB.WriteCallback.html" title="interface in com.example.fairdraw.DBs">UserDB.WriteCallback</a>&nbsp;cb)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Creates or updates a user in the database.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#userExists(java.lang.String,com.example.fairdraw.DBs.UserDB.ExistsCallback)" class="member-name-link">userExists</a><wbr>(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;deviceId,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#userExists(java.lang.String,com.example.fairdraw.DBs.UserDB.ExistsCallback)" class="member-name-link">userExists</a><wbr>(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;deviceId,
  <a href="UserDB.ExistsCallback.html" title="interface in com.example.fairdraw.DBs">UserDB.ExistsCallback</a>&nbsp;cb)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Asynchronously checks if a user with the given device ID exists in the database.</div>
 </div>
 </div>
@@ -204,6 +210,21 @@ loadScripts(document, 'script');</script>
 <dd><code>deviceId</code> - The device ID of the user to retrieve.</dd>
 <dd><code>cb</code> - The callback to be invoked with the result. On success: cb.onCallback(user, null).
            If the document doesn't exist: cb.onCallback(null, null). On failure: cb.onCallback(null, exception).</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="addUserSnapshotListener(java.lang.String,com.example.fairdraw.DBs.UserDB.GetUserCallback)">
+<h3>addUserSnapshotListener</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.firebase.firestore.ListenerRegistration</span>&nbsp;<span class="element-name">addUserSnapshotListener</span><wbr><span class="parameters">(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;deviceId,
+ <a href="UserDB.GetUserCallback.html" title="interface in com.example.fairdraw.DBs">UserDB.GetUserCallback</a>&nbsp;cb)</span></div>
+<div class="block">Adds a snapshot listener to a user document for real-time updates.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>deviceId</code> - The device ID of the user to listen to.</dd>
+<dd><code>cb</code> - The callback to be invoked with the result on each update.</dd>
+<dt>Returns:</dt>
+<dd>A ListenerRegistration that can be used to remove the listener.</dd>
 </dl>
 </section>
 </li>
