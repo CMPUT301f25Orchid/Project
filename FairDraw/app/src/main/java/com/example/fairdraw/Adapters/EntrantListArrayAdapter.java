@@ -6,14 +6,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.fairdraw.DBs.EventDB;
+import com.example.fairdraw.DBs.UserDB;
 import com.example.fairdraw.Others.ListItemEntrant;
 import com.example.fairdraw.R;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * RecyclerView adapter that displays a list of entrants in a compact item view.
@@ -32,18 +38,11 @@ public class EntrantListArrayAdapter extends RecyclerView.Adapter<EntrantListArr
 
     private final Context context;
     private final List<ListItemEntrant> entrantList;
-    private Boolean hideCloseButton = true;
+    private final Boolean hideCloseButton; // initialize in constructor
+    private final String eventId; // initialize in constructor
 
-    /**
-     * Create an adapter that shows entrants and hides the close button.
-     *
-     * @param context the Android context used to inflate views
-     * @param entrantList list of entrants to display (must not be null)
-     */
-    public EntrantListArrayAdapter(Context context, List<ListItemEntrant> entrantList) {
-        this.context = context;
-        this.entrantList = entrantList;
-    }
+    // Simple in-memory cache mapping deviceId -> display name to avoid repeated DB calls
+    private final Map<String, String> nameCache = new HashMap<>();
 
     /**
      * Create an adapter with explicit control over the close button visibility.
@@ -52,10 +51,11 @@ public class EntrantListArrayAdapter extends RecyclerView.Adapter<EntrantListArr
      * @param entrantList list of entrants to display (must not be null)
      * @param hideCloseButton if true, the close button will be hidden
      */
-    public EntrantListArrayAdapter(Context context, List<ListItemEntrant> entrantList, Boolean hideCloseButton) {
+    public EntrantListArrayAdapter(Context context, List<ListItemEntrant> entrantList, Boolean hideCloseButton, String eventId) {
         this.context = context;
         this.entrantList = entrantList;
-        this.hideCloseButton = hideCloseButton;
+        this.hideCloseButton = hideCloseButton != null ? hideCloseButton : true;
+        this.eventId = eventId != null ? eventId : "";
     }
 
     /**
@@ -70,16 +70,8 @@ public class EntrantListArrayAdapter extends RecyclerView.Adapter<EntrantListArr
     public EntrantViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_entrant_small, parent, false);
 
-        // If hideCloseButton is true, hide the close button
-        if (hideCloseButton) {
-            ((ImageView) view.findViewById(R.id.ivClose)).setVisibility(View.GONE);
-        }
-        else {
-            view.findViewById(R.id.ivClose).setOnClickListener(v -> {
-                // TODO: remove entrant from list and put in cancelled list
-            });
-        }
-
+        // Don't set click behavior here because we need the adapter position which is
+        // only reliably available in onBindViewHolder. We'll control visibility there too.
         return new EntrantViewHolder(view);
     }
 
@@ -93,7 +85,104 @@ public class EntrantListArrayAdapter extends RecyclerView.Adapter<EntrantListArr
     public void onBindViewHolder(@NonNull EntrantViewHolder holder, int position) {
         ListItemEntrant listItemEntrant = entrantList.get(position);
         if (listItemEntrant != null) {
-            holder.entrantName.setText(listItemEntrant.getEntrantId());
+            String deviceId = listItemEntrant.getEntrantId();
+
+            // If we have the name cached, use it; otherwise show a placeholder (deviceId) and fetch.
+            if (deviceId != null && nameCache.containsKey(deviceId)) {
+                holder.entrantName.setText(nameCache.get(deviceId));
+            } else {
+                // Show device id as temporary text to avoid empty UI
+                holder.entrantName.setText(deviceId != null ? deviceId : context.getString(R.string.unavailable));
+
+                // Avoid refetching if we've previously recorded absence by caching deviceId->deviceId
+                if (deviceId != null && !nameCache.containsKey(deviceId)) {
+                    final String did = deviceId;
+                    UserDB.getUserOrNull(did, (user, e) -> {
+                        if (e == null && user != null && user.getName() != null && !user.getName().isEmpty()) {
+                            nameCache.put(did, user.getName());
+                        } else {
+                            // Fall back to device id as display name so we don't keep refetching
+                            nameCache.put(did, did);
+                        }
+
+                        // Find all positions where this device id appears and notify to rebind
+                        for (int i = 0; i < entrantList.size(); i++) {
+                            ListItemEntrant it = entrantList.get(i);
+                            if (it != null && did.equals(it.getEntrantId())) {
+                                notifyItemChanged(i);
+                            }
+                        }
+                    });
+                }
+            }
+        }
+
+        // Configure close button visibility and behavior here so we have the current position
+        if (hideCloseButton) {
+            holder.ivClose.setVisibility(View.GONE);
+            holder.ivClose.setOnClickListener(null);
+        } else {
+            holder.ivClose.setVisibility(View.VISIBLE);
+            holder.ivClose.setOnClickListener(v -> {
+                int pos = holder.getBindingAdapterPosition();
+                if (pos == RecyclerView.NO_POSITION) return;
+
+                // Capture entrant id and remove from adapter list immediately for responsive UI
+                ListItemEntrant removedItem = entrantList.remove(pos);
+                notifyItemRemoved(pos);
+
+                if (removedItem == null) return;
+                String entrantId = removedItem.getEntrantId();
+
+                // If we don't have an eventId, just return after removing locally.
+                if (eventId.isEmpty()) {
+                    return;
+                }
+
+                // Fetch the event, remove the entrant from any list they may be in and add to cancelledList.
+                EventDB.getEvent(eventId, event -> {
+                    if (event == null) {
+                        // Could not fetch event; nothing to persist. Optionally inform user.
+                        // We avoid restoring the item to keep behavior simple.
+                        return;
+                    }
+
+                    // Defensive null checks for lists
+                    List<String> waiting = event.getWaitingList();
+                    List<String> invited = event.getInvitedList();
+                    List<String> enrolled = event.getEnrolledList();
+                    List<String> cancelled = event.getCancelledList();
+
+                    if (waiting == null) waiting = new ArrayList<>();
+                    if (invited == null) invited = new ArrayList<>();
+                    if (enrolled == null) enrolled = new ArrayList<>();
+                    if (cancelled == null) cancelled = new ArrayList<>();
+
+                    // Remove from any list the entrant might currently be in
+                    waiting.remove(entrantId);
+                    invited.remove(entrantId);
+                    enrolled.remove(entrantId);
+
+                    // Add to cancelled list if not already present
+                    if (!cancelled.contains(entrantId)) {
+                        cancelled.add(entrantId);
+                    }
+
+                    // Persist changes back to the event object
+                    event.setWaitingList(waiting);
+                    event.setInvitedList(invited);
+                    event.setEnrolledList(enrolled);
+                    event.setCancelledList(cancelled);
+
+                    EventDB.updateEvent(event, success -> {
+                        if (!success) {
+                            // Inform user of failure to persist; local removal already happened.
+                            // Use a Toast to notify; this is low-risk and non-blocking.
+                            Toast.makeText(context, R.string.error_updating_event, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                });
+            });
         }
     }
 
@@ -113,6 +202,7 @@ public class EntrantListArrayAdapter extends RecyclerView.Adapter<EntrantListArr
      */
     public static class EntrantViewHolder extends RecyclerView.ViewHolder {
         TextView entrantName;
+        ImageView ivClose;
 
         /**
          * Create a view holder for the provided item view.
@@ -122,6 +212,7 @@ public class EntrantListArrayAdapter extends RecyclerView.Adapter<EntrantListArr
         public EntrantViewHolder(@NonNull View itemView) {
             super(itemView);
             entrantName = itemView.findViewById(R.id.tvEntrantName);
+            ivClose = itemView.findViewById(R.id.ivClose);
         }
     }
 }

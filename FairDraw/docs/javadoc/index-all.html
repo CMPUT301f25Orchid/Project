@@ -92,6 +92,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Adds a device to the waitlist of a specific event.</div>
 </dd>
+<dt><a href="com/example/fairdraw/DBs/UserDB.html#addUserSnapshotListener(java.lang.String,com.example.fairdraw.DBs.UserDB.GetUserCallback)" class="member-name-link">addUserSnapshotListener(String, UserDB.GetUserCallback)</a> - Static method in class com.example.fairdraw.DBs.<a href="com/example/fairdraw/DBs/UserDB.html" title="class in com.example.fairdraw.DBs">UserDB</a></dt>
+<dd>
+<div class="block">Adds a snapshot listener to a user document for real-time updates.</div>
+</dd>
 <dt><a href="com/example/fairdraw/Models/Admin.html" class="type-name-link" title="class in com.example.fairdraw.Models">Admin</a> - Class in <a href="com/example/fairdraw/Models/package-summary.html">com.example.fairdraw.Models</a></dt>
 <dd>
 <div class="block">Model representing an application admin.</div>
@@ -160,6 +164,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/example/fairdraw/Models/Event.html#cancelLotteryWinner(java.lang.String)" class="member-name-link">cancelLotteryWinner(String)</a> - Method in class com.example.fairdraw.Models.<a href="com/example/fairdraw/Models/Event.html" title="class in com.example.fairdraw.Models">Event</a></dt>
 <dd>
 <div class="block">Cancels an invited winner by moving them from the invited list to the cancelled list.</div>
+</dd>
+<dt><a href="com/example/fairdraw/Models/Event.html#canJoinWaitingList(java.lang.String)" class="member-name-link">canJoinWaitingList(String)</a> - Method in class com.example.fairdraw.Models.<a href="com/example/fairdraw/Models/Event.html" title="class in com.example.fairdraw.Models">Event</a></dt>
+<dd>
+<div class="block">Returns whether the provided deviceId is allowed to join the lottery waiting list.</div>
 </dd>
 <dt><a href="com/example/fairdraw/Others/OrganizerEventsDataHolder.html#clear()" class="member-name-link">clear()</a> - Static method in class com.example.fairdraw.Others.<a href="com/example/fairdraw/Others/OrganizerEventsDataHolder.html" title="class in com.example.fairdraw.Others">OrganizerEventsDataHolder</a></dt>
 <dd>
@@ -264,6 +272,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Required empty public constructor which attaches the fragment layout.</div>
 </dd>
+<dt><a href="com/example/fairdraw/Activities/EditProfileActivity.html" class="type-name-link" title="class in com.example.fairdraw.Activities">EditProfileActivity</a> - Class in <a href="com/example/fairdraw/Activities/package-summary.html">com.example.fairdraw.Activities</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/example/fairdraw/Activities/EditProfileActivity.html#%3Cinit%3E()" class="member-name-link">EditProfileActivity()</a> - Constructor for class com.example.fairdraw.Activities.<a href="com/example/fairdraw/Activities/EditProfileActivity.html" title="class in com.example.fairdraw.Activities">EditProfileActivity</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/example/fairdraw/Models/Entrant.html" class="type-name-link" title="class in com.example.fairdraw.Models">Entrant</a> - Class in <a href="com/example/fairdraw/Models/package-summary.html">com.example.fairdraw.Models</a></dt>
 <dd>
 <div class="block">Model representing an entrant in the application.</div>
@@ -328,11 +340,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">RecyclerView adapter that displays a list of entrants in a compact item view.</div>
 </dd>
-<dt><a href="com/example/fairdraw/Adapters/EntrantListArrayAdapter.html#%3Cinit%3E(android.content.Context,java.util.List)" class="member-name-link">EntrantListArrayAdapter(Context, List&lt;ListItemEntrant&gt;)</a> - Constructor for class com.example.fairdraw.Adapters.<a href="com/example/fairdraw/Adapters/EntrantListArrayAdapter.html" title="class in com.example.fairdraw.Adapters">EntrantListArrayAdapter</a></dt>
-<dd>
-<div class="block">Create an adapter that shows entrants and hides the close button.</div>
-</dd>
-<dt><a href="com/example/fairdraw/Adapters/EntrantListArrayAdapter.html#%3Cinit%3E(android.content.Context,java.util.List,java.lang.Boolean)" class="member-name-link">EntrantListArrayAdapter(Context, List&lt;ListItemEntrant&gt;, Boolean)</a> - Constructor for class com.example.fairdraw.Adapters.<a href="com/example/fairdraw/Adapters/EntrantListArrayAdapter.html" title="class in com.example.fairdraw.Adapters">EntrantListArrayAdapter</a></dt>
+<dt><a href="com/example/fairdraw/Adapters/EntrantListArrayAdapter.html#%3Cinit%3E(android.content.Context,java.util.List,java.lang.Boolean,java.lang.String)" class="member-name-link">EntrantListArrayAdapter(Context, List&lt;ListItemEntrant&gt;, Boolean, String)</a> - Constructor for class com.example.fairdraw.Adapters.<a href="com/example/fairdraw/Adapters/EntrantListArrayAdapter.html" title="class in com.example.fairdraw.Adapters">EntrantListArrayAdapter</a></dt>
 <dd>
 <div class="block">Create an adapter with explicit control over the close button visibility.</div>
 </dd>
@@ -651,6 +659,11 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Determine the view type for the notification at the supplied position.</div>
 </dd>
+<dt><a href="com/example/fairdraw/Models/Event.html#getJoinWaitlistButtonText(java.lang.String)" class="member-name-link">getJoinWaitlistButtonText(String)</a> - Method in class com.example.fairdraw.Models.<a href="com/example/fairdraw/Models/Event.html" title="class in com.example.fairdraw.Models">Event</a></dt>
+<dd>
+<div class="block">Returns the appropriate string resource id to display on the Join Lottery Waitlist button for the
+ given deviceId.</div>
+</dd>
 <dt><a href="com/example/fairdraw/ServiceUtility/GatePrefs.html#getKnownExists(android.content.Context)" class="member-name-link">getKnownExists(Context)</a> - Static method in class com.example.fairdraw.ServiceUtility.<a href="com/example/fairdraw/ServiceUtility/GatePrefs.html" title="class in com.example.fairdraw.ServiceUtility">GatePrefs</a></dt>
 <dd>
 <div class="block">Returns whether the local device believes a corresponding user exists on the server.</div>
@@ -757,6 +770,23 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/example/fairdraw/Activities/BaseTopBottomActivity.html#initTopNav(com.example.fairdraw.Others.BarType)" class="member-name-link">initTopNav(BarType)</a> - Method in class com.example.fairdraw.Activities.<a href="com/example/fairdraw/Activities/BaseTopBottomActivity.html" title="class in com.example.fairdraw.Activities">BaseTopBottomActivity</a></dt>
 <dd>
 <div class="block">Initialize the top bar common buttons used across Entrant activities.</div>
+</dd>
+<dt><a href="com/example/fairdraw/Models/Event.html#isEnrolled(java.lang.String)" class="member-name-link">isEnrolled(String)</a> - Method in class com.example.fairdraw.Models.<a href="com/example/fairdraw/Models/Event.html" title="class in com.example.fairdraw.Models">Event</a></dt>
+<dd>
+<div class="block">Returns true if the given deviceId is already enrolled (registered) for the event.</div>
+</dd>
+<dt><a href="com/example/fairdraw/Models/Event.html#isInvited(java.lang.String)" class="member-name-link">isInvited(String)</a> - Method in class com.example.fairdraw.Models.<a href="com/example/fairdraw/Models/Event.html" title="class in com.example.fairdraw.Models">Event</a></dt>
+<dd>
+<div class="block">Returns true if the given deviceId has been invited (won the lottery) for the event.</div>
+</dd>
+<dt><a href="com/example/fairdraw/Models/Event.html#isJoinWaitlistButtonEnabled(java.lang.String)" class="member-name-link">isJoinWaitlistButtonEnabled(String)</a> - Method in class com.example.fairdraw.Models.<a href="com/example/fairdraw/Models/Event.html" title="class in com.example.fairdraw.Models">Event</a></dt>
+<dd>
+<div class="block">Convenience method for UI: whether the Join Lottery Waitlist button should be enabled
+ for the provided deviceId.</div>
+</dd>
+<dt><a href="com/example/fairdraw/Models/Event.html#isOnWaitingList(java.lang.String)" class="member-name-link">isOnWaitingList(String)</a> - Method in class com.example.fairdraw.Models.<a href="com/example/fairdraw/Models/Event.html" title="class in com.example.fairdraw.Models">Event</a></dt>
+<dd>
+<div class="block">Returns true if the given deviceId is already on the waiting list.</div>
 </dd>
 </dl>
 <h2 class="title" id="I:L">L</h2>
@@ -940,6 +970,8 @@ loadScripts(document, 'script');</script>
 <div class="block">Reads the incoming Intent Uri, validates required parameters and forwards the Intent to
  the destination Activity.</div>
 </dd>
+<dt><a href="com/example/fairdraw/Activities/EditProfileActivity.html#onCreate(android.os.Bundle)" class="member-name-link">onCreate(Bundle)</a> - Method in class com.example.fairdraw.Activities.<a href="com/example/fairdraw/Activities/EditProfileActivity.html" title="class in com.example.fairdraw.Activities">EditProfileActivity</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/example/fairdraw/Activities/EntrantEventDetails.html#onCreate(android.os.Bundle)" class="member-name-link">onCreate(Bundle)</a> - Method in class com.example.fairdraw.Activities.<a href="com/example/fairdraw/Activities/EntrantEventDetails.html" title="class in com.example.fairdraw.Activities">EntrantEventDetails</a></dt>
 <dd>
 <div class="block">Activity lifecycle entry point.</div>
@@ -1012,6 +1044,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/example/fairdraw/Activities/EntrantHomeActivity.html#onDestroy()" class="member-name-link">onDestroy()</a> - Method in class com.example.fairdraw.Activities.<a href="com/example/fairdraw/Activities/EntrantHomeActivity.html" title="class in com.example.fairdraw.Activities">EntrantHomeActivity</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/example/fairdraw/Activities/EntrantScan.html#onDestroy()" class="member-name-link">onDestroy()</a> - Method in class com.example.fairdraw.Activities.<a href="com/example/fairdraw/Activities/EntrantScan.html" title="class in com.example.fairdraw.Activities">EntrantScan</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/example/fairdraw/Activities/ProfileActivity.html#onDestroy()" class="member-name-link">onDestroy()</a> - Method in class com.example.fairdraw.Activities.<a href="com/example/fairdraw/Activities/ProfileActivity.html" title="class in com.example.fairdraw.Activities">ProfileActivity</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/example/fairdraw/Adapters/EventArrayAdapter.EditEventListener.html#onEditEvent(int)" class="member-name-link">onEditEvent(int)</a> - Method in interface com.example.fairdraw.Adapters.<a href="com/example/fairdraw/Adapters/EventArrayAdapter.EditEventListener.html" title="interface in com.example.fairdraw.Adapters">EventArrayAdapter.EditEventListener</a></dt>
 <dd>

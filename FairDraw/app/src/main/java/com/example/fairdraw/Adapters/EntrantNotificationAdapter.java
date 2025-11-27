@@ -180,8 +180,8 @@ public class EntrantNotificationAdapter extends RecyclerView.Adapter<EntrantNoti
      * different notification layouts.
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        final TextView msg; // tvMessageWon / tvMessageLost / tvMessageWaitJoined / tvMessageWaitLeft
-        final TextView cta; // btnAcceptDecline (WIN only), else null
+        TextView msg; // tvMessageWon / tvMessageLost / tvMessageWaitJoined / tvMessageWaitLeft
+        TextView cta; // btnAcceptDecline (WIN only), else null
 
         /**
          * Create a holder for the provided view. The constructor locates the

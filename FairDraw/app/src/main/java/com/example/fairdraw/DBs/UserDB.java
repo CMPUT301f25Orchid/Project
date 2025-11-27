@@ -6,6 +6,7 @@ import com.example.fairdraw.Models.User;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
 
 /**
  * Provides a high-level API for interacting with the "users" collection in Firestore.
@@ -86,6 +87,27 @@ public class UserDB {
                     }
                 })
                 .addOnFailureListener(e -> cb.onCallback(null, e));
+    }
+
+    /**
+     * Adds a snapshot listener to a user document for real-time updates.
+     * @param deviceId The device ID of the user to listen to.
+     * @param cb The callback to be invoked with the result on each update.
+     * @return A ListenerRegistration that can be used to remove the listener.
+     */
+    public static ListenerRegistration addUserSnapshotListener(String deviceId, GetUserCallback cb) {
+        return getUserCollection().document(deviceId).addSnapshotListener((snapshot, e) -> {
+            if (e != null) {
+                cb.onCallback(null, e);
+                return;
+            }
+
+            if (snapshot != null && snapshot.exists()) {
+                cb.onCallback(snapshot.toObject(User.class), null);
+            } else {
+                cb.onCallback(null, null);
+            }
+        });
     }
 
     /**

@@ -20,6 +20,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FairDraw">
         <activity
+            android:name=".Activities.EditProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activities.OrganizerManageEvent"
             android:exported="false" />
         <activity

@@ -83,6 +83,7 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.installations)
     implementation(libs.firebase.storage)
+    implementation(libs.espresso.intents)
     implementation(libs.cardview)
     testImplementation(libs.junit)
     // Robolectric for JVM unit tests
@@ -100,6 +101,12 @@ dependencies {
     implementation("com.google.zxing:core:3.5.2")
     implementation("com.github.bumptech.glide:glide:4.15.1")
     annotationProcessor("com.github.bumptech.glide:compiler:4.15.1")
-    // Espresso Intents required by androidTest EntrantNotificationsActivityTest
-    androidTestImplementation("androidx.test.espresso:espresso-intents:3.7.0")
+
+    // Testing dependencies
+    testImplementation("junit:junit:4.13.2")
+    androidTestImplementation("androidx.test.ext:junit:1.2.1")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
+
+    // Add this line to resolve the intent errors
+    androidTestImplementation("androidx.test.espresso:espresso-intents:3.6.1")
 }

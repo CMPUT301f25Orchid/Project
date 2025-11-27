@@ -130,6 +130,12 @@ class com.example.fairdraw.Models.Event {
 + setEnrolledList(arg0 : List<String>) : void
 + getCancelledList() : List<String>
 + setCancelledList(arg0 : List<String>) : void
++ isEnrolled(arg0 : String) : boolean
++ isInvited(arg0 : String) : boolean
++ isOnWaitingList(arg0 : String) : boolean
++ canJoinWaitingList(arg0 : String) : boolean
++ getJoinWaitlistButtonText(arg0 : String) : int
++ isJoinWaitlistButtonEnabled(arg0 : String) : boolean
 + drawLotteryWinners() : List<String>
 + replaceLotteryWinner(arg0 : String) : String
 + cancelLotteryWinner(arg0 : String) : void
@@ -166,6 +172,7 @@ interface com.example.fairdraw.DBs.OrganizerDB$DeleteOrganizerCallback {
 }
 class com.example.fairdraw.DBs.UserDB {
 + {static} getUserOrNull(arg0 : String, arg1 : GetUserCallback) : void
++ {static} addUserSnapshotListener(arg0 : String, arg1 : GetUserCallback) : ListenerRegistration
 + {static} userExists(arg0 : String, arg1 : ExistsCallback) : void
 + {static} upsertUser(arg0 : User, arg1 : WriteCallback) : void
 + {static} deleteUser(arg0 : String, arg1 : DeleteCallback) : void
@@ -183,6 +190,7 @@ class com.example.fairdraw.ServiceUtility.QrUtil {
 }
 class com.example.fairdraw.Activities.ProfileActivity {
 # onCreate(arg0 : Bundle) : void
+# onDestroy() : void
 }
 class com.example.fairdraw.Activities.EntrantHomeActivity {
 # onCreate(arg0 : Bundle) : void
@@ -298,6 +306,9 @@ interface com.example.fairdraw.DBs.EventDB$DeleteEventCallback {
 interface com.example.fairdraw.DBs.EventDB$RemoveFromWaitlistCallback {
 }
 interface com.example.fairdraw.DBs.EventDB$AddToWaitlistCallback {
+}
+class com.example.fairdraw.Activities.EditProfileActivity {
+# onCreate(arg0 : Bundle) : void
 }
 class com.example.fairdraw.Fragments.SendNotificationDialogFragment {
 + {static} newInstance(arg0 : String) : SendNotificationDialogFragment
@@ -415,6 +426,7 @@ com.example.fairdraw.DBs.EventDB +.. com.example.fairdraw.DBs.EventDB$UpdateEven
 com.example.fairdraw.DBs.EventDB +.. com.example.fairdraw.DBs.EventDB$DeleteEventCallback
 com.example.fairdraw.DBs.EventDB +.. com.example.fairdraw.DBs.EventDB$RemoveFromWaitlistCallback
 com.example.fairdraw.DBs.EventDB +.. com.example.fairdraw.DBs.EventDB$AddToWaitlistCallback
+androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.EditProfileActivity
 androidx.fragment.app.DialogFragment <|-- com.example.fairdraw.Fragments.SendNotificationDialogFragment
 com.example.fairdraw.Fragments.SendNotificationDialogFragment +.. com.example.fairdraw.Fragments.SendNotificationDialogFragment$Listener
 java.io.Serializable <|.. com.example.fairdraw.Others.EntrantNotification

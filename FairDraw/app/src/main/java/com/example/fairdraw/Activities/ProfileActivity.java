@@ -18,6 +18,7 @@ import com.example.fairdraw.DBs.UserDB;
 import com.example.fairdraw.Models.User;
 import com.example.fairdraw.R;
 import com.example.fairdraw.ServiceUtility.DevicePrefsManager;
+import com.google.firebase.firestore.ListenerRegistration;
 
 /**
  * ProfileActivity displays the user's profile information and allows editing and
@@ -29,7 +30,9 @@ public class ProfileActivity extends AppCompatActivity {
 
     //Declaring UI elements
     private Button editButton, returnButton, deleteAccButton, viewHistoryButton;
-    private TextView nameTextView, usernameTextView, emailTextView, phoneTextView;
+    private TextView nameTextView, emailTextView, phoneTextView;
+
+    private ListenerRegistration userListener;
 
     /**
      * Activity that displays a user's profile information. Expects a "deviceId" string extra.
@@ -39,10 +42,9 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_profile);
-        
+
         //Initializing UI elements
         nameTextView = findViewById(R.id.etName);
-        usernameTextView = findViewById(R.id.etUsername);
         emailTextView = findViewById(R.id.etEmail);
         phoneTextView = findViewById(R.id.etPhone);
 
@@ -56,8 +58,8 @@ public class ProfileActivity extends AppCompatActivity {
 
         if (deviceId != null && !deviceId.isEmpty()){
             //Fetching user data from Firestore based on the device ID
-            // fetchAndDisplayUserData(deviceId);
-            Log.d(TAG, "Device ID received: " + deviceId);
+            fetchAndDisplayUserData(deviceId);
+            //Log.d(TAG, "Device ID received: " + deviceId);
 
         } else {
             //Handle the case where no device ID is provided
@@ -66,11 +68,40 @@ public class ProfileActivity extends AppCompatActivity {
             finish();
         }
 
+        editButton.setOnClickListener(View -> {
+            // Handle edit button click
+            // Start EditProfileActivity
+            Intent intent = new Intent(ProfileActivity.this, EditProfileActivity.class);
+            intent.putExtra("deviceId", deviceId);
+            startActivity(intent);
+        });
+
         returnButton.setOnClickListener(v -> {
             Intent intent = new Intent(this, EntrantHomeActivity.class);
             startActivity(intent);
             finish();
         });
+
+//        deleteAccButton.setOnClickListener(v -> {
+//            // Call the deleteUser method from UserDB
+//            UserDB.deleteUser(deviceId, (ok, e) -> {
+//                // This callback runs after the delete operation is complete
+//                if (ok) {
+//                    // The user was successfully deleted
+//                    Log.d(TAG, "User account deleted successfully.");
+//                    Toast.makeText(ProfileActivity.this, "Account deleted.", Toast.LENGTH_SHORT).show();
+//
+//                    // IMPORTANT: Finish the activity to return to the previous screen.
+//                    // This is what makes the test pass.
+//                    finish();
+//                } else {
+//                    // There was an error deleting the user
+//                    Log.e(TAG, "Failed to delete user account.", e);
+//                    Toast.makeText(ProfileActivity.this, "Failed to delete account.", Toast.LENGTH_SHORT).show();
+//                }
+//            });
+//        });    NEEDS TO BE COMPLETED, SHOULD DELETING THE ACCOUNT RETURN YOU TO THE SIGN UP PAGE INSTEAD OF JUST FINISHING THE ACTIVITY
+
     }
 
     /**
@@ -78,7 +109,7 @@ public class ProfileActivity extends AppCompatActivity {
      * @param deviceId The device ID of the user to fetch data for.
      */
     private void fetchAndDisplayUserData(String deviceId) {
-        UserDB.getUserOrNull(deviceId, new UserDB.GetUserCallback() {
+        userListener = UserDB.addUserSnapshotListener(deviceId, new UserDB.GetUserCallback() {
             @Override
             public void onCallback(@Nullable User user, @Nullable Exception e) {
                 if (e != null) {
@@ -86,14 +117,30 @@ public class ProfileActivity extends AppCompatActivity {
                     Toast.makeText(ProfileActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                     return;
                 }
-                ;
-
                 if (user != null) {
                     //User was found, now update the UI
-                    //Ensure you are on the main
+                    //Ensure you are on the main thread when updating UI
+                    runOnUiThread(() -> {
+                        nameTextView.setText(user.getName());
+                        emailTextView.setText(user.getEmail());
+                        phoneTextView.setText(user.getPhoneNum());
+
+                    });
+                } else {
+                    //User not found
+                    Log.e(TAG, "User not found for device ID: " + deviceId);
+                    Toast.makeText(ProfileActivity.this, "User not found.", Toast.LENGTH_LONG).show();
                 }
 
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (userListener != null) {
+            userListener.remove();
+        }
     }
 }
