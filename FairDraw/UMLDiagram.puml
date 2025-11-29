@@ -19,6 +19,7 @@ class com.example.fairdraw.Models.Admin {
 }
 class com.example.fairdraw.Activities.EntrantEventDetails {
 # onCreate(arg0 : Bundle) : void
++ onRequestPermissionsResult(arg0 : int, arg1 : String[], arg2 : int[]) : void
 # onDestroy() : void
 }
 class com.example.fairdraw.DBs.EntrantDB {
@@ -124,6 +125,10 @@ class com.example.fairdraw.Models.Event {
 + setState(arg0 : EventState) : void
 + getWaitingList() : List<String>
 + setWaitingList(arg0 : List<String>) : void
++ getWaitlistLocations() : Map<String,EntrantLocation>
++ setWaitlistLocations(arg0 : Map<String,EntrantLocation>) : void
++ putWaitlistLocation(arg0 : String, arg1 : EntrantLocation) : void
++ getWaitlistLocation(arg0 : String) : EntrantLocation
 + getInvitedList() : List<String>
 + setInvitedList(arg0 : List<String>) : void
 + getEnrolledList() : List<String>
@@ -141,6 +146,12 @@ class com.example.fairdraw.Models.Event {
 + cancelLotteryWinner(arg0 : String) : void
 + acceptLotteryWinner(arg0 : String) : void
 }
+class com.example.fairdraw.Models.Event$EntrantLocation {
++ getLat() : Double
++ setLat(arg0 : Double) : void
++ getLng() : Double
++ setLng(arg0 : Double) : void
+}
 class com.example.fairdraw.Models.User {
 + getName() : String
 + getEmail() : String
@@ -154,6 +165,12 @@ class com.example.fairdraw.Models.User {
 + setDeviceId(arg0 : String) : void
 + setFcmToken(arg0 : String) : void
 + setRoles(arg0 : ArrayList<String>) : void
+}
+class com.example.fairdraw.Models.AreaStats {
++ increment() : void
++ getLat() : double
++ getLng() : double
++ getCount() : int
 }
 class com.example.fairdraw.DBs.OrganizerDB {
 + {static} getOrganizerCollection() : CollectionReference
@@ -191,6 +208,14 @@ class com.example.fairdraw.ServiceUtility.QrUtil {
 class com.example.fairdraw.Activities.ProfileActivity {
 # onCreate(arg0 : Bundle) : void
 # onDestroy() : void
+}
+class com.example.fairdraw.ServiceUtility.GeoService {
++ {static} int LOCATION_PERMISSION_REQUEST_CODE
++ hasLocationPermission() : boolean
++ requestLocationPermission(arg0 : Activity) : void
++ getLastKnownLocation(arg0 : GeoCallback) : void
+}
+interface com.example.fairdraw.ServiceUtility.GeoService$GeoCallback {
 }
 class com.example.fairdraw.Activities.EntrantHomeActivity {
 # onCreate(arg0 : Bundle) : void
@@ -291,7 +316,7 @@ class com.example.fairdraw.DBs.EventDB {
 + {static} getEvents(arg0 : GetEventsCallback) : void
 + {static} listenToEvents(arg0 : GetEventsCallback) : ListenerRegistration
 + {static} removeFromWaitlist(arg0 : String, arg1 : String, arg2 : RemoveFromWaitlistCallback) : void
-+ {static} addToWaitlist(arg0 : String, arg1 : String, arg2 : AddToWaitlistCallback) : void
++ {static} addToWaitlist(arg0 : String, arg1 : String, arg2 : Event.EntrantLocation, arg3 : AddToWaitlistCallback) : void
 }
 interface com.example.fairdraw.DBs.EventDB$GetEventCallback {
 }
@@ -346,6 +371,10 @@ class com.example.fairdraw.Activities.EditEventPage {
 + onCreateView(arg0 : LayoutInflater, arg1 : ViewGroup, arg2 : Bundle) : View
 + onViewCreated(arg0 : View, arg1 : Bundle) : void
 }
+class com.example.fairdraw.Activities.OrganizerWaitListMapActivity {
+# onCreate(arg0 : Bundle) : void
++ onMapReady(arg0 : GoogleMap) : void
+}
 class com.example.fairdraw.Activities.OrganizerMainPage {
 # onCreate(arg0 : Bundle) : void
 }
@@ -396,6 +425,8 @@ androidx.fragment.app.DialogFragment <|-- com.example.fairdraw.Fragments.FilterE
 com.example.fairdraw.Fragments.FilterEventsDialogFragment +.. com.example.fairdraw.Fragments.FilterEventsDialogFragment$FilterListener
 com.example.fairdraw.Activities.BaseTopBottomActivity <|-- com.example.fairdraw.Activities.OrganizerManageEvent
 java.io.Serializable <|.. com.example.fairdraw.Models.Event
+com.example.fairdraw.Models.Event +.. com.example.fairdraw.Models.Event$EntrantLocation
+com.example.fairdraw.Models.Serializable <|.. com.example.fairdraw.Models.Event$EntrantLocation
 java.io.Serializable <|.. com.example.fairdraw.Models.User
 com.example.fairdraw.DBs.OrganizerDB +.. com.example.fairdraw.DBs.OrganizerDB$GetOrganizerCallback
 com.example.fairdraw.DBs.OrganizerDB +.. com.example.fairdraw.DBs.OrganizerDB$AddOrganizerCallback
@@ -406,6 +437,7 @@ com.example.fairdraw.DBs.UserDB +.. com.example.fairdraw.DBs.UserDB$ExistsCallba
 com.example.fairdraw.DBs.UserDB +.. com.example.fairdraw.DBs.UserDB$WriteCallback
 com.example.fairdraw.DBs.UserDB +.. com.example.fairdraw.DBs.UserDB$DeleteCallback
 androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.ProfileActivity
+com.example.fairdraw.ServiceUtility.GeoService +.. com.example.fairdraw.ServiceUtility.GeoService$GeoCallback
 androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.EntrantHomeActivity
 androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.MainActivity
 java.io.Serializable <|.. com.example.fairdraw.Models.Entrant
@@ -432,6 +464,8 @@ com.example.fairdraw.Fragments.SendNotificationDialogFragment +.. com.example.fa
 java.io.Serializable <|.. com.example.fairdraw.Others.EntrantNotification
 androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.TestDeepLinkActivity
 androidx.fragment.app.Fragment <|-- com.example.fairdraw.Activities.EditEventPage
+com.google.android.gms.maps.OnMapReadyCallback <|.. com.example.fairdraw.Activities.OrganizerWaitListMapActivity
+androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.OrganizerWaitListMapActivity
 com.example.fairdraw.Activities.BaseTopBottomActivity <|-- com.example.fairdraw.Activities.OrganizerMainPage
 androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.CreateEventPage
 androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.DeepLinkRouterActivity
