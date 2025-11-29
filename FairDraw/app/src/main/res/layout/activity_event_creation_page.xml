@@ -17,7 +17,7 @@
 
     <include
         android:id="@+id/event_create_toolbar"
-        layout="@layout/toolbar"
+        layout="@layout/top_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
