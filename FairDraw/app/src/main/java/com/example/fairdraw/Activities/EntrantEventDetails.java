@@ -174,23 +174,6 @@ public class EntrantEventDetails extends BaseTopBottomActivity {
                 // Add to waitlist
                 handleJoinWaitlistClick();
 
-//                EventDB.addToWaitlist(eventId, DevicePrefsManager.getDeviceId(this), success -> {
-//                    if (success) {
-//                        onWaitlist[0] = true;
-//                        // After adding, use cached event if available to determine label/state.
-//                        if (currentEvent != null) {
-//                            // The cached event won't yet reflect the addition; present a leave affordance.
-//                            btnWaitlist.setText(getString(R.string.leave_lottery_waitlist));
-//                            btnWaitlist.setEnabled(true);
-//                        } else {
-//                            btnWaitlist.setText(getString(R.string.leave_lottery_waitlist));
-//                            btnWaitlist.setEnabled(true);
-//                        }
-//                        Toast.makeText(this, "Added to waitlist", Toast.LENGTH_SHORT).show();
-//                    } else {
-//                        Toast.makeText(this, "Failed to add to waitlist", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
             }
         });
     }
@@ -256,11 +239,21 @@ public class EntrantEventDetails extends BaseTopBottomActivity {
             @Override
             public void onLocationError(String message) {
                 Log.w("EntrantEventDetails", "Location error: " + message);
-                // Optional: still let them join without location, or show another dialog.
+                // Do NOT join without location when event requires geolocation. Offer retry instead.
                 Toast.makeText(EntrantEventDetails.this,
-                        "Could not get location. Joining without location.",
-                        Toast.LENGTH_SHORT).show();
-                joinWaitlistInternal();
+                        "Could not get location. This event requires geolocation so you can't join without it.",
+                        Toast.LENGTH_LONG).show();
+
+                new MaterialAlertDialogBuilder(EntrantEventDetails.this)
+                        .setTitle("Location unavailable")
+                        .setMessage("We couldn't obtain your location. You can retry or cancel joining the waitlist.")
+                        .setPositiveButton("Retry", (dialog, which) -> {
+                            dialog.dismiss();
+                            // Try again (will request permission if needed)
+                            startJoinWithLocation();
+                        })
+                        .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                        .show();
             }
         });
     }
@@ -274,6 +267,20 @@ public class EntrantEventDetails extends BaseTopBottomActivity {
 
     private void joinWaitlistInternal(@Nullable Event.EntrantLocation location) {
         String deviceId = DevicePrefsManager.getDeviceId(this);
+
+        // If the event requires geolocation, disallow joining without a provided location.
+        if (currentEvent != null && Boolean.TRUE.equals(currentEvent.getGeolocation()) && location == null) {
+            new MaterialAlertDialogBuilder(this)
+                    .setTitle("Location required")
+                    .setMessage("This event requires that you share your location to join. Please agree to share your location to continue.")
+                    .setPositiveButton("Retry", (dialog, which) -> {
+                        dialog.dismiss();
+                        showGeoConsentDialog();
+                    })
+                    .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                    .show();
+            return;
+        }
 
         // New overloaded DB method that accepts a location
         EventDB.addToWaitlist(eventId, deviceId, location, success -> {

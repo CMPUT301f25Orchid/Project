@@ -1,8 +1,8 @@
 package com.example.fairdraw.Activities;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -13,8 +13,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.fairdraw.DBs.EventDB;
-import com.example.fairdraw.Models.AreaStats;
 import com.example.fairdraw.Models.Event;
+import com.example.fairdraw.Models.AreaStats;
 import com.example.fairdraw.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -24,6 +24,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -34,6 +35,7 @@ public class OrganizerWaitListMapActivity extends AppCompatActivity implements O
 
     private GoogleMap mMap;
     private String eventId;
+    private TextView tvStatusPill;
 
     // key -> AreaStats (bucketed region)
     private final Map<String, AreaStats> areaMap = new HashMap<>();
@@ -61,6 +63,30 @@ public class OrganizerWaitListMapActivity extends AppCompatActivity implements O
         // Back button
         Button btnBack = findViewById(R.id.btnBackToEvent);
         btnBack.setOnClickListener(v -> finish());
+        tvStatusPill = findViewById(R.id.tvStatusPill);
+
+        // Check registration status of event with current date
+        EventDB.getEvent(eventId, event -> {
+            if (event == null) {
+                Toast.makeText(this, "Failed to load event", Toast.LENGTH_LONG).show();
+                return;
+            }
+            Date today = new Date();
+            Date eventRegOpen = event.getEventOpenRegDate();
+            Date eventRegClose = event.getEventCloseRegDate();
+
+            if (eventRegOpen != null && eventRegClose != null) {
+                if (today.before(eventRegOpen)) {
+                    tvStatusPill.setText("Registration Not Open");
+                }
+                else if (today.after(eventRegClose)) {
+                    tvStatusPill.setText("Registration Closed");
+                }
+                else {
+                    tvStatusPill.setText("Registration Open");
+                }
+            }
+        });
 
         // Attach a SupportMapFragment into the FrameLayout
         SupportMapFragment mapFragment = SupportMapFragment.newInstance();
