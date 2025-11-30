@@ -77,7 +77,9 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">OrganizerEventsDataHolder</span>
 <span class="extends-implements">extends <a href="https://developer.android.com/reference/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">A singleton class that holds the event data for the organizer.</div>
+<div class="block">A singleton holder for organizer events. Provides a thread-safe internal list
+ and notifies the attached RecyclerView ListAdapter (if any) through
+ submitList(...) when the data changes.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -94,45 +96,31 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#addEvent(com.example.fairdraw.Models.Event)" class="member-name-link">addEvent</a><wbr>(<a href="../Models/Event.html" title="class in com.example.fairdraw.Models">Event</a>&nbsp;event)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Add an event to the data list.</div>
-</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#clear()" class="member-name-link">clear</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Clear all events from the data list.</div>
-</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://developer.android.com/reference/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="../Models/Event.html" title="class in com.example.fairdraw.Models">Event</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getDataList()" class="member-name-link">getDataList</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Backwards-compatible: original code expects an ArrayList (getDataList()).</div>
-</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://developer.android.com/reference/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../Models/Event.html" title="class in com.example.fairdraw.Models">Event</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getEvents()" class="member-name-link">getEvents</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Get the list of events.</div>
-</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setAdapter(com.example.fairdraw.Adapters.EventArrayAdapter)" class="member-name-link">setAdapter</a><wbr>(<a href="../Adapters/EventArrayAdapter.html" title="class in com.example.fairdraw.Adapters">EventArrayAdapter</a>&nbsp;a)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Set the event adapter for the app.</div>
-</div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setAdapter(com.example.fairdraw.Adapters.EventRecyclerAdapter)" class="member-name-link">setAdapter</a><wbr>(<a href="../Adapters/EventRecyclerAdapter.html" title="class in com.example.fairdraw.Adapters">EventRecyclerAdapter</a>&nbsp;a)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setDataList(java.util.ArrayList)" class="member-name-link">setDataList</a><wbr>(<a href="https://developer.android.com/reference/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="../Models/Event.html" title="class in com.example.fairdraw.Models">Event</a>&gt;&nbsp;dataList)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Backwards-compatible setter used by OrganizerMainPage to set the data list reference.</div>
-</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setEventAdapter(com.example.fairdraw.Adapters.EventArrayAdapter)" class="member-name-link">setEventAdapter</a><wbr>(<a href="../Adapters/EventArrayAdapter.html" title="class in com.example.fairdraw.Adapters">EventArrayAdapter</a>&nbsp;a)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setEventAdapter(com.example.fairdraw.Adapters.EventRecyclerAdapter)" class="member-name-link">setEventAdapter</a><wbr>(<a href="../Adapters/EventRecyclerAdapter.html" title="class in com.example.fairdraw.Adapters">EventRecyclerAdapter</a>&nbsp;a)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Backwards-compatible name used in codebase: setEventAdapter</div>
+<div class="block">Backwards-compatible name used elsewhere in the codebase.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#updateEvent(com.example.fairdraw.Models.Event,int)" class="member-name-link">updateEvent</a><wbr>(<a href="../Models/Event.html" title="class in com.example.fairdraw.Models">Event</a>&nbsp;event,
  int&nbsp;index)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Update an existing event at the provided index.</div>
-</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -154,57 +142,37 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getEvents()">
 <h3>getEvents</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://developer.android.com/reference/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../Models/Event.html" title="class in com.example.fairdraw.Models">Event</a>&gt;</span>&nbsp;<span class="element-name">getEvents</span>()</div>
-<div class="block">Get the list of events.</div>
-<dl class="notes">
-<dt>Returns:</dt>
-<dd>A copy of the list of events.</dd>
-</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getDataList()">
 <h3>getDataList</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://developer.android.com/reference/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="../Models/Event.html" title="class in com.example.fairdraw.Models">Event</a>&gt;</span>&nbsp;<span class="element-name">getDataList</span>()</div>
-<div class="block">Backwards-compatible: original code expects an ArrayList (getDataList()).
- Return the internal list reference as an ArrayList for existing callers that rely on direct modification.
- NOTE: callers who modify the returned list should be careful; prefer getEvents() for a safe copy.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="setDataList(java.util.ArrayList)">
 <h3>setDataList</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setDataList</span><wbr><span class="parameters">(<a href="https://developer.android.com/reference/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="../Models/Event.html" title="class in com.example.fairdraw.Models">Event</a>&gt;&nbsp;dataList)</span></div>
-<div class="block">Backwards-compatible setter used by OrganizerMainPage to set the data list reference.
- We'll copy elements into our internal synchronized list to preserve thread-safety.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="setAdapter(com.example.fairdraw.Adapters.EventArrayAdapter)">
+<section class="detail" id="setAdapter(com.example.fairdraw.Adapters.EventRecyclerAdapter)">
 <h3>setAdapter</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setAdapter</span><wbr><span class="parameters">(<a href="../Adapters/EventArrayAdapter.html" title="class in com.example.fairdraw.Adapters">EventArrayAdapter</a>&nbsp;a)</span></div>
-<div class="block">Set the event adapter for the app.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>a</code> - This is the adapter that will be used to display the events in the app.</dd>
-</dl>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setAdapter</span><wbr><span class="parameters">(<a href="../Adapters/EventRecyclerAdapter.html" title="class in com.example.fairdraw.Adapters">EventRecyclerAdapter</a>&nbsp;a)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="setEventAdapter(com.example.fairdraw.Adapters.EventArrayAdapter)">
+<section class="detail" id="setEventAdapter(com.example.fairdraw.Adapters.EventRecyclerAdapter)">
 <h3>setEventAdapter</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setEventAdapter</span><wbr><span class="parameters">(<a href="../Adapters/EventArrayAdapter.html" title="class in com.example.fairdraw.Adapters">EventArrayAdapter</a>&nbsp;a)</span></div>
-<div class="block">Backwards-compatible name used in codebase: setEventAdapter</div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setEventAdapter</span><wbr><span class="parameters">(<a href="../Adapters/EventRecyclerAdapter.html" title="class in com.example.fairdraw.Adapters">EventRecyclerAdapter</a>&nbsp;a)</span></div>
+<div class="block">Backwards-compatible name used elsewhere in the codebase.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="addEvent(com.example.fairdraw.Models.Event)">
 <h3>addEvent</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">addEvent</span><wbr><span class="parameters">(<a href="../Models/Event.html" title="class in com.example.fairdraw.Models">Event</a>&nbsp;event)</span></div>
-<div class="block">Add an event to the data list.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>event</code> - The new event that needs to be added</dd>
-</dl>
 </section>
 </li>
 <li>
@@ -212,14 +180,12 @@ loadScripts(document, 'script');</script>
 <h3>updateEvent</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">updateEvent</span><wbr><span class="parameters">(<a href="../Models/Event.html" title="class in com.example.fairdraw.Models">Event</a>&nbsp;event,
  int&nbsp;index)</span></div>
-<div class="block">Update an existing event at the provided index. Backwards-compatible with existing callers.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="clear()">
 <h3>clear</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">clear</span>()</div>
-<div class="block">Clear all events from the data list.</div>
 </section>
 </li>
 </ul>
