@@ -136,12 +136,4 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
     }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (userListener != null) {
-            userListener.remove();
-        }
-    }
 }

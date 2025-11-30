@@ -73,9 +73,7 @@ public class BaseTopBottomActivity extends AppCompatActivity {
             });
 
             scan.setOnClickListener(v -> {
-                // Reuse the entrant scanner for now
-                Intent intent = new Intent(this, EntrantScan.class);
-                startActivity(intent);
+                // Leave empty
             });
 
             notifications.setOnClickListener(v -> {

@@ -4,15 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.cardview.widget.CardView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -22,8 +20,8 @@ import com.bumptech.glide.Glide;
 import com.example.fairdraw.DBs.EventDB;
 import com.example.fairdraw.Fragments.FilterEventsDialogFragment;
 import com.example.fairdraw.Models.Event;
-import com.example.fairdraw.Others.BarType;
 import com.example.fairdraw.Others.EventState;
+import com.example.fairdraw.Others.BarType;
 import com.example.fairdraw.R;
 import com.example.fairdraw.ServiceUtility.FirebaseImageStorageService;
 import com.google.firebase.firestore.ListenerRegistration;
@@ -38,7 +36,7 @@ import java.util.Calendar;
  * and allowing navigation to other parts of the app such as the organizer page, scan page,
  * and notifications. It also handles filtering of events based on user-selected criteria.
  */
-public class EntrantHomeActivity extends AppCompatActivity {
+public class EntrantHomeActivity extends BaseTopBottomActivity {
 
     private LinearLayout eventListContainer;
     private ListenerRegistration eventListener;
@@ -57,46 +55,12 @@ public class EntrantHomeActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_entrant_home);
 
-        // Initialize top and bottom navigation bars
-        // For now do top nav manually here
-        View entrantBtn = findViewById(R.id.btnEntrant);
-        entrantBtn.setOnClickListener(v ->{
-            Snackbar.make(findViewById(android.R.id.content), "You are already on the Entrant Home page.", Snackbar.LENGTH_SHORT).show();
-        });
+        // Initialize shared top and bottom navigation using BaseTopBottomActivity
+        initTopNav(BarType.ENTRANT);
+        initBottomNav(BarType.ENTRANT, findViewById(R.id.home_bottom_nav_bar));
 
-        View organizerBtn = findViewById(R.id.btnOrganizer);
-        organizerBtn.setOnClickListener(v ->{
-            Log.d("OrganizerMainPage", "Organizer button clicked");
-            Intent intent = new Intent(this, OrganizerMainPage.class);
-            startActivity(intent);
-        });
-
-        View home = findViewById(R.id.home_activity);
-        View myEvents = findViewById(R.id.events_activity);
-        View scan = findViewById(R.id.scan_activity);
-        View notifications = findViewById(R.id.notifications_activity);
-
-        home.setOnClickListener(v -> {
-            // Send to EntrantHomeActivity
-            Intent intent = new Intent(this, EntrantHomeActivity.class);
-            startActivity(intent);
-        });
-
-        myEvents.setOnClickListener(v -> {
-            // TODO: Send to EntrantEventsActivity
-        });
-
-        scan.setOnClickListener(v -> {
-            // Send to EntrantScan
-            Intent intent = new Intent(this, EntrantScan.class);
-            startActivity(intent);
-        });
-
-        notifications.setOnClickListener(v -> {
-            // Send to EntrantNotificationsActivity
-            Intent intent = new Intent(this, EntrantNotificationsActivity.class);
-            startActivity(intent);
-        });
+        BottomNavigationView bottomNav = findViewById(R.id.home_bottom_nav_bar);
+        if (bottomNav != null) bottomNav.setSelectedItemId(R.id.home_activity);
         findViewById(R.id.imgAvatar).setOnClickListener(v -> {
             // Send to ProfileActivity
             Intent intent = new Intent(this, ProfileActivity.class);
