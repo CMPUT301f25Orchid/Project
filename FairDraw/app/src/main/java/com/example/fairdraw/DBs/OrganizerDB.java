@@ -4,6 +4,12 @@ import com.example.fairdraw.Models.Organizer;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
+
+import java.util.Date;
 
 /**
  * Firestore helper for operations on the "organizers" collection.
@@ -109,4 +115,51 @@ public class OrganizerDB {
         getOrganizerCollection().document(deviceId).delete()
                 .addOnCompleteListener(task -> callback.onCallback(task.isSuccessful()));
     }
+    /**
+     * Remove an organizer and clean up their events in a single batch:
+     * - Delete events with no endDate or endDate in the future (current/ongoing/upcoming)
+     * - For past events (endDate in the past) set organizer -> "Unknown organizer"
+     * - Delete the organizer document
+     *
+     * All operations are committed in one WriteBatch so they succeed or fail together.
+     *
+     * @param organizerId document id of the organizer to remove
+     * @param callback callback invoked with success flag
+     */
+    public static void removeOrganizerAndCleanupEvents(String organizerId, DeleteOrganizerCallback callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference eventsCol = db.collection("events");
+
+        Query q = eventsCol.whereEqualTo("organizer", organizerId);
+        q.get().addOnCompleteListener(queryTask -> {
+            if (!queryTask.isSuccessful() || queryTask.getResult() == null) {
+                callback.onCallback(false);
+                return;
+            }
+
+            QuerySnapshot snapshot = queryTask.getResult();
+            WriteBatch batch = db.batch();
+            Date now = new Date();
+
+            for (QueryDocumentSnapshot doc : snapshot) {
+                Date endDate = doc.getDate("endDate");
+                if (endDate == null || endDate.after(now)) {
+                    // current or upcoming event -> delete
+                    batch.delete(doc.getReference());
+                } else {
+                    // past event -> keep but remove organizer identity
+                    batch.update(doc.getReference(), "organizer", "Unknown organizer");
+                }
+            }
+
+            // Delete the organizer document itself
+            DocumentReference organizerRef = getOrganizerCollection().document(organizerId);
+            batch.delete(organizerRef);
+
+            // Commit the batch
+            batch.commit().addOnCompleteListener(commitTask ->
+                    callback.onCallback(commitTask.isSuccessful()));
+        });
+    }
 }
+
