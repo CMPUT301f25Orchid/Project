@@ -12,22 +12,33 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.fairdraw.Adapters.EntrantListArrayAdapter;
 import com.example.fairdraw.DBs.EventDB;
+import com.example.fairdraw.DBs.UserDB;
 import com.example.fairdraw.Models.Event;
+import com.example.fairdraw.Others.ListItemEntrant;
 import com.example.fairdraw.R;
 import com.example.fairdraw.ServiceUtility.FirebaseImageStorageService;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.atomic.AtomicInteger;
 
-public class OrganizerExportActivity extends AppCompatActivity {
+public class OrganizerExportActivity extends BaseTopBottomActivity{
     String eventId;
     Event event;
     ImageView ivHeroImage;
@@ -132,6 +143,17 @@ public class OrganizerExportActivity extends AppCompatActivity {
         btnReturnHome = findViewById(R.id.btnReturn);
         btnDownloadFinalEntrants = findViewById(R.id.btnDownloadFinalEntrants);
 
+        // Set button to return to previous page
+        btnReturnHome.setOnClickListener(v -> {
+            finish();
+        });
+
+        // Set button to export final entrants to CSV
+        btnDownloadFinalEntrants.setOnClickListener(v -> {
+            exportEnrolledEntrantsToCsv(event.getEnrolledList(), event.getTitle());
+        });
+
+        // Get the event and bind the event data to the UI components
         EventDB.getEventCollection().document(eventId).addSnapshotListener((snapshot, e) -> {
             if (e != null) {
                 Log.w("OrganizerManageEvent", "Listen failed.", e);
@@ -172,5 +194,102 @@ public class OrganizerExportActivity extends AppCompatActivity {
 
         // Show description
         tvDescription.setText((e.getDescription() == null || e.getDescription().isEmpty()) ? "No description provided" : e.getDescription());
+
+        // Fill the final entrants list
+        List<ListItemEntrant> entrantList = new ArrayList<>();
+        for (String s : e.getEnrolledList()) {
+            entrantList.add(new ListItemEntrant(s));
+        }
+        EntrantListArrayAdapter adapter = new EntrantListArrayAdapter(this, entrantList, true, event.getUuid());
+        rvFinalList.setLayoutManager(new LinearLayoutManager(this));
+        rvFinalList.setAdapter(adapter);
     }
+
+    // Export Final Entrant List to CSV
+    private void writeCsvAndShare(List<String[]> rows, String eventTitle) {
+        // Build CSV content bytes
+        StringBuilder sb = getStringBuilder(rows);
+        byte[] bytes = sb.toString().getBytes();
+
+        // File name with timestamp
+        String safeTitle = (eventTitle == null || eventTitle.isEmpty()) ? "event" : eventTitle.replaceAll("[^a-zA-Z0-9-_]", "_");
+        String time = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
+        String fileName = safeTitle + "_enrolled_" + time + ".csv";
+
+        // Store pending bytes and fileName, then launch ACTION_CREATE_DOCUMENT so the user can pick Downloads or another location
+        pendingCsvBytes = bytes;
+        pendingCsvFileName = fileName;
+
+        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("text/csv");
+        intent.putExtra(Intent.EXTRA_TITLE, fileName);
+        // Use ActivityResultLauncher instead of deprecated startActivityForResult
+        try {
+            createFileLauncher.launch(intent);
+        } catch (Exception ex) {
+            Log.e("OrganizerManageEvent", "Failed to launch create document picker", ex);
+            Toast.makeText(this, "Unable to open save dialog: " + ex.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+    /**
+     * Export the enrolled entrant IDs to a CSV file. For each entrant id we try to fetch
+     * a User record to include name/email/phone if available. The resulting file is saved
+     * into the app external files directory and then shared using a FileProvider URI.
+     */
+    private void exportEnrolledEntrantsToCsv(List<String> enrolledIds, String eventTitle) {
+        if (enrolledIds == null || enrolledIds.isEmpty()) {
+            Toast.makeText(this, "No enrolled entrants to export.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Header
+        final List<String[]> rows = new ArrayList<>();
+        rows.add(new String[]{"DeviceId", "Name", "Email", "Phone"});
+
+        // We'll fetch User objects for each entrant asynchronously and collect rows.
+        AtomicInteger remaining = new AtomicInteger(enrolledIds.size());
+
+        for (String deviceId : enrolledIds) {
+            UserDB.getUserOrNull(deviceId, (user, ex) -> {
+                if (user != null) {
+                    rows.add(new String[]{deviceId,
+                            user.getName() == null ? "" : user.getName(),
+                            user.getEmail() == null ? "" : user.getEmail(),
+                            user.getPhoneNum() == null ? "" : user.getPhoneNum()});
+                } else {
+                    // Either user not found or error; still include id and leave other columns blank
+                    rows.add(new String[]{deviceId, "", "", ""});
+                    if (ex != null) Log.w("OrganizerManageEvent", "Failed to fetch user " + deviceId, ex);
+                }
+
+                if (remaining.decrementAndGet() == 0) {
+                    // All fetched - write CSV
+                    writeCsvAndShare(rows, eventTitle);
+                }
+            });
+        }
+    }
+
+    @NonNull
+    private static StringBuilder getStringBuilder(List<String[]> rows) {
+        StringBuilder sb = new StringBuilder();
+        for (String[] row : rows) {
+            for (int i = 0; i < row.length; i++) {
+                String cell = row[i] == null ? "" : row[i];
+                // Escape quotes
+                cell = cell.replace("\"", "\"\"");
+                if (cell.contains(",") || cell.contains("\n") || cell.contains("\"")) {
+                    sb.append('"').append(cell).append('"');
+                } else {
+                    sb.append(cell);
+                }
+                if (i < row.length - 1) sb.append(',');
+            }
+            sb.append('\n');
+        }
+        return sb;
+    }
+
+
 }

@@ -167,7 +167,7 @@ public class OrganizerManageEvent extends BaseTopBottomActivity {
         rvRegistered = findViewById(R.id.rvRegistered);
         rvWaiting = findViewById(R.id.rvWaiting);
         btnSendNotification = findViewById(R.id.btnSendNotification);
-        btnDownloadFinalEntrants = findViewById(R.id.btnDownloadFinalEntrants);
+        btnDownloadFinalEntrants = findViewById(R.id.btnReturn);
         btnSeeWaitingMap = findViewById(R.id.btnSeeWaitingMap);
 
         EventDB.getEventCollection().document(eventId).addSnapshotListener((snapshot, e) -> {

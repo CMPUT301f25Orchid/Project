@@ -138,7 +138,7 @@
 
             <!-- Action buttons -->
             <Button
-                android:id="@+id/btnReturn"
+                android:id="@+id/btnDownloadFinalEntrants"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginTop="12dp"
@@ -147,7 +147,7 @@
                 android:textAllCaps="false" />
 
             <Button
-                android:id="@+id/btnDownloadFinalEntrants"
+                android:id="@+id/btnReturn"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginTop="10dp"
