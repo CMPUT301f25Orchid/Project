@@ -9,7 +9,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+import com.google.android.material.snackbar.Snackbar;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -61,7 +61,7 @@ public class EntrantHomeActivity extends AppCompatActivity {
         // For now do top nav manually here
         View entrantBtn = findViewById(R.id.btnEntrant);
         entrantBtn.setOnClickListener(v ->{
-            Toast.makeText(this, "You are already on the Entrant Home page.", Toast.LENGTH_SHORT).show();
+            Snackbar.make(findViewById(android.R.id.content), "You are already on the Entrant Home page.", Snackbar.LENGTH_SHORT).show();
         });
 
         View organizerBtn = findViewById(R.id.btnOrganizer);

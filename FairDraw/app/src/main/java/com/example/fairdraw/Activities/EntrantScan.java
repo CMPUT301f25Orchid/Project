@@ -5,7 +5,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.widget.Toast;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -39,7 +40,8 @@ public class EntrantScan extends BaseTopBottomActivity {
     private final ActivityResultLauncher<String> requestCameraPermission =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), granted -> {
                 if (granted) startScanning();
-                else Toast.makeText(this, "Camera permission is required to scan.", Toast.LENGTH_LONG).show();
+                else //Toast.makeText(this, "Camera permission is required to scan.", Toast.LENGTH_LONG).show();
+                    Snackbar.make(findViewById(android.R.id.content), "Camera permission is required to scan.", Snackbar.LENGTH_LONG).show();
             });
 
     private final BarcodeCallback callback = new BarcodeCallback() {
@@ -52,7 +54,7 @@ public class EntrantScan extends BaseTopBottomActivity {
             handled = true; // avoid multiple triggers
 
             // For now: just show and navigate to MainActivity (pass the raw text for testing)
-            Toast.makeText(EntrantScan.this, "Scanned: " + contents, Toast.LENGTH_SHORT).show();
+            Snackbar.make(barcodeScanner, "Scanned: " + contents, Snackbar.LENGTH_SHORT).show();
 
             Intent view = new Intent(Intent.ACTION_VIEW, Uri.parse(contents));
             startActivity(view);

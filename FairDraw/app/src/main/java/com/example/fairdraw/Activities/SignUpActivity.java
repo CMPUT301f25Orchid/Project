@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -80,7 +79,7 @@ public class SignUpActivity extends AppCompatActivity {
             UserDB.upsertUser(user, (ok, e) -> {
                 if (!ok) {
                     String msg = (e != null) ? e.getMessage() : "Unknown error";
-                    Toast.makeText(this, "Failed to create account: " + msg, Toast.LENGTH_LONG).show();
+                    Snackbar.make(findViewById(android.R.id.content), "Failed to create account: " + msg, Snackbar.LENGTH_LONG).show();
                     return;
                 }
                 intent = new Intent(this, ProfileActivity.class);

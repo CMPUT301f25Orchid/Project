@@ -7,7 +7,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -102,7 +103,7 @@ public class EntrantEventDetails extends BaseTopBottomActivity {
         // 1) get the eventId from intent
         eventId = getIntent().getStringExtra("event_id");
         if (eventId == null || eventId.trim().isEmpty()) {
-            Toast.makeText(this, "Missing event id", Toast.LENGTH_LONG).show();
+            Snackbar.make(findViewById(android.R.id.content), "Missing event id", Snackbar.LENGTH_LONG).show();
             finish();
             return;
         }
@@ -110,7 +111,7 @@ public class EntrantEventDetails extends BaseTopBottomActivity {
         // 2) fetch Event and bind, and setup listener for realtime updates
         eventListener = EventDB.listenToEvent(eventId, event -> {
             if (event == null) {
-                Toast.makeText(this, "Unable to load event.", Toast.LENGTH_LONG).show();
+                Snackbar.make(findViewById(android.R.id.content), "Unable to load event.", Snackbar.LENGTH_LONG).show();
                 return;
             }
             // Cache the latest event for use in click callbacks
@@ -164,9 +165,9 @@ public class EntrantEventDetails extends BaseTopBottomActivity {
                             btnWaitlist.setText(getString(R.string.join_lottery_waitlist));
                             btnWaitlist.setEnabled(true);
                         }
-                        Toast.makeText(this, "Removed from waitlist", Toast.LENGTH_SHORT).show();
+                        Snackbar.make(findViewById(android.R.id.content), "Removed from waitlist", Snackbar.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(this, "Failed to remove from waitlist", Toast.LENGTH_SHORT).show();
+                        Snackbar.make(findViewById(android.R.id.content), "Failed to remove from waitlist", Snackbar.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -240,9 +241,9 @@ public class EntrantEventDetails extends BaseTopBottomActivity {
             public void onLocationError(String message) {
                 Log.w("EntrantEventDetails", "Location error: " + message);
                 // Do NOT join without location when event requires geolocation. Offer retry instead.
-                Toast.makeText(EntrantEventDetails.this,
+                Snackbar.make(findViewById(android.R.id.content),
                         "Could not get location. This event requires geolocation so you can't join without it.",
-                        Toast.LENGTH_LONG).show();
+                        Snackbar.LENGTH_LONG).show();
 
                 new MaterialAlertDialogBuilder(EntrantEventDetails.this)
                         .setTitle("Location unavailable")
@@ -288,9 +289,9 @@ public class EntrantEventDetails extends BaseTopBottomActivity {
                 onWaitlist[0] = true;
                 btnWaitlist.setText(getString(R.string.leave_lottery_waitlist));
                 btnWaitlist.setEnabled(true);
-                Toast.makeText(this, "Added to waitlist", Toast.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(android.R.id.content), "Added to waitlist", Snackbar.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, "Failed to add to waitlist", Toast.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(android.R.id.content), "Failed to add to waitlist", Snackbar.LENGTH_SHORT).show();
             }
         });
     }
@@ -313,9 +314,9 @@ public class EntrantEventDetails extends BaseTopBottomActivity {
                 if (pendingJoinAfterPermission) {
                     pendingJoinAfterPermission = false;
                 }
-                Toast.makeText(this,
+                Snackbar.make(findViewById(android.R.id.content),
                         "Location permission is required for this event's geolocation feature.",
-                        Toast.LENGTH_SHORT).show();
+                        Snackbar.LENGTH_SHORT).show();
             }
         }
     }
@@ -390,7 +391,7 @@ public class EntrantEventDetails extends BaseTopBottomActivity {
                         .into(heroImage);
             } else {
                 // Handle error
-                Toast.makeText(this, "Failed to load event poster", Toast.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(android.R.id.content), "Failed to load event poster", Snackbar.LENGTH_SHORT).show();
                 Log.e("EntrantEventDetails", "Error loading event poster", urlTask.getException());
             }
         });

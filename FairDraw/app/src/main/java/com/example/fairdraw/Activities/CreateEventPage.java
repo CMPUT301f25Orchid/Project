@@ -11,8 +11,8 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 import android.text.InputType;
+import com.google.android.material.snackbar.Snackbar;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -37,8 +37,6 @@ import com.example.fairdraw.ServiceUtility.DevicePrefsManager;
 import com.example.fairdraw.ServiceUtility.FirebaseImageStorageService;
 import com.example.fairdraw.ServiceUtility.QrUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.zxing.BarcodeFormat;
-import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 /**
  * Activity for creating a new event.
@@ -145,10 +143,10 @@ public class CreateEventPage extends AppCompatActivity {
                 bannerPhoto = null;
                 if (result.getData() != null) {
                     bannerPhoto = result.getData().getData();
-                    Toast.makeText(this, "Image uploaded", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(android.R.id.content), "Image uploaded", Snackbar.LENGTH_SHORT).show();
                 }
                 else {
-                    Toast.makeText(this, "No image selected", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(android.R.id.content), "No image selected", Snackbar.LENGTH_SHORT).show();
                 }
             }
         });
@@ -165,7 +163,7 @@ public class CreateEventPage extends AppCompatActivity {
                     eventLocation.getText().toString().isEmpty() ||
                     eventPrice.getText().toString().isEmpty() ||
                     eventGeolocation.getCheckedRadioButtonId() == -1) {
-                Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(android.R.id.content), "Please fill in all fields", Snackbar.LENGTH_SHORT).show();
             } else {
                 try {
                     Date openDate = dateFormat.parse(eventRegistrationOpenDate.getText().toString());
@@ -235,7 +233,7 @@ public class CreateEventPage extends AppCompatActivity {
                 }
                 catch (Exception e) {
                     Log.e("CreateEventPage", "Error creating event", e);
-                    Toast.makeText(this, "Error creating event: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(android.R.id.content), "Error creating event: " + e.getMessage(), Snackbar.LENGTH_SHORT).show();
                 }
 
                 // Return to Organizer Main Page

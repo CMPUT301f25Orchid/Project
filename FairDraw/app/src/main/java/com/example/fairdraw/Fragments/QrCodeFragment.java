@@ -9,7 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -119,12 +120,12 @@ public class QrCodeFragment extends DialogFragment {
             Log.d("QrCodeFragment", "Successfully loaded QR code image");
         }).addOnFailureListener(e -> {
             Log.d("QrCodeFragment", "Failed to load QR code image", e);
-            // Toast message to inform user of failure adn to check logs
-            Toast.makeText(getContext(), "Failed to load QR code image. Please try again later.", Toast.LENGTH_LONG).show();
+            // Show Snackbar to inform user of failure and to check logs
+            Snackbar.make(view, "Failed to load QR code image. Please try again later.", Snackbar.LENGTH_LONG).show();
 
-            // Close the fragment since QR code cannot be displayed
-            dismiss();
-        });
+             // Close the fragment since QR code cannot be displayed
+             dismiss();
+         });
 
         // Close fragment when "X" is clicked
         btnClose.setOnClickListener(v -> dismiss());
@@ -136,7 +137,7 @@ public class QrCodeFragment extends DialogFragment {
             // Convert ImageView drawable to Bitmap safely
             Drawable drawable = imgQrCode.getDrawable();
             if (drawable == null) {
-                Toast.makeText(getContext(), "No QR code to save", Toast.LENGTH_SHORT).show();
+                Snackbar.make(view, "No QR code to save", Snackbar.LENGTH_SHORT).show();
                 return;
             }
 
@@ -158,7 +159,7 @@ public class QrCodeFragment extends DialogFragment {
             }
 
             if (qrBitmap == null) {
-                Toast.makeText(getContext(), "Could not obtain QR code image.", Toast.LENGTH_SHORT).show();
+                Snackbar.make(view, "Could not obtain QR code image.", Snackbar.LENGTH_SHORT).show();
                 return;
             }
 
@@ -195,7 +196,7 @@ public class QrCodeFragment extends DialogFragment {
                 values.put(MediaStore.Images.Media.IS_PENDING, 0);
                 requireContext().getContentResolver().update(uri, values, null, null);
 
-                Toast.makeText(requireContext(), "QR code saved to Pictures/FairDraw", Toast.LENGTH_LONG).show();
+                Snackbar.make(requireActivity().findViewById(android.R.id.content), "QR code saved to Pictures/FairDraw", Snackbar.LENGTH_LONG).show();
 
             } else {
                 // Older devices: write to external pictures folder (requires WRITE_EXTERNAL_STORAGE on < Q)
@@ -215,11 +216,11 @@ public class QrCodeFragment extends DialogFragment {
                     // scan completed
                 });
 
-                Toast.makeText(requireContext(), "QR code saved to Pictures/FairDraw", Toast.LENGTH_LONG).show();
+                Snackbar.make(requireActivity().findViewById(android.R.id.content), "QR code saved to Pictures/FairDraw", Snackbar.LENGTH_LONG).show();
             }
         } catch (IOException e) {
             Log.e("QrCodeFragment", "Error saving QR code", e);
-            Toast.makeText(requireContext(), "Failed to save QR code. Please check storage permissions.", Toast.LENGTH_LONG).show();
+            Snackbar.make(requireActivity().findViewById(android.R.id.content), "Failed to save QR code. Please check storage permissions.", Snackbar.LENGTH_LONG).show();
         }
     }
 

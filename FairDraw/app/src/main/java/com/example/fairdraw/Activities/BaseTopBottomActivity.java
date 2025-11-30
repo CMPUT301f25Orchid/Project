@@ -2,7 +2,7 @@ package com.example.fairdraw.Activities;
 
 import android.content.Intent;
 import android.view.View;
-import android.widget.Toast;
+import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -95,30 +95,30 @@ public class BaseTopBottomActivity extends AppCompatActivity {
      *                   toast. Otherwise we navigate to the other role's main activity.
      */
     protected void initTopNav(BarType currentBar) {
-        View entrantBtn = findViewById(R.id.btnEntrant);
-        if (entrantBtn != null) {
-            entrantBtn.setOnClickListener(v -> {
-                if (currentBar == BarType.ENTRANT) {
+         View entrantBtn = findViewById(R.id.btnEntrant);
+         if (entrantBtn != null) {
+             entrantBtn.setOnClickListener(v -> {
+                 if (currentBar == BarType.ENTRANT) {
                     // Already an entrant
-                    Toast.makeText(this, "You are already an entrant.", Toast.LENGTH_SHORT).show();
-                } else {
-                    // Navigate to Entrant main/home activity
-                    startActivity(new Intent(this, EntrantHomeActivity.class));
-                }
-            });
-        }
+                    Snackbar.make(findViewById(android.R.id.content), "You are already an entrant.", Snackbar.LENGTH_SHORT).show();
+                 } else {
+                     // Navigate to Entrant main/home activity
+                     startActivity(new Intent(this, EntrantHomeActivity.class));
+                 }
+             });
+         }
 
-        View organizerBtn = findViewById(R.id.btnOrganizer);
-        if (organizerBtn != null) {
-            organizerBtn.setOnClickListener(v -> {
-                if (currentBar == BarType.ORGANIZER) {
+         View organizerBtn = findViewById(R.id.btnOrganizer);
+         if (organizerBtn != null) {
+             organizerBtn.setOnClickListener(v -> {
+                 if (currentBar == BarType.ORGANIZER) {
                     // Already an organizer
-                    Toast.makeText(this, "You are already an organizer.", Toast.LENGTH_SHORT).show();
-                } else {
-                    // Navigate to Organizer main page
-                    startActivity(new Intent(this, OrganizerMainPage.class));
-                }
-            });
-        }
-    }
-}
+                    Snackbar.make(findViewById(android.R.id.content), "You are already an organizer.", Snackbar.LENGTH_SHORT).show();
+                 } else {
+                     // Navigate to Organizer main page
+                     startActivity(new Intent(this, OrganizerMainPage.class));
+                 }
+             });
+         }
+     }
+ }
