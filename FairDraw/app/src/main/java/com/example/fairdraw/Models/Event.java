@@ -8,7 +8,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -22,6 +24,40 @@ import java.util.stream.Collectors;
  * decline, and accept or cancel winners.
  */
 public class Event implements Serializable {
+
+    /**
+     * Simple value object to hold an entrant's location when they joined the waitlist.
+     * Firestore-friendly (no-arg constructor + getters/setters).
+     */
+    public static class EntrantLocation implements Serializable {
+        private Double lat;
+        private Double lng;
+        // You can add fields later: city, postalCode, etc.
+
+        // Required no-arg constructor for Firestore
+        public EntrantLocation() {}
+
+        public EntrantLocation(Double lat, Double lng) {
+            this.lat = lat;
+            this.lng = lng;
+        }
+
+        public Double getLat() {
+            return lat;
+        }
+
+        public void setLat(Double lat) {
+            this.lat = lat;
+        }
+
+        public Double getLng() {
+            return lng;
+        }
+
+        public void setLng(Double lng) {
+            this.lng = lng;
+        }
+    }
 
     private String uuid;
     private String title;
@@ -45,6 +81,10 @@ public class Event implements Serializable {
 
     // List of user IDs who are on the waiting list for the lottery.
     private List<String> waitingList;
+
+    // Map from entrant deviceId -> their location when joining the waitlist
+    // (can be extended later to include city/postal code)
+    private Map<String, EntrantLocation> waitlistLocations;
 
     // List of user IDs who have won the lottery and been sent an invitation.
     private List<String> invitedList;
@@ -443,6 +483,35 @@ public class Event implements Serializable {
      */
     public void setWaitingList(List<String> waitingList) {
         this.waitingList = waitingList;
+    }
+
+    public Map<String, EntrantLocation> getWaitlistLocations() {
+        if (waitlistLocations == null) {
+            waitlistLocations = new HashMap<>();
+        }
+        return waitlistLocations;
+    }
+
+    public void setWaitlistLocations(Map<String, EntrantLocation> waitlistLocations) {
+        this.waitlistLocations = waitlistLocations;
+    }
+
+    /**
+     * Associate or update an entrant's location by deviceId.
+     */
+    public void putWaitlistLocation(String deviceId, EntrantLocation location) {
+        if (waitlistLocations == null) {
+            waitlistLocations = new HashMap<>();
+        }
+        waitlistLocations.put(deviceId, location);
+    }
+
+    /**
+     * Get the stored location for a specific entrant on the waitlist, or null if none.
+     */
+    public EntrantLocation getWaitlistLocation(String deviceId) {
+        if (waitlistLocations == null) return null;
+        return waitlistLocations.get(deviceId);
     }
 
     /**

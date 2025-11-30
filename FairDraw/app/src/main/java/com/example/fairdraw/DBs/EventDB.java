@@ -1,13 +1,21 @@
 package com.example.fairdraw.DBs;
 
+import androidx.annotation.Nullable;
+
 import com.example.fairdraw.Models.Event;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.DocumentSnapshot;
 
+import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Firestore helper for operations on the "events" collection.
@@ -15,6 +23,9 @@ import java.util.List;
  * <p>Provides CRUD operations, list retrieval, and real-time listeners for events.</p>
  */
 public class EventDB {
+
+    // Tag for logging
+    private static final String TAG = "EventDB";
 
     /**
      * Callback for when an Event is retrieved from the database.
@@ -111,8 +122,18 @@ public class EventDB {
         DocumentReference eventRef = getEventCollection().document(eventId);
         eventRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                Event event = task.getResult().toObject(Event.class);
-                callback.onCallback(event);
+                try {
+                    if (task.getResult() != null) {
+                        Event event = task.getResult().toObject(Event.class);
+                        callback.onCallback(event);
+                    } else {
+                        Log.e(TAG, "getEvent: task returned null result for id " + eventId);
+                        callback.onCallback(null);
+                    }
+                } catch (Exception ex) {
+                    Log.e(TAG, "Failed to deserialize event with id " + eventId, ex);
+                    callback.onCallback(null);
+                }
             } else {
                 callback.onCallback(null);
             }
@@ -135,8 +156,13 @@ public class EventDB {
             }
 
             if (snapshot != null && snapshot.exists()) {
-                Event event = snapshot.toObject(Event.class);
-                callback.onCallback(event);
+                try {
+                    Event event = snapshot.toObject(Event.class);
+                    callback.onCallback(event);
+                } catch (Exception ex) {
+                    Log.e(TAG, "Failed to deserialize event in listener for id " + eventId, ex);
+                    callback.onCallback(null);
+                }
             } else {
                 callback.onCallback(null);
             }
@@ -184,7 +210,18 @@ public class EventDB {
     public static void getEvents(GetEventsCallback callback) {
         getEventCollection().get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                List<Event> events = task.getResult().toObjects(Event.class);
+                List<Event> events = new ArrayList<>();
+                if (task.getResult() != null) {
+                    for (DocumentSnapshot ds : task.getResult().getDocuments()) {
+                        try {
+                            Event ev = ds.toObject(Event.class);
+                            events.add(ev);
+                        } catch (Exception ex) {
+                            Log.e(TAG, "Failed to deserialize event with id " + ds.getId(), ex);
+                            // continue processing other documents
+                        }
+                    }
+                }
                 callback.onCallback(events);
             } else {
                 callback.onCallback(null);
@@ -207,7 +244,15 @@ public class EventDB {
             }
 
             if (snapshots != null) {
-                List<Event> events = snapshots.toObjects(Event.class);
+                List<Event> events = new ArrayList<>();
+                for (DocumentSnapshot ds : snapshots.getDocuments()) {
+                    try {
+                        Event ev = ds.toObject(Event.class);
+                        events.add(ev);
+                    } catch (Exception ex) {
+                        Log.e(TAG, "Failed to deserialize event with id " + ds.getId(), ex);
+                    }
+                }
                 callback.onCallback(events);
             } else {
                 callback.onCallback(null);
@@ -234,9 +279,20 @@ public class EventDB {
      * @param deviceId The ID of the device to add to the waitlist.
      * @param callback The callback to be invoked upon completion.
      */
-    public static void addToWaitlist(String eventId, String deviceId, AddToWaitlistCallback callback) {
+    public static void addToWaitlist(String eventId,
+                                     String deviceId,
+                                     @Nullable Event.EntrantLocation location,
+                                     AddToWaitlistCallback callback) {
         DocumentReference eventRef = getEventCollection().document(eventId);
-        eventRef.update("waitingList", FieldValue.arrayUnion(deviceId))
+
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("waitingList", FieldValue.arrayUnion(deviceId));
+
+        if (location != null) {
+            updates.put("waitlistLocations." + deviceId, location);
+        }
+
+        eventRef.update(updates)
                 .addOnCompleteListener(task -> callback.onCallback(task.isSuccessful()));
     }
 }

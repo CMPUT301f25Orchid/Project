@@ -314,6 +314,11 @@ public class OrganizerManageEvent extends BaseTopBottomActivity {
             startActivity(intent);
         });
 
+        btnSeeWaitingMap.setOnClickListener(v -> {
+            Intent intent = new Intent(this, OrganizerWaitListMapActivity.class);
+            intent.putExtra("event_id", eventId);
+            startActivity(intent);
+        });
     }
 
     private void buildEntrantItemRecyclerView(RecyclerView recyclerView, List<String> stringList, Boolean hideCloseButton) {
