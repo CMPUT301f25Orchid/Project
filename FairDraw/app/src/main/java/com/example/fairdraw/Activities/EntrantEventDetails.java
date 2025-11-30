@@ -136,10 +136,7 @@ public class EntrantEventDetails extends BaseTopBottomActivity {
 
             bindEvent(event);
 
-            btnViewQrCode.setOnClickListener(v -> {
-                QrCodeFragment qrFragment = QrCodeFragment.newInstance(eventId,event.getTitle());
-                qrFragment.show(getSupportFragmentManager(), "QrCodeFragment");
-            });
+            setupQrButton(event);
         });
 
         storageService = new FirebaseImageStorageService();
@@ -337,7 +334,15 @@ public class EntrantEventDetails extends BaseTopBottomActivity {
     private static int nz(@Nullable Integer i) {
         return i == null ? 0 : i;
     }
-    
+
+    void setupQrButton(Event event) {
+        btnViewQrCode.setOnClickListener(v -> {
+            QrCodeFragment qrFragment =
+                    QrCodeFragment.newInstance(eventId, event.getTitle());
+            qrFragment.show(getSupportFragmentManager(), "QrCodeFragment");
+        });
+    }
+
     private void bindEvent(Event e) {
         // title / summary
         setTextOrHide(tvTitle,  safe(e.getTitle(), "Event"));

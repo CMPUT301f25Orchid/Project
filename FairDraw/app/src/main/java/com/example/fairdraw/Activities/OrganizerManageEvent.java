@@ -65,9 +65,9 @@ public class OrganizerManageEvent extends BaseTopBottomActivity {
     FirebaseImageStorageService storageService;
 
     // Fields used for ACTION_CREATE_DOCUMENT flow using Activity Result API
-    private ActivityResultLauncher<Intent> createFileLauncher;
-    private byte[] pendingCsvBytes = null;
-    private String pendingCsvFileName = null;
+    ActivityResultLauncher<Intent> createFileLauncher;
+    byte[] pendingCsvBytes = null;
+    String pendingCsvFileName = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

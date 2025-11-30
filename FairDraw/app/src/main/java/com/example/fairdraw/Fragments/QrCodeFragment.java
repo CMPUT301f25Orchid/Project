@@ -124,7 +124,7 @@ public class QrCodeFragment extends DialogFragment {
             Snackbar.make(view, "Failed to load QR code image. Please try again later.", Snackbar.LENGTH_LONG).show();
 
              // Close the fragment since QR code cannot be displayed
-             dismiss();
+            // dismiss();
          });
 
         // Close fragment when "X" is clicked
