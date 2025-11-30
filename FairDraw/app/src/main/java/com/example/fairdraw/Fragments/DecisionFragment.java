@@ -9,7 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
+import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -78,13 +78,13 @@ public class DecisionFragment extends DialogFragment {
         View btnDecline = view.findViewById(R.id.decline_button);
 
         btnDecline.setOnClickListener(v -> {
-            Toast.makeText(getContext(), "You have declined the invitation", Toast.LENGTH_SHORT).show();
+            Snackbar.make(view, "You have declined the invitation", Snackbar.LENGTH_SHORT).show();
             Log.d("DecisionFragment", "User declined the invitation for event: " + eventName);
             EventDB.getEvent(DecisionFragment.notification.eventId, new EventDB.GetEventCallback() {
                 @Override
                 public void onCallback(Event event) {
                     if (event == null) {
-                        Toast.makeText(getContext(), "Event not found", Toast.LENGTH_SHORT).show();
+                        Snackbar.make(view, "Event not found", Snackbar.LENGTH_SHORT).show();
                         return;
                     }
 
@@ -94,7 +94,7 @@ public class DecisionFragment extends DialogFragment {
                         @Override
                         public void onCallback(boolean success) {
                             if (success) {
-                                Toast.makeText(getContext(), "You have been removed from the invited list", Toast.LENGTH_SHORT).show();
+                                Snackbar.make(view, "You have been removed from the invited list", Snackbar.LENGTH_SHORT).show();
                             }
                         }
                     });
@@ -108,7 +108,7 @@ public class DecisionFragment extends DialogFragment {
                 @Override
                 public void onCallback(Event event) {
                     if (event == null) {
-                        Toast.makeText(getContext(), "Event not found", Toast.LENGTH_SHORT).show();
+                        Snackbar.make(view, "Event not found", Snackbar.LENGTH_SHORT).show();
                         return;
                     }
 
@@ -118,11 +118,11 @@ public class DecisionFragment extends DialogFragment {
                         @Override
                         public void onCallback(boolean success) {
                             if (success) {
-                                Toast.makeText(getContext(), "You have been added to the enrolled list", Toast.LENGTH_SHORT).show();
+                                Snackbar.make(view, "You have been added to the enrolled list", Snackbar.LENGTH_SHORT).show();
                                 Log.d("DecisionFragment", "Successfully updated event for accepting invitation");
                             }
                             else {
-                                Toast.makeText(getContext(), "Failed to accept invitation", Toast.LENGTH_SHORT).show();
+                                Snackbar.make(view, "Failed to accept invitation", Snackbar.LENGTH_SHORT).show();
                                 Log.e("DecisionFragment", "Failed to update event for accepting invitation");
                             }
                         }

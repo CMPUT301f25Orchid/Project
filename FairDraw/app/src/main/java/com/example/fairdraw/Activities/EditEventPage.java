@@ -18,7 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
-import android.widget.Toast;
+import com.google.android.material.snackbar.Snackbar;
 
 import com.example.fairdraw.Models.Event;
 import com.example.fairdraw.Others.OrganizerEventsDataHolder;
@@ -107,18 +107,18 @@ public class EditEventPage extends Fragment {
 
         // Create launcher to retrieve photo from library
         launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == RESULT_OK) {
-                        bannerPhoto = null;
-                        if (result.getData() != null) {
-                            bannerPhoto = result.getData().getData();
-                            Toast.makeText(view.getContext(), "Image uploaded", Toast.LENGTH_SHORT).show();
-                        }
-                        else {
-                            Toast.makeText(view.getContext(), "No image selected", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+                 result -> {
+                     if (result.getResultCode() == RESULT_OK) {
+                         bannerPhoto = null;
+                         if (result.getData() != null) {
+                             bannerPhoto = result.getData().getData();
+                            Snackbar.make(view, "Image uploaded", Snackbar.LENGTH_SHORT).show();
+                         }
+                         else {
+                            Snackbar.make(view, "No image selected", Snackbar.LENGTH_SHORT).show();
+                         }
+                     }
+                 });
 
         // Set button listener to upload poster image
         uploadPosterImage.setOnClickListener(v -> {
@@ -165,7 +165,7 @@ public class EditEventPage extends Fragment {
                 eventLocation.getText().toString().isEmpty() ||
                 eventPrice.getText().toString().isEmpty() ||
                 eventGeolocation.getCheckedRadioButtonId() == -1) {
-                    Toast.makeText(v.getContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(v, "Please fill in all fields", Snackbar.LENGTH_SHORT).show();
             } else {
                 try {
                     Date openDate = dateFormat.parse(eventRegistrationOpenDate.getText().toString());
@@ -199,7 +199,7 @@ public class EditEventPage extends Fragment {
                     requireActivity().getSupportFragmentManager().popBackStack();
                 }
                 catch (Exception e) {
-                    Toast.makeText(v.getContext(), "Invalid date format", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(v, "Invalid date format", Snackbar.LENGTH_SHORT).show();
                 }
             }
         });

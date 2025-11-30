@@ -4,7 +4,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.widget.Toast;
+import com.google.android.material.snackbar.Snackbar;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -33,14 +34,14 @@ public class DeepLinkRouterActivity extends AppCompatActivity {
         Uri data = (in != null) ? in.getData() : null;
 
         if (data == null || !"fairdraw".equals(data.getScheme()) || !"open".equals(data.getHost())) {
-            Toast.makeText(this, "Invalid link", Toast.LENGTH_SHORT).show();
+            Snackbar.make(findViewById(android.R.id.content), "Invalid link", Snackbar.LENGTH_SHORT).show();
             finish();
             return;
         }
 
         String destClassName = data.getQueryParameter("dest");
         if (destClassName == null || destClassName.isEmpty()) {
-            Toast.makeText(this, "Missing destination", Toast.LENGTH_SHORT).show();
+            Snackbar.make(findViewById(android.R.id.content), "Missing destination", Snackbar.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -60,7 +61,7 @@ public class DeepLinkRouterActivity extends AppCompatActivity {
 
             startActivity(forward);
         } catch (ClassNotFoundException e) {
-            Toast.makeText(this, "Destination not found", Toast.LENGTH_SHORT).show();
+            Snackbar.make(findViewById(android.R.id.content), "Destination not found", Snackbar.LENGTH_SHORT).show();
         }
 
         finish();

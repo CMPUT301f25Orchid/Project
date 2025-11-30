@@ -5,7 +5,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.Nullable;
@@ -64,7 +65,7 @@ public class ProfileActivity extends AppCompatActivity {
         } else {
             //Handle the case where no device ID is provided
             Log.e(TAG, "No device ID provided in Intent extras.");
-            Toast.makeText(this, "Could not load user profile.", Toast.LENGTH_SHORT).show();
+            Snackbar.make(findViewById(android.R.id.content), "Could not load user profile.", Snackbar.LENGTH_SHORT).show();
             finish();
         }
 
@@ -114,7 +115,7 @@ public class ProfileActivity extends AppCompatActivity {
             public void onCallback(@Nullable User user, @Nullable Exception e) {
                 if (e != null) {
                     Log.e(TAG, "Error fetching user data.", e);
-                    Toast.makeText(ProfileActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    Snackbar.make(findViewById(android.R.id.content), "Error: " + e.getMessage(), Snackbar.LENGTH_LONG).show();
                     return;
                 }
                 if (user != null) {
@@ -129,18 +130,10 @@ public class ProfileActivity extends AppCompatActivity {
                 } else {
                     //User not found
                     Log.e(TAG, "User not found for device ID: " + deviceId);
-                    Toast.makeText(ProfileActivity.this, "User not found.", Toast.LENGTH_LONG).show();
+                    Snackbar.make(findViewById(android.R.id.content), "User not found.", Snackbar.LENGTH_LONG).show();
                 }
 
             }
         });
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (userListener != null) {
-            userListener.remove();
-        }
     }
 }
