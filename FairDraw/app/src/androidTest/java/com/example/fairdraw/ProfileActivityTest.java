@@ -152,6 +152,7 @@ public class ProfileActivityTest {
 //    /**
 //     * Tests that clicking the 'Delete' button removes the user's profile information
 //     * from the view, simulating deletion.
+//     * Tests user story 01.02.04
 //     */
 //    @Test
 //    public void test_deleteButtonClearsProfileAndNavigatesAway() throws InterruptedException {
