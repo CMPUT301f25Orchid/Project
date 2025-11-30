@@ -6,21 +6,32 @@ import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 
+import android.os.SystemClock;
+import android.view.View;
+
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.example.fairdraw.R;
+import com.example.fairdraw.ToastMatcher;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+
 
 /**
  * Covers Entrant Section A (Sign-up basics):
@@ -35,6 +46,8 @@ import org.junit.runner.RunWith;
 @RunWith(AndroidJUnit4.class)
 public class SignUpActivityTest {
 
+    private View decorView;
+
     @Rule
     public ActivityScenarioRule<SignUpActivity> activityRule =
             new ActivityScenarioRule<>(SignUpActivity.class);
@@ -43,6 +56,13 @@ public class SignUpActivityTest {
     public void setUp() {
         // Enable Espresso-Intents so we can verify navigation to ProfileActivity
         Intents.init();
+
+        activityRule.getScenario().onActivity(new ActivityScenario.ActivityAction<SignUpActivity>() {
+            @Override
+            public void perform(SignUpActivity activity) {
+                decorView = activity.getWindow().getDecorView();
+            }
+        });
     }
 
     @After
@@ -73,6 +93,9 @@ public class SignUpActivityTest {
         // Act
         onView(withId(R.id.btnSignUp)).perform(click());
 
+        // Sleep wait for navigation to complete
+        SystemClock.sleep(3000);
+
         // Assert: ProfileActivity is started
         intended(hasComponent(ProfileActivity.class.getName()));
     }
@@ -97,10 +120,9 @@ public class SignUpActivityTest {
         // Act
         onView(withId(R.id.btnSignUp)).perform(click());
 
-        // Assert: correct Toast is shown
+        // Assert snackbar is shown
         onView(withText("Please fill all fields."))
-                .inRoot(new ToastMatcher())
-                .check(matches(withText("Please fill all fields.")));
+                .check(matches(isDisplayed()));
     }
 
     /**
@@ -127,9 +149,8 @@ public class SignUpActivityTest {
         // Act
         onView(withId(R.id.btnSignUp)).perform(click());
 
-        // Assert
+        // Assert snackbar is shown
         onView(withText("Please enter a valid email address."))
-                .inRoot(new ToastMatcher())
-                .check(matches(withText("Please enter a valid email address.")));
+                .check(matches(isDisplayed()));
     }
 }
