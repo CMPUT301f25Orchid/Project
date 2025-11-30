@@ -12,7 +12,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
 
-import androidx.test.ext.junit.runners.AndroidJUnit4;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import com.example.fairdraw.ServiceUtility.FirebaseImageStorageService;
 import com.google.android.gms.tasks.Task;
@@ -20,13 +21,12 @@ import com.google.android.gms.tasks.Task;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-@RunWith(AndroidJUnit4.class)
+@RunWith(JUnit4.class)
 public class FirebaseImageStorageServiceTest {
 
     private static final long TIMEOUT_SEC = 30;     // generous timeout to avoid flakes
