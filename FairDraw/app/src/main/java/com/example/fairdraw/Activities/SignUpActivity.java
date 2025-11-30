@@ -54,6 +54,12 @@ public class SignUpActivity extends AppCompatActivity {
                 return;
             }
 
+            // Check that email is in email format
+            if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                Toast.makeText(this, "Please enter a valid email address.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             final String deviceId = DevicePrefsManager.getDeviceId(this);
             User user = new User(name, email, phone, deviceId, /*fcmToken*/ null);
 
