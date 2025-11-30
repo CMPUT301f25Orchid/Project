@@ -4,41 +4,37 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.FrameLayout;
-import android.widget.ListView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.fairdraw.Adapters.EventArrayAdapter;
+import com.example.fairdraw.Adapters.EventRecyclerAdapter;
+import com.example.fairdraw.Adapters.ItemSpacingDecoration;
 import com.example.fairdraw.Models.Event;
 import com.example.fairdraw.Others.BarType;
 import com.example.fairdraw.Others.OrganizerEventsDataHolder;
 import com.example.fairdraw.R;
 import com.example.fairdraw.ServiceUtility.DevicePrefsManager;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Activity for the organizer main page.
  */
 public class OrganizerMainPage extends BaseTopBottomActivity {
-    BottomNavigationView bottomNav;
     FrameLayout fragmentContainer;
-    ListView eventList;
-    EventArrayAdapter eventAdapter;
+    RecyclerView eventList;
+    EventRecyclerAdapter eventAdapter;
     FirebaseFirestore db;
     CollectionReference eventsRef;
-
-    ArrayList<Event> dataList;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,35 +58,50 @@ public class OrganizerMainPage extends BaseTopBottomActivity {
 
         // Populate event list with database data
         db = FirebaseFirestore.getInstance();
-        dataList = OrganizerEventsDataHolder.getDataList();
         eventsRef = db.collection("events");
         eventsRef.addSnapshotListener((value, e) -> {
             if (e != null) {
                 Log.e("Firestore", e.toString());
             }
             if (value != null && !value.isEmpty()) {
-                dataList.clear();
+                ArrayList<Event> filtered = new ArrayList<>();
                 for (QueryDocumentSnapshot doc : value) {
                     Event event = doc.toObject(Event.class);
                     if (event.getOrganizer() == null){
                         continue;
                     }
                     if (event.getOrganizer().equals(deviceId)){
-                        dataList.add(event);
+                        filtered.add(event);
                     }
                 }
-                eventAdapter.notifyDataSetChanged();
+                // Update the shared holder which will notify adapters
+                OrganizerEventsDataHolder.setDataList(filtered);
+            } else {
+                // If empty, clear the holder
+                OrganizerEventsDataHolder.clear();
             }
         });
 
-        // Set up event list view
+        // Set up RecyclerView
         eventList = findViewById(R.id.event_list);
-        eventAdapter = new EventArrayAdapter(this, dataList, this::openFragment, position -> {
+        eventList.setLayoutManager(new LinearLayoutManager(this));
+
+        // use custom spacing between MaterialCardView items
+        int spacing = getResources().getDimensionPixelSize(R.dimen.event_item_spacing);
+        eventList.addItemDecoration(new ItemSpacingDecoration(spacing));
+
+        eventAdapter = new EventRecyclerAdapter(this::openFragment, position -> {
+            // Use adapter as source of truth rather than a separate list
+            Event e = eventAdapter.getEventAt(position);
+            if (e == null) return;
             Intent intent = new Intent(OrganizerMainPage.this, OrganizerManageEvent.class);
-            intent.putExtra("eventId", dataList.get(position).getUuid());
+            intent.putExtra("eventId", e.getUuid());
             startActivity(intent);
         });
         eventList.setAdapter(eventAdapter);
+
+        // inform holder about adapter so external code can update it
+        OrganizerEventsDataHolder.setEventAdapter(eventAdapter);
 
         // bottom nav handled by BaseTopBottomActivity.initBottomNav
     }
@@ -101,8 +112,7 @@ public class OrganizerMainPage extends BaseTopBottomActivity {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         fragmentContainer = findViewById(R.id.fragment_container);
         fragmentContainer.bringToFront();
-        OrganizerEventsDataHolder.setDataList(dataList);
-        OrganizerEventsDataHolder.setEventAdapter(eventAdapter);
+        // Holder already contains the current list and adapter; no need to reset it here
         Bundle bundle = new Bundle();
         bundle.putInt("position", index);
         fragment.setArguments(bundle);
