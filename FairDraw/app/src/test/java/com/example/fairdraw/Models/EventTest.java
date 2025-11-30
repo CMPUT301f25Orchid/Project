@@ -7,16 +7,10 @@ import com.example.fairdraw.Others.EventState;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@RunWith(RobolectricTestRunner.class)
-@Config(manifest = Config.NONE)
 public class EventTest {
 
     private Event event;
@@ -79,7 +73,7 @@ public class EventTest {
     }
 
     @Test
-    public void drawLotteryWinners_behaviour_counts() {
+    public void drawLotteryWinners_behaviour_counts_and_removal() {
         // empty invited/enrolled; capacity 3
         event.getWaitingList().clear();
         event.getInvitedList().clear();
@@ -132,5 +126,27 @@ public class EventTest {
         event.cancelLotteryWinner("canc");
         assertTrue(event.getCancelledList().contains("canc"));
     }
-}
 
+    @Test
+    public void waitlist_locations_put_and_get() {
+        Event.EntrantLocation loc = new Event.EntrantLocation(1.1, 2.2);
+        event.putWaitlistLocation("d1", loc);
+        Event.EntrantLocation got = event.getWaitlistLocation("d1");
+        assertNotNull(got);
+        assertEquals(1.1, got.getLat(), 1e-9);
+        assertEquals(2.2, got.getLng(), 1e-9);
+
+        // get non-existent
+        assertNull(event.getWaitlistLocation("missing"));
+    }
+
+    @Test
+    public void state_and_setters_behave() {
+        event.setState(EventState.PUBLISHED);
+        assertEquals(EventState.PUBLISHED, event.getState());
+        event.setTitle("NewTitle");
+        assertEquals("NewTitle", event.getTitle());
+        event.setCapacity(10);
+        assertEquals((Integer)10, event.getCapacity());
+    }
+}

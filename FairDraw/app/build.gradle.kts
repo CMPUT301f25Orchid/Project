@@ -97,4 +97,6 @@ dependencies {
 
     // Add this line to resolve the intent errors
     androidTestImplementation("androidx.test.espresso:espresso-intents:3.6.1")
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+    implementation("com.google.android.gms:play-services-maps:18.2.0")
 }
