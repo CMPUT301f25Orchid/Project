@@ -106,7 +106,8 @@ jobs:
           if ! git diff --staged --quiet; then
             git commit -m "docs: Auto-generate UML diagram [ci skip]"
             # Rebase on latest main in case another workflow pushed first
-            git pull --rebase origin main
+            # Rebase on latest main; temporarily stash any other local changes
+            git -c rebase.autoStash=true pull --rebase origin main
             git push
           else
             echo "No changes to UML diagram. Skipping commit."
