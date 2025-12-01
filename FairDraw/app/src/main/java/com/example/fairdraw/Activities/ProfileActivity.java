@@ -2,23 +2,24 @@ package com.example.fairdraw.Activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
-import android.widget.Switch;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.example.fairdraw.DBs.AdminDB;
+import com.example.fairdraw.DBs.EntrantDB;
+import com.example.fairdraw.DBs.OrganizerDB;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
-import com.example.fairdraw.DBs.EventDB;
 import com.example.fairdraw.DBs.UserDB;
 import com.example.fairdraw.Models.User;
 import com.example.fairdraw.R;
@@ -41,6 +42,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private ListenerRegistration userListener;
     private User currentUser;
+    private ShapeableImageView avatarImageView;
 
 
     /**
@@ -57,6 +59,7 @@ public class ProfileActivity extends AppCompatActivity {
         emailTextView = findViewById(R.id.etEmail);
         phoneTextView = findViewById(R.id.etPhone);
         notificationSwitch = findViewById(R.id.swNotifications);
+        avatarImageView = findViewById(R.id.ivAvatar);
 
         editButton = findViewById(R.id.btnEdit);
         returnButton = findViewById(R.id.btnReturnHome);
@@ -90,47 +93,19 @@ public class ProfileActivity extends AppCompatActivity {
             finish();
         });
 
-//        deleteAccButton.setOnClickListener(v -> {
-//            // Call the deleteUser method from UserDB
-//            UserDB.deleteUser(deviceId, (ok, e) -> {
-//                // This callback runs after the delete operation is complete
-//                if (ok) {
-//                    // The user was successfully deleted
-//                    Log.d(TAG, "User account deleted successfully.");
-//                    Toast.makeText(ProfileActivity.this, "Account deleted.", Toast.LENGTH_SHORT).show();
-//
-//                    // Navigate back to the main sign-up/entry activity
-//                    Intent intent = new Intent(ProfileActivity.this, SignUpActivity.class);
-//
-//                    // FLAG_ACTIVITY_NEW_TASK: Starts the activity in a new task.
-//                    // FLAG_ACTIVITY_CLEAR_TASK: Clears the existing task stack, so the user
-//                    //    cannot navigate back to the authenticated parts of the app.
-//                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//
-//                    startActivity(intent);
-//
-//                    // Finish the current activity
-//                    finish();
-//                } else {
-//                    // There was an error deleting the user
-//                    Log.e(TAG, "Failed to delete user account.", e);
-//                    Toast.makeText(ProfileActivity.this, "Failed to delete account.", Toast.LENGTH_SHORT).show();
-//                }
-//            }); //OLD DELETE METHOD, REMOVE WHEN DONE WITH NEW ONE
-//        });
 
-//        deleteAccButton.setOnClickListener(v -> {
-//            new AlertDialog.Builder(this)
-//                    .setTitle("Delete Account")
-//                    .setMessage("Are you sure you want to delete your account? This will also remove all events you have organized. This action cannot be undone.")
-//                    .setPositiveButton("Delete", (dialog, which) -> {
-//                        // User confirmed, start the deletion process
-//                        Toast.makeText(ProfileActivity.this, "Deleting account...", Toast.LENGTH_SHORT).show();
-//                        performCascadingDelete(deviceId);
-//                    })
-//                    .setNegativeButton("Cancel", null) // Do nothing if canceled
-//                    .show();
-//        });
+        deleteAccButton.setOnClickListener(v -> {
+            new AlertDialog.Builder(this)
+                    .setTitle("Delete Account")
+                    .setMessage("Are you sure you want to delete your account? This will also affect all events you have organized. This action cannot be undone.")
+                    .setPositiveButton("Delete", (dialog, which) -> {
+                        // User confirmed, start the deletion process
+                        Snackbar.make(findViewById(android.R.id.content), "Deleting account...", Snackbar.LENGTH_SHORT).show();
+                        performCascadingDelete(deviceId);
+                    })
+                    .setNegativeButton("Cancel", null) // Do nothing if canceled
+                    .show();
+        });
 
         notificationSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             // Prevent this from firing when the switch is set programmatically
@@ -161,49 +136,51 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
-//    /**
-//     * Performs a cascading delete of user data.
-//     * 1. Deletes events organized by the user.
-//     * 2. Deletes the user's roles (Organiser, Entrant, etc.).
-//     * 3. Deletes the main user document.
-//     * 4. Navigates back to the sign-up screen.
-//     * 4. So rather we do this, delete them as an entrant, delete them as an organizer(Should delete events) , and delete them as admin. Then go back to home screens
-//     * @param deviceId The ID of the user to delete.
-//     */
-//    private void performCascadingDelete(String deviceId) {
-//        // 1: Delete all events organized by this user.
-//        // NOTE: ANDREW WORKING ON THIS METHOD. WHEN DONE CHANGE AS NECESSARY
-//        // PERHAPS CHANGE CASCADE to instead have organizerdb.deleteorganizer etc instead of this event thing
-//        //SCROLL UP ON GEMINI TO SEE THE SUGGESTED METHOD THAT DELETES ALL EVENTS
-//        EventDB.deleteEventsByOrganizer(deviceId, (ok, e) -> {
-//            if (ok) {
-//                Log.d(TAG, "Successfully deleted events for user: " + deviceId);
-//                // 2: Now delete the user's role documents. We can do this in parallel.
-//                // NOTE: ADD/UNCOMMENT DELETE ROLE METHODS IN USERDB
-//                UserDB.deleteRole("Organisers", deviceId, (ok1, e1) -> {});
-//                UserDB.deleteRole("Entrants", deviceId, (ok2, e2) -> {});
-//                UserDB.deleteRole("Admins", deviceId, (ok3, e3) -> {}); // If you have an Admins collection
-//
-//                // 3: After a brief delay to allow role deletion to start, delete the main user document.
-//                UserDB.deleteUser(deviceId, (finalOk, finalE) -> {
-//                    if (finalOk) {
-//                        Log.d(TAG, "User account deleted successfully.");
-//                        Toast.makeText(ProfileActivity.this, "Account deleted.", Toast.LENGTH_SHORT).show();
-//
-//                        // Step 4: Navigate back to the main sign-up/entry activity
-//                        Intent intent = new Intent(ProfileActivity.this, SignUpActivity.class);
-//                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                        startActivity(intent);
-//                        finish();
-//                    } else {
-//                        handleDeleteError(finalE);
-//                    }
-//                });
-//            } else {
-//                handleDeleteError(e);
-//            }
-//        }); //DON'T FORGET TO ADD IT IN EDIT PROFILE ASW
-//    }
+    /**
+     * Performs a cascading delete of user data.
+     * 1. Deletes user from Entrant, Organiser, and Admin (if necessary) collection.
+     * Deleting the user as an organizer makes changes to linked documents as necessary
+     * 2. Deletes the main user document.
+     * 3. Navigates back to the sign-up screen.
+     * @param deviceId The ID of the user to delete.
+     */
+    private void performCascadingDelete(String deviceId) {
+        // Delete user from Entrant, Organiser and Admin collections.
+        EntrantDB.deleteEntrant(deviceId, ok -> {
+            if (!ok) {
+                Log.e(TAG, "Failed to delete from Entrants, but continuing deletion process.");
+            }
+        });
+        OrganizerDB.deleteOrganizer(deviceId, ok -> {
+            if (!ok) {
+                Log.e(TAG, "Failed to delete from Organizers, but continuing deletion process.");
+            }
+        });
+
+        AdminDB.deleteAdmin(deviceId, ok -> {
+            if (!ok) {
+                Log.e(TAG, "Failed to delete from Admins, but continuing deletion process.");
+            }
+        });
+
+
+        // After a brief delay to allow role deletion to start, delete the main user document.
+        UserDB.deleteUser(deviceId, (finalOk, finalE) -> {
+            if (finalOk) {
+                Log.d(TAG, "User account deleted successfully.");
+                Snackbar.make(findViewById(android.R.id.content), "Account deleted.", Snackbar.LENGTH_SHORT).show();
+
+
+                // Navigate back to the main sign-up/entry activity
+                Intent intent = new Intent(ProfileActivity.this, SignUpActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            } else {
+                handleDeleteError(finalE);
+            }
+        });
+    }
 
     private void handleDeleteError(Exception e) {
         Log.e(TAG, "Failed to delete user account.", e);
@@ -233,7 +210,12 @@ public class ProfileActivity extends AppCompatActivity {
                         emailTextView.setText(user.getEmail());
                         phoneTextView.setText(user.getPhoneNum());
                         notificationSwitch.setChecked(user.isNotificationsEnabled());
-
+                        if (user.getProfilePicture() != null && !user.getProfilePicture().isEmpty()) {
+                            Glide.with(ProfileActivity.this)
+                                    .load(Uri.parse(user.getProfilePicture()))
+                                    .circleCrop()
+                                    .into(avatarImageView);
+                        }
                     });
                 } else {
                     //User not found

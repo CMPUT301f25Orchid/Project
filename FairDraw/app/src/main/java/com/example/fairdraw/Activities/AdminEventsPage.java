@@ -13,6 +13,7 @@ import android.text.TextWatcher;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -27,6 +28,7 @@ import com.example.fairdraw.Others.BarType;
 import com.example.fairdraw.R;
 import com.example.fairdraw.ServiceUtility.FirebaseImageStorageService;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.ListenerRegistration;
 
 import java.util.ArrayList;
@@ -141,8 +143,25 @@ public class AdminEventsPage extends BaseTopBottomActivity {
             });
             eventIdView.setText("id: " + event.getUuid());
 
-            //Implementing Deleting the event by CLEO_SLAYS!!
-
+            //On click listener for deleting events
+            deleteButton.setOnClickListener(v -> {
+                // Show a confirmation dialog before deleting
+                new AlertDialog.Builder(AdminEventsPage.this)
+                        .setTitle("Delete Event")
+                        .setMessage("Are you sure you want to permanently delete '" + event.getTitle() + "'?")
+                        .setPositiveButton("Delete", (dialog, which) -> {
+                            // User confirmed deletion
+                            EventDB.deleteEvent(event.getUuid(), success -> {
+                                if (success) {
+                                    Snackbar.make(findViewById(R.id.main), "Event deleted successfully", Snackbar.LENGTH_LONG).show();
+                                } else {
+                                    Snackbar.make(findViewById(R.id.main), "Failed to delete event", Snackbar.LENGTH_LONG).show();
+                                }
+                            });
+                        })
+                        .setNegativeButton("Cancel", null) // Do nothing if cancelled
+                        .show();
+            });
 
             // Try to fetch the Bitmap for the event image
             FirebaseImageStorageService storageService = new FirebaseImageStorageService();
