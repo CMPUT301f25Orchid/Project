@@ -1,5 +1,6 @@
 package com.example.fairdraw.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,8 +17,10 @@ import com.example.fairdraw.DBs.EntrantDB;
 import com.example.fairdraw.DBs.EventDB;
 import com.example.fairdraw.Models.Entrant;
 import com.example.fairdraw.Models.Event;
+import com.example.fairdraw.Others.BarType;
 import com.example.fairdraw.R;
 import com.example.fairdraw.ServiceUtility.DevicePrefsManager;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.ListenerRegistration;
 
 import com.google.android.material.card.MaterialCardView;
@@ -26,7 +29,7 @@ import android.graphics.Color;
 import java.util.Collections;
 import java.util.List;
 
-public class EntrantMyEventsActivity extends AppCompatActivity {
+public class EntrantMyEventsActivity extends BaseTopBottomActivity {
 
     private ListenerRegistration reg;
     private LinearLayout historyContainer;
@@ -41,6 +44,18 @@ public class EntrantMyEventsActivity extends AppCompatActivity {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
+        });
+
+        // Initialize shared top and bottom navigation using BaseTopBottomActivity
+        initTopNav(BarType.ENTRANT);
+        initBottomNav(BarType.ENTRANT, findViewById(R.id.home_bottom_nav_bar));
+
+        BottomNavigationView bottomNav = findViewById(R.id.home_bottom_nav_bar);
+        if (bottomNav != null) bottomNav.setSelectedItemId(R.id.events_activity);
+        findViewById(R.id.imgAvatar).setOnClickListener(v -> {
+            // Send to ProfileActivity
+            Intent intent = new Intent(this, ProfileActivity.class);
+            startActivity(intent);
         });
 
         historyContainer = findViewById(R.id.historyContainer);
