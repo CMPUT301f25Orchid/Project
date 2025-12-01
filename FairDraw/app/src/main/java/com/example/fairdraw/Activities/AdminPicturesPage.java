@@ -2,6 +2,7 @@ package com.example.fairdraw.Activities;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -39,7 +40,7 @@ public class AdminPicturesPage extends BaseTopBottomActivity {
         });
 
         initTopNav(BarType.ADMIN);
-        initBottomNav(BarType.ADMIN, findViewById(R.id.bottom_nav));
+        initBottomNav(BarType.ADMIN, findViewById(R.id.admin_bottom_nav));
 
         pictureListContainer = findViewById(R.id.picture_list_container);
 
@@ -72,6 +73,19 @@ public class AdminPicturesPage extends BaseTopBottomActivity {
             ImageView posterImage = cardView.findViewById(R.id.event_picture);
             TextView eventTitleView = cardView.findViewById(R.id.event_picture_title);
             TextView organizerView = cardView.findViewById(R.id.event_picture_author);
+            ImageButton deleteButton = cardView.findViewById(R.id.delete_image_button);
+
+            deleteButton.setOnClickListener(v -> {
+                FirebaseImageStorageService imageService = new FirebaseImageStorageService();
+                imageService.deleteEventPoster(posterInfo.eventId).addOnSuccessListener(aVoid -> {
+                    // Remove the card view from the container
+                    pictureListContainer.removeView(cardView);
+                    Snackbar.make(findViewById(R.id.main), "Picture deleted successfully", Snackbar.LENGTH_LONG).show();
+                }).addOnFailureListener(e -> {
+                    Snackbar.make(findViewById(R.id.main), "Failed to delete picture", Snackbar.LENGTH_LONG).show();
+                });
+            });
+
 
             // Set values
             EventDB.getEvent(posterInfo.eventId, event -> {
