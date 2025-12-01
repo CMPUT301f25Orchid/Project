@@ -98,11 +98,7 @@ public class FilterUtils {
             if (tag == null) continue;
             
             String tagLower = tag.toLowerCase();
-            // Exact match (case-insensitive)
-            if (tagLower.equals(queryLower)) {
-                return true;
-            }
-            // Substring match (case-insensitive)
+            // Substring match includes exact match (case-insensitive)
             if (tagLower.contains(queryLower)) {
                 return true;
             }

@@ -318,7 +318,7 @@ public class CreateEventPage extends BaseTopBottomActivity {
             return;
         }
         
-        // Check for case-insensitive duplicate
+        // Check for case-insensitive duplicate (O(n) is acceptable for small tag count)
         for (int i = 0; i < chipGroupTags.getChildCount(); i++) {
             Chip existingChip = (Chip) chipGroupTags.getChildAt(i);
             if (existingChip.getText().toString().equalsIgnoreCase(normalizedTag)) {

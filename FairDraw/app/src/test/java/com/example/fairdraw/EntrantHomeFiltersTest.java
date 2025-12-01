@@ -13,8 +13,9 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 /**
- * Unit tests for the EntrantHome filtering logic via FilterUtils.
- * Tests status filtering, tag/interest filtering, and availability filtering.
+ * Unit tests for the FilterUtils class which provides the filtering logic
+ * used by EntrantHomeActivity. Tests status filtering, tag/interest filtering,
+ * and availability filtering.
  */
 public class EntrantHomeFiltersTest {
 
