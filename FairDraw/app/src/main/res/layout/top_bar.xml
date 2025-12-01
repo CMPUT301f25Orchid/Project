@@ -15,7 +15,6 @@
         android:layout_height="match_parent"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingStart="16dp"
         android:paddingEnd="16dp">
 
         <!-- User image -->
@@ -62,6 +61,24 @@
             android:textAllCaps="false"
             android:textColor="#488EF6"
             android:backgroundTint="#FFFFFF"
+            app:cornerRadius="9dp"
+            app:strokeColor="#FFFFFF"
+            android:textSize="12sp"/>
+
+        <Space
+            android:layout_width="8dp"
+            android:layout_height="0dp"/>
+
+        <!-- Admin pill -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnAdmin"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="95dp"
+            android:layout_height="50dp"
+            android:text="Admin"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#488EF6"
             app:cornerRadius="9dp"
             app:strokeColor="#FFFFFF"
             android:textSize="12sp"/>

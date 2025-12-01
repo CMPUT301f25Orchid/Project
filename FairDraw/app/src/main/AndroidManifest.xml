@@ -21,11 +21,26 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FairDraw">
+        <activity
+            android:name=".Activities.AdminPicturesPage"
+            android:exported="false" />
+
+        <activity
+            android:name=".Activities.AdminManageProfiles"
+            android:exported="false" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDSa13q7kBXf_HRLjal_m3fm3OKyohl5hQ" />
+
         <activity
             android:name=".Activities.OrganizerWaitListMapActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.EntrantMyEventsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.AdminEventsPage"
             android:exported="false" />
         <activity
             android:name=".Activities.EditProfileActivity"
@@ -73,7 +88,7 @@
             android:exported="true" />
         <activity
             android:name=".Activities.MainActivity"
-            android:exported="true" />
+            android:exported="true"/>
         <activity
             android:name=".Activities.SignUpActivity"
             android:exported="false" />
@@ -88,6 +103,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".Activities.EntrantNotificationsActivity" />
+        <activity
+            android:name=".Activities.AdminNotificationLogActivity"
+            android:exported="true" />
     </application>
 
 </manifest>

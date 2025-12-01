@@ -155,14 +155,22 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Create a new FilterEventsDialogFragment with optional current values.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://developer.android.com/reference/android/app/Dialog.html" title="class or interface in android.app" class="external-link">Dialog</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onCreateDialog(android.os.Bundle)" class="member-name-link">onCreateDialog</a><wbr>(<a href="https://developer.android.com/reference/android/os/Bundle.html" title="class or interface in android.os" class="external-link">Bundle</a>&nbsp;savedInstanceState)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="FilterEventsDialogFragment.html" title="class in com.example.fairdraw.Fragments">FilterEventsDialogFragment</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#newInstance(java.lang.String,java.lang.String,int,java.util.ArrayList)" class="member-name-link">newInstance</a><wbr>(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;currentStatus,
+ <a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;currentInterest,
+ int&nbsp;currentAvailability,
+ <a href="https://developer.android.com/reference/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;availableTags)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Create a new FilterEventsDialogFragment with optional current values and available tags.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://developer.android.com/reference/android/app/Dialog.html" title="class or interface in android.app" class="external-link">Dialog</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onCreateDialog(android.os.Bundle)" class="member-name-link">onCreateDialog</a><wbr>(<a href="https://developer.android.com/reference/android/os/Bundle.html" title="class or interface in android.os" class="external-link">Bundle</a>&nbsp;savedInstanceState)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Create the dialog UI used to pick filters.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setFilterListener(com.example.fairdraw.Fragments.FilterEventsDialogFragment.FilterListener)" class="member-name-link">setFilterListener</a><wbr>(<a href="FilterEventsDialogFragment.FilterListener.html" title="interface in com.example.fairdraw.Fragments">FilterEventsDialogFragment.FilterListener</a>&nbsp;listener)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setFilterListener(com.example.fairdraw.Fragments.FilterEventsDialogFragment.FilterListener)" class="member-name-link">setFilterListener</a><wbr>(<a href="FilterEventsDialogFragment.FilterListener.html" title="interface in com.example.fairdraw.Fragments">FilterEventsDialogFragment.FilterListener</a>&nbsp;listener)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Set a listener which will receive filter events.</div>
 </div>
 </div>
@@ -214,6 +222,25 @@ loadScripts(document, 'script');</script>
 <dd><code>currentStatus</code> - current status filter, or "All"</dd>
 <dd><code>currentInterest</code> - current interest filter, or "All"</dd>
 <dd><code>currentAvailability</code> - current availability or -1 for any</dd>
+<dt>Returns:</dt>
+<dd>configured FilterEventsDialogFragment</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="newInstance(java.lang.String,java.lang.String,int,java.util.ArrayList)">
+<h3>newInstance</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="FilterEventsDialogFragment.html" title="class in com.example.fairdraw.Fragments">FilterEventsDialogFragment</a></span>&nbsp;<span class="element-name">newInstance</span><wbr><span class="parameters">(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;currentStatus,
+ <a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;currentInterest,
+ int&nbsp;currentAvailability,
+ <a href="https://developer.android.com/reference/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;availableTags)</span></div>
+<div class="block">Create a new FilterEventsDialogFragment with optional current values and available tags.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>currentStatus</code> - current status filter, or "All"</dd>
+<dd><code>currentInterest</code> - current interest filter, or "All"</dd>
+<dd><code>currentAvailability</code> - current availability or -1 for any</dd>
+<dd><code>availableTags</code> - list of available tags for autocomplete</dd>
 <dt>Returns:</dt>
 <dd>configured FilterEventsDialogFragment</dd>
 </dl>

@@ -31,7 +31,10 @@ class com.example.fairdraw.DBs.EntrantDB {
 + {static} addEntrant(arg0 : Entrant, arg1 : AddEntrantCallback) : void
 + {static} updateEntrant(arg0 : Entrant, arg1 : UpdateEntrantCallback) : void
 + {static} deleteEntrant(arg0 : String, arg1 : DeleteEntrantCallback) : void
++ {static} listenToEntrant(arg0 : String, arg1 : GetEntrantCallback) : ListenerRegistration
 + {static} pushNotificationToUser(arg0 : String, arg1 : EntrantNotification, arg2 : PushNotificationCallback) : void
++ {static} addEventToHistory(arg0 : String, arg1 : String, arg2 : String, arg3 : SimpleCallback) : void
++ {static} updateEventHistoryStatus(arg0 : String, arg1 : String, arg2 : String, arg3 : SimpleCallback) : void
 }
 interface com.example.fairdraw.DBs.EntrantDB$GetEntrantCallback {
 }
@@ -40,6 +43,8 @@ interface com.example.fairdraw.DBs.EntrantDB$AddEntrantCallback {
 interface com.example.fairdraw.DBs.EntrantDB$UpdateEntrantCallback {
 }
 interface com.example.fairdraw.DBs.EntrantDB$DeleteEntrantCallback {
+}
+interface com.example.fairdraw.DBs.EntrantDB$SimpleCallback {
 }
 interface com.example.fairdraw.DBs.EntrantDB$PushNotificationCallback {
 }
@@ -109,6 +114,8 @@ class com.example.fairdraw.Models.Event {
 + setEnrolledList(arg0 : List<String>) : void
 + getCancelledList() : List<String>
 + setCancelledList(arg0 : List<String>) : void
++ getTags() : List<String>
++ setTags(arg0 : List<String>) : void
 + isEnrolled(arg0 : String) : boolean
 + isInvited(arg0 : String) : boolean
 + isOnWaitingList(arg0 : String) : boolean
@@ -133,12 +140,16 @@ class com.example.fairdraw.Models.User {
 + getDeviceId() : String
 + getFcmToken() : String
 + getRoles() : ArrayList<String>
++ getProfilePicture() : String
 + setName(arg0 : String) : void
 + setEmail(arg0 : String) : void
 + setPhoneNum(arg0 : String) : void
 + setDeviceId(arg0 : String) : void
 + setFcmToken(arg0 : String) : void
 + setRoles(arg0 : ArrayList<String>) : void
++ isNotificationsEnabled() : boolean
++ setNotificationsEnabled(arg0 : boolean) : void
++ setProfilePicture(arg0 : String) : void
 }
 class com.example.fairdraw.Models.AreaStats {
 + increment() : void
@@ -173,6 +184,7 @@ class com.example.fairdraw.ServiceUtility.FirebaseImageStorageService {
 + getEventPosterBytes(arg0 : String, arg1 : long) : Task<byte[]>
 + deleteEventPoster(arg0 : String) : Task<Void>
 + eventPosterExists(arg0 : String) : Task<Boolean>
++ listAllEventPosters() : Task<List<EventPosterInfo>>
 + uploadEventQr(arg0 : String, arg1 : Bitmap, arg2 : int, arg3 : int) : Task<Uri>
 + uploadEventQr(arg0 : String, arg1 : Uri) : Task<Uri>
 + getEventQrDownloadUrl(arg0 : String) : Task<Uri>
@@ -180,8 +192,12 @@ class com.example.fairdraw.ServiceUtility.FirebaseImageStorageService {
 + deleteEventQr(arg0 : String) : Task<Void>
 + eventQrExists(arg0 : String) : Task<Boolean>
 }
+class com.example.fairdraw.ServiceUtility.FirebaseImageStorageService$EventPosterInfo {
++ eventId : String
++ downloadUri : Uri
+}
 class com.example.fairdraw.Fragments.DecisionFragment {
-+ newInstance(arg0 : EntrantNotification) : DecisionFragment
++ {static} newInstance(arg0 : EntrantNotification) : DecisionFragment
 + onCreateDialog(arg0 : Bundle) : Dialog
 }
 class com.example.fairdraw.Adapters.EntrantListArrayAdapter {
@@ -192,6 +208,9 @@ class com.example.fairdraw.Adapters.EntrantListArrayAdapter {
 class com.example.fairdraw.Adapters.EntrantListArrayAdapter$EntrantViewHolder {
 }
 class com.example.fairdraw.Activities.SignUpActivity {
+# onCreate(arg0 : Bundle) : void
+}
+class com.example.fairdraw.Activities.AdminManageProfiles {
 # onCreate(arg0 : Bundle) : void
 }
 enum com.example.fairdraw.Others.EventState {
@@ -224,6 +243,10 @@ class com.example.fairdraw.Others.EntrantNotification {
 + message : String
 + read : boolean
 }
+class com.example.fairdraw.Activities.AdminPicturesPage {
+# onCreate(arg0 : Bundle) : void
++ displayPictures(arg0 : List<FirebaseImageStorageService.EventPosterInfo>) : void
+}
 class com.example.fairdraw.Activities.EditEventPage {
 + onCreateView(arg0 : LayoutInflater, arg1 : ViewGroup, arg2 : Bundle) : View
 + onViewCreated(arg0 : View, arg1 : Bundle) : void
@@ -251,19 +274,62 @@ class com.example.fairdraw.Fragments.QrCodeFragment {
 + onViewCreated(arg0 : View, arg1 : Bundle) : void
 + getTheme() : int
 }
+class com.example.fairdraw.Others.FilterUtils {
++ {static} filter(arg0 : List<Event>, arg1 : String, arg2 : String, arg3 : int) : List<Event>
++ {static} matchesStatus(arg0 : Event, arg1 : String) : boolean
++ {static} matchesInterest(arg0 : Event, arg1 : String) : boolean
++ {static} matchesAvailability(arg0 : Event, arg1 : int) : boolean
+}
 class com.example.fairdraw.Others.ListItemEntrant {
 + getEntrantId() : String
 + setEntrantId(arg0 : String) : void
 }
+class com.example.fairdraw.Activities.AdminNotificationLogActivity {
+# onCreate(arg0 : Bundle) : void
+}
+class com.example.fairdraw.Activities.AdminNotificationLogActivity$LogAdapter {
++ onCreateViewHolder(arg0 : ViewGroup, arg1 : int) : LogViewHolder
++ onBindViewHolder(arg0 : LogViewHolder, arg1 : int) : void
++ getItemCount() : int
+}
+class com.example.fairdraw.Activities.AdminNotificationLogActivity$LogAdapter$LogViewHolder {
+}
+class com.example.fairdraw.Activities.AdminEventsPage {
+# onCreate(arg0 : Bundle) : void
+# onDestroy() : void
+}
+class com.example.fairdraw.Others.AdminNotificationLog {
++ setTimestamp(arg0 : Date) : void
++ getEventId() : String
++ getEventTitle() : String
++ getRecipientDeviceId() : String
++ getNotificationType() : NotificationType
++ getUserName() : String
++ getTimestamp() : Date
+}
 class com.example.fairdraw.Models.Admin {
 + getDeviceId() : String
 + setDeviceId(arg0 : String) : void
+}
+class com.example.fairdraw.Others.EntrantEventStatus {
++ {static} String REGISTERED
++ {static} String INVITED
++ {static} String SELECTED
++ {static} String NOT_SELECTED
++ {static} String CANCELLED
++ {static} String CHECKED_IN
++ {static} colorForStatus(arg0 : Context, arg1 : String) : int
 }
 class com.example.fairdraw.Activities.EntrantScan {
 # onCreate(arg0 : Bundle) : void
 # onResume() : void
 # onPause() : void
 # onDestroy() : void
+}
+class com.example.fairdraw.Activities.EntrantMyEventsActivity {
+# onCreate(arg0 : Bundle) : void
+# onStart() : void
+# onStop() : void
 }
 class com.example.fairdraw.Activities.EntrantNotificationsActivity {
 # onCreate(arg0 : Bundle) : void
@@ -272,6 +338,7 @@ class com.example.fairdraw.Activities.EntrantNotificationsActivity {
 }
 class com.example.fairdraw.Fragments.FilterEventsDialogFragment {
 + {static} newInstance(arg0 : String, arg1 : String, arg2 : int) : FilterEventsDialogFragment
++ {static} newInstance(arg0 : String, arg1 : String, arg2 : int, arg3 : ArrayList<String>) : FilterEventsDialogFragment
 + setFilterListener(arg0 : FilterListener) : void
 + onCreateDialog(arg0 : Bundle) : Dialog
 }
@@ -287,6 +354,7 @@ class com.example.fairdraw.DBs.OrganizerDB {
 + {static} addOrganizer(arg0 : Organizer, arg1 : AddOrganizerCallback) : void
 + {static} updateOrganizer(arg0 : Organizer, arg1 : UpdateOrganizerCallback) : void
 + {static} deleteOrganizer(arg0 : String, arg1 : DeleteOrganizerCallback) : void
++ {static} removeOrganizerAndCleanupEvents(arg0 : String, arg1 : String, arg2 : DeleteOrganizerCallback) : void
 }
 interface com.example.fairdraw.DBs.OrganizerDB$GetOrganizerCallback {
 }
@@ -314,6 +382,7 @@ interface com.example.fairdraw.DBs.UserDB$DeleteCallback {
 class com.example.fairdraw.Activities.EntrantHomeActivity {
 # onCreate(arg0 : Bundle) : void
 # onDestroy() : void
++ displayEvents(arg0 : List<Event>) : void
 }
 class com.example.fairdraw.Activities.MainActivity {
 # onCreate(arg0 : Bundle) : void
@@ -326,6 +395,8 @@ class com.example.fairdraw.Models.Entrant {
 + setDeviceId(arg0 : String) : void
 + getEventHistory() : List<String>
 + setEventHistory(arg0 : ArrayList<String>) : void
++ getEventHistoryStatus() : Map<String,Map<String,Object>>
++ setEventHistoryStatus(arg0 : Map<String,Map<String,Object>>) : void
 + getNotificationPrefs() : HashMap<String,Boolean>
 + addEventToHistory(arg0 : String) : void
 + setNotificationPrefs(arg0 : HashMap<String,Boolean>) : void
@@ -340,6 +411,8 @@ class com.example.fairdraw.DBs.AdminDB {
 + {static} addAdmin(arg0 : Admin, arg1 : AddAdminCallback) : void
 + {static} updateAdmin(arg0 : Admin, arg1 : UpdateAdminCallback) : void
 + {static} deleteAdmin(arg0 : String, arg1 : DeleteAdminCallback) : void
++ {static} logNotification(arg0 : AdminNotificationLog) : void
++ {static} getNotificationLogsQuery() : com.google.firebase.firestore.Query
 }
 interface com.example.fairdraw.DBs.AdminDB$GetAdminCallback {
 }
@@ -419,6 +492,7 @@ com.example.fairdraw.DBs.EntrantDB +.. com.example.fairdraw.DBs.EntrantDB$GetEnt
 com.example.fairdraw.DBs.EntrantDB +.. com.example.fairdraw.DBs.EntrantDB$AddEntrantCallback
 com.example.fairdraw.DBs.EntrantDB +.. com.example.fairdraw.DBs.EntrantDB$UpdateEntrantCallback
 com.example.fairdraw.DBs.EntrantDB +.. com.example.fairdraw.DBs.EntrantDB$DeleteEntrantCallback
+com.example.fairdraw.DBs.EntrantDB +.. com.example.fairdraw.DBs.EntrantDB$SimpleCallback
 com.example.fairdraw.DBs.EntrantDB +.. com.example.fairdraw.DBs.EntrantDB$PushNotificationCallback
 com.example.fairdraw.DBs.EntrantDB +.. com.example.fairdraw.DBs.EntrantDB$NotificationsListener
 androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.BaseTopBottomActivity
@@ -432,21 +506,31 @@ com.example.fairdraw.Models.Serializable <|.. com.example.fairdraw.Models.Event$
 java.io.Serializable <|.. com.example.fairdraw.Models.User
 androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.ProfileActivity
 com.example.fairdraw.ServiceUtility.GeoService +.. com.example.fairdraw.ServiceUtility.GeoService$GeoCallback
+com.example.fairdraw.ServiceUtility.FirebaseImageStorageService +.. com.example.fairdraw.ServiceUtility.FirebaseImageStorageService$EventPosterInfo
 androidx.fragment.app.DialogFragment <|-- com.example.fairdraw.Fragments.DecisionFragment
 com.example.fairdraw.Adapters.Adapter <|-- com.example.fairdraw.Adapters.EntrantListArrayAdapter
 com.example.fairdraw.Adapters.EntrantListArrayAdapter +.. com.example.fairdraw.Adapters.EntrantListArrayAdapter$EntrantViewHolder
 com.example.fairdraw.Adapters.ViewHolder <|-- com.example.fairdraw.Adapters.EntrantListArrayAdapter$EntrantViewHolder
 androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.SignUpActivity
+androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.AdminManageProfiles
 androidx.fragment.app.DialogFragment <|-- com.example.fairdraw.Fragments.SendNotificationDialogFragment
 com.example.fairdraw.Fragments.SendNotificationDialogFragment +.. com.example.fairdraw.Fragments.SendNotificationDialogFragment$Listener
 java.io.Serializable <|.. com.example.fairdraw.Others.EntrantNotification
+com.example.fairdraw.Activities.BaseTopBottomActivity <|-- com.example.fairdraw.Activities.AdminPicturesPage
 androidx.fragment.app.Fragment <|-- com.example.fairdraw.Activities.EditEventPage
 com.google.android.gms.maps.OnMapReadyCallback <|.. com.example.fairdraw.Activities.OrganizerWaitListMapActivity
 com.example.fairdraw.Activities.BaseTopBottomActivity <|-- com.example.fairdraw.Activities.OrganizerWaitListMapActivity
 com.example.fairdraw.Activities.BaseTopBottomActivity <|-- com.example.fairdraw.Activities.CreateEventPage
 androidx.fragment.app.DialogFragment <|-- com.example.fairdraw.Fragments.QrCodeFragment
+androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.AdminNotificationLogActivity
+com.example.fairdraw.Activities.AdminNotificationLogActivity +.. com.example.fairdraw.Activities.AdminNotificationLogActivity$LogAdapter
+com.example.fairdraw.Activities.Adapter <|-- com.example.fairdraw.Activities.AdminNotificationLogActivity$LogAdapter
+com.example.fairdraw.Activities.AdminNotificationLogActivity$LogAdapter +.. com.example.fairdraw.Activities.AdminNotificationLogActivity$LogAdapter$LogViewHolder
+com.example.fairdraw.Activities.ViewHolder <|-- com.example.fairdraw.Activities.AdminNotificationLogActivity$LogAdapter$LogViewHolder
+com.example.fairdraw.Activities.BaseTopBottomActivity <|-- com.example.fairdraw.Activities.AdminEventsPage
 java.io.Serializable <|.. com.example.fairdraw.Models.Admin
 com.example.fairdraw.Activities.BaseTopBottomActivity <|-- com.example.fairdraw.Activities.EntrantScan
+com.example.fairdraw.Activities.BaseTopBottomActivity <|-- com.example.fairdraw.Activities.EntrantMyEventsActivity
 com.example.fairdraw.Activities.BaseTopBottomActivity <|-- com.example.fairdraw.Activities.EntrantNotificationsActivity
 androidx.fragment.app.DialogFragment <|-- com.example.fairdraw.Fragments.FilterEventsDialogFragment
 com.example.fairdraw.Fragments.FilterEventsDialogFragment +.. com.example.fairdraw.Fragments.FilterEventsDialogFragment$FilterListener

@@ -21,15 +21,19 @@ import com.example.fairdraw.DBs.EventDB;
 import com.example.fairdraw.Fragments.FilterEventsDialogFragment;
 import com.example.fairdraw.Models.Event;
 import com.example.fairdraw.Others.EventState;
+import com.example.fairdraw.Others.FilterUtils;
 import com.example.fairdraw.Others.BarType;
 import com.example.fairdraw.R;
 import com.example.fairdraw.ServiceUtility.FirebaseImageStorageService;
 import com.google.firebase.firestore.ListenerRegistration;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Calendar;
+import java.util.Set;
 
 /**
  * EntrantHomeActivity displays the home screen for entrants, showing a list of events
@@ -42,6 +46,7 @@ public class EntrantHomeActivity extends BaseTopBottomActivity {
     private ListenerRegistration eventListener;
 
     private List<Event> allEvents;  // store full list
+    private ArrayList<String> availableTags = new ArrayList<>();
 
     // Store current filter state
     private String currentStatusFilter = "All";
@@ -78,7 +83,9 @@ public class EntrantHomeActivity extends BaseTopBottomActivity {
         // Fetch all events from Firestore and listen for real-time updates
         eventListener = EventDB.listenToEvents(events -> {
             if (events != null) {
-                allEvents = events;       // ✅ store the full list
+                allEvents = events;       // store the full list
+                // Compute distinct available tags
+                computeAvailableTags();
                 // Re-apply the current filters to the updated list
                 applyFilters(currentStatusFilter, currentInterestFilter, currentAvailabilityFilter);
             } else {
@@ -89,11 +96,12 @@ public class EntrantHomeActivity extends BaseTopBottomActivity {
 
         Button filterBtn = findViewById(R.id.filterEventsBtn);
         filterBtn.setOnClickListener(v -> {
-            // ✅ Use the newInstance method to pass the current filter state
+            // Use the newInstance method to pass the current filter state and available tags
             FilterEventsDialogFragment dialog = FilterEventsDialogFragment.newInstance(
                     currentStatusFilter,
                     currentInterestFilter,
-                    currentAvailabilityFilter
+                    currentAvailabilityFilter,
+                    availableTags
             );
             dialog.setFilterListener(new FilterEventsDialogFragment.FilterListener() {
 
@@ -121,6 +129,22 @@ public class EntrantHomeActivity extends BaseTopBottomActivity {
         });
     }
 
+    /**
+     * Computes distinct available tags from all events and stores them sorted.
+     */
+    private void computeAvailableTags() {
+        Set<String> tagsSet = new HashSet<>();
+        if (allEvents != null) {
+            for (Event event : allEvents) {
+                if (event != null && event.getTags() != null) {
+                    tagsSet.addAll(event.getTags());
+                }
+            }
+        }
+        availableTags = new ArrayList<>(tagsSet);
+        Collections.sort(availableTags, String.CASE_INSENSITIVE_ORDER);
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -133,12 +157,21 @@ public class EntrantHomeActivity extends BaseTopBottomActivity {
     /**
      * Adds eventscard.xml for each Event
      */
-    private void displayEvents(List<Event> events) {
+    public void displayEvents(List<Event> events) {
         eventListContainer.removeAllViews(); // Clear previous views to prevent duplicates
         LayoutInflater inflater = LayoutInflater.from(this);
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
 
         for (Event event : events) {
+            // If event is null, skip it
+            if (event == null) continue;
+
+            // If event uuid is null, skip it
+            if (event.getUuid() == null) {
+                Log.w("EntrantHomeActivity", "Skipping event with null UUID with title: " + event.getTitle());
+                continue;
+            }
+
             // Inflate the card layout
             CardView cardView = (CardView) inflater.inflate(R.layout.eventscard, eventListContainer, false);
 
@@ -207,45 +240,10 @@ public class EntrantHomeActivity extends BaseTopBottomActivity {
     private void applyFilters(String status, String interest, int availability) {
         if (allEvents == null) return;
 
-        List<Event> filtered = new java.util.ArrayList<>(allEvents);
+        // Use FilterUtils to filter events (operates on a copy, does not mutate allEvents)
+        List<Event> filtered = FilterUtils.filter(allEvents, status, interest, availability);
 
-        // ✅ Filter by status
-        if (!status.equals("All")) {
-            filtered.removeIf(event -> {
-                if (status.equals("Open")) {
-                    return event.getState() != EventState.PUBLISHED;
-                } else if (status.equals("Closed")) {
-                    return event.getState() != EventState.CLOSED;
-                }
-                return false;
-            });
-        }
-
-        // ✅ Filter by interest (if stored in description)
-        if (!interest.equals("All")) {
-            filtered.removeIf(event ->
-                    !event.getDescription().toLowerCase()
-                            .contains(interest.toLowerCase())
-            );
-        }
-
-        // ✅ Filter by availability (Monday, Tuesday etc.)
-        if (availability != -1) {
-            filtered.removeIf(event -> {
-                if (event.getTime() == null) return true; // Remove if no date
-
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(event.getTime());
-
-                int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
-
-                // Compare the integer day of the week
-                return dayOfWeek != availability;
-            });
-        }
-
-
-        // ✅ Update UI
+        // Update UI
         if (filtered.isEmpty()) {
             showNoEventsMessage();
         } else {

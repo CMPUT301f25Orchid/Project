@@ -5,6 +5,8 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.fairdraw.Others.EntrantEventStatus;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.activity.EdgeToEdge;
@@ -233,6 +235,15 @@ public class OrganizerManageEvent extends BaseTopBottomActivity {
                                         Log.d("OrganizerManageEvent", "Failed to send notification to entrant ID: " + entrantId + " | " + (e1 != null ? e1.getMessage() : "Unknown error"));
                                     }
                                 });
+
+                                // Also update entrant event history
+                                EntrantDB.addEventToHistory(entrantId, eventId, EntrantEventStatus.INVITED, (ok, ex) -> {
+                                    if (ok) {
+                                        Log.d("OrganizerManageEvent", "Event added to entrant history for ID: " + entrantId);
+                                    } else {
+                                        Log.d("OrganizerManageEvent", "Failed to add event to entrant history for ID: " + entrantId + " | " + (ex != null ? ex.getMessage() : "Unknown error"));
+                                    }
+                                });
                             }
 
                             // Also notify those who remained on the waiting list that they did not win
@@ -244,6 +255,14 @@ public class OrganizerManageEvent extends BaseTopBottomActivity {
                                             Log.d("OrganizerManageEvent", "Lose notification sent to entrant ID: " + loserId);
                                         } else {
                                             Log.d("OrganizerManageEvent", "Failed to send lose notification to entrant ID: " + loserId + " | " + (e2 != null ? e2.getMessage() : "Unknown error"));
+                                        }
+                                    });
+
+                                    EntrantDB.addEventToHistory(loserId, eventId, EntrantEventStatus.NOT_SELECTED, (ok, ex) -> {
+                                        if (ok) {
+                                            Log.d("OrganizerManageEvent", "Event added to entrant history as not selected for ID: " + loserId);
+                                        } else {
+                                            Log.d("OrganizerManageEvent", "Failed to add event to entrant history for ID: " + loserId + " | " + (ex != null ? ex.getMessage() : "Unknown error"));
                                         }
                                     });
                                 }
@@ -258,17 +277,59 @@ public class OrganizerManageEvent extends BaseTopBottomActivity {
             });
         });
 
+        // Validate entrant lists - some event documents in Firestore may be corrupted/missing fields.
+        List<String> invited = e.getInvitedList();
+        List<String> cancelled = e.getCancelledList();
+        List<String> enrolled = e.getEnrolledList();
+        List<String> waiting = e.getWaitingList();
+
+        boolean anyNull = (invited == null) || (cancelled == null) || (enrolled == null) || (waiting == null);
+        if (anyNull) {
+            StringBuilder missing = new StringBuilder();
+            if (invited == null) missing.append("invitedList ");
+            if (cancelled == null) missing.append("cancelledList ");
+            if (enrolled == null) missing.append("enrolledList ");
+            if (waiting == null) missing.append("waitingList ");
+
+            Log.w("OrganizerManageEvent", "Event data incomplete for event " + (e.getUuid() == null ? eventId : e.getUuid()) + ": missing lists: " + missing);
+            Snackbar.make(findViewById(android.R.id.content), "Event data incomplete (broken event). Some lists are missing.", Snackbar.LENGTH_LONG).show();
+
+            // Disable actions that depend on full event data to avoid surprises
+            if (btnDrawAndInvite != null) btnDrawAndInvite.setEnabled(false);
+            if (btnSendNotification != null) btnSendNotification.setEnabled(false);
+            if (btnDownloadFinalEntrants != null) btnDownloadFinalEntrants.setEnabled(false);
+            if (btnSeeWaitingMap != null) btnSeeWaitingMap.setEnabled(false);
+
+            // Use safe empty lists for UI rendering to avoid NPEs
+            if (invited == null) invited = new ArrayList<>();
+            if (cancelled == null) cancelled = new ArrayList<>();
+            if (enrolled == null) enrolled = new ArrayList<>();
+            if (waiting == null) waiting = new ArrayList<>();
+        } else {
+            // Re-enable actions if data is present
+            if (btnDrawAndInvite != null) btnDrawAndInvite.setEnabled(true);
+            if (btnSendNotification != null) btnSendNotification.setEnabled(true);
+            if (btnDownloadFinalEntrants != null) btnDownloadFinalEntrants.setEnabled(true);
+            if (btnSeeWaitingMap != null) btnSeeWaitingMap.setEnabled(true);
+        }
+
+        // Make final safe copies for use inside lambdas/listeners
+        final List<String> invitedSafe = invited;
+        final List<String> cancelledSafe = cancelled;
+        final List<String> enrolledSafe = enrolled;
+        final List<String> waitingSafe = waiting;
+
         // Show invited list
-        buildEntrantItemRecyclerView(rvInvited, e.getInvitedList(), false);
+        buildEntrantItemRecyclerView(rvInvited, invitedSafe, false);
 
         // Cancelled list
-        buildEntrantItemRecyclerView(rvCancelled, e.getCancelledList(), true);
+        buildEntrantItemRecyclerView(rvCancelled, cancelledSafe, true);
 
         // Registered list
-        buildEntrantItemRecyclerView(rvRegistered, e.getEnrolledList(), true);
+        buildEntrantItemRecyclerView(rvRegistered, enrolledSafe, true);
 
         // Waiting list
-        buildEntrantItemRecyclerView(rvWaiting, e.getWaitingList(), true);
+        buildEntrantItemRecyclerView(rvWaiting, waitingSafe, true);
 
         // Link action buttons later
         btnSendNotification.setOnClickListener(v -> {
@@ -281,24 +342,42 @@ public class OrganizerManageEvent extends BaseTopBottomActivity {
                 List<String> targetEntrants;
                 switch (audience) {
                     case SELECTED:
-                        targetEntrants = e.getInvitedList();
+                        targetEntrants = invitedSafe;
                         break;
                     case CANCELLED:
-                        targetEntrants = e.getCancelledList();
+                        targetEntrants = cancelledSafe;
                         break;
                     case WAITING_LIST:
                     default:
-                        targetEntrants = e.getWaitingList();
+                        targetEntrants = waitingSafe;
                         break;
                 }
+
+                if (targetEntrants.isEmpty()) {
+                    Snackbar.make(findViewById(android.R.id.content), "No recipients available for selected audience.", Snackbar.LENGTH_SHORT).show();
+                    return;
+                }
+
                 EntrantNotification notification = new EntrantNotification(NotificationType.OTHER, eventId1, "No title");
                 notification.message = message;
                 for (String entrantId : targetEntrants) {
-                    EntrantDB.pushNotificationToUser(entrantId, notification, (ok, ex) -> {
-                        if (ok) {
-                            Log.d("OrganizerManageEvent", "Custom notification sent to entrant ID: " + entrantId);
+                    // Fetch the user's data to check their preference
+                    UserDB.getUserOrNull(entrantId, (user, userEx) -> {
+                        if (user != null && user.isNotificationsEnabled()) {
+                            // 2. User exists and has notifications ENABLED, so send it.
+                            EntrantDB.pushNotificationToUser(entrantId, notification, (ok, ex) -> {
+                                if (ok) {
+                                    Log.d("OrganizerManageEvent", "Custom notification sent to entrant ID: " + entrantId);
+                                } else {
+                                    Log.e("OrganizerManageEvent", "Failed to send custom notification to entrant ID: " + entrantId, ex);
+                                }
+                            });
+                        } else if (user == null) {
+                            // Log if we couldn't find the user document
+                            Log.w("OrganizerManageEvent", "Could not find user " + entrantId + " to check notification preferences.");
                         } else {
-                            Log.d("OrganizerManageEvent", "Failed to send custom notification to entrant ID: " + entrantId + " | " + (ex != null ? ex.getMessage() : "Unknown error"));
+                            // 3. User was found but has notifications DISABLED, so we skip them.
+                            Log.d("OrganizerManageEvent", "Skipping custom notification for user " + entrantId + " (notifications disabled).");
                         }
                     });
                 }
@@ -322,11 +401,13 @@ public class OrganizerManageEvent extends BaseTopBottomActivity {
     }
 
     private void buildEntrantItemRecyclerView(RecyclerView recyclerView, List<String> stringList, Boolean hideCloseButton) {
+        // Make resilient to null inputs by treating null as empty list
+        List<String> safeList = stringList == null ? new ArrayList<>() : stringList;
         List<ListItemEntrant> entrantList = new ArrayList<>();
-        for (String s : stringList) {
+        for (String s : safeList) {
             entrantList.add(new ListItemEntrant(s));
         }
-        EntrantListArrayAdapter adapter = new EntrantListArrayAdapter(this, entrantList, hideCloseButton, event.getUuid());
+        EntrantListArrayAdapter adapter = new EntrantListArrayAdapter(this, entrantList, hideCloseButton, event == null ? null : event.getUuid());
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
     }

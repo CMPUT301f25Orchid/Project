@@ -1,9 +1,16 @@
 package com.example.fairdraw.DBs;
 
 import com.example.fairdraw.Models.Organizer;
+import com.example.fairdraw.Others.AdminNotificationLog;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
+
+import java.util.Date;
 
 /**
  * Firestore helper for operations on the "organizers" collection.
@@ -109,4 +116,66 @@ public class OrganizerDB {
         getOrganizerCollection().document(deviceId).delete()
                 .addOnCompleteListener(task -> callback.onCallback(task.isSuccessful()));
     }
+    /**
+     * Remove an organizer and clean up their events in a single batch:
+     * - Delete events with no endDate or endDate in the future (current/ongoing/upcoming)
+     * - For past events (endDate in the past) set organizer -> "Unknown organizer"
+     * - Delete the organizer document
+     *
+     * All operations are committed in one WriteBatch so they succeed or fail together.
+     *
+     * @param organizerId document id of the organizer to remove
+     * @param callback callback invoked with success flag
+     */
+    public static void removeOrganizerAndCleanupEvents(
+            String organizerId,
+            String adminId,                        // NEW argument
+            DeleteOrganizerCallback callback) {
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference eventsCol = db.collection("events");
+
+        Query q = eventsCol.whereEqualTo("organizer", organizerId);
+        q.get().addOnCompleteListener(queryTask -> {
+            if (!queryTask.isSuccessful() || queryTask.getResult() == null) {
+                callback.onCallback(false);
+                return;
+            }
+
+            QuerySnapshot snapshot = queryTask.getResult();
+            WriteBatch batch = db.batch();
+            Date now = new Date();
+
+            for (QueryDocumentSnapshot doc : snapshot) {
+                Date endDate = doc.getDate("endDate");
+                if (endDate == null || endDate.after(now)) {
+                    batch.delete(doc.getReference());
+                } else {
+                    batch.update(doc.getReference(), "organizer", "Unknown organizer");
+                }
+            }
+
+            DocumentReference organizerRef = getOrganizerCollection().document(organizerId);
+            batch.delete(organizerRef);
+
+            batch.commit().addOnCompleteListener(commitTask -> {
+
+                boolean success = commitTask.isSuccessful();
+
+                if (success) {
+                    // NEW logging block
+                    AdminNotificationLog log = new AdminNotificationLog(
+                            adminId,
+                            "REMOVE_ORGANIZER",
+                            "Organizer " + organizerId + " removed and events cleaned up",
+                            new Date()
+                    );
+                    AdminDB.logNotification(log);
+                }
+
+                callback.onCallback(success);
+            });
+        });
+    }
 }
+

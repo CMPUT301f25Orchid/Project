@@ -10,6 +10,7 @@ permissions:
 
 jobs:
   build-and-commit-javadoc:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
 
     steps:
@@ -40,6 +41,8 @@ jobs:
           git add FairDraw/docs/javadoc
           if ! git diff --staged --quiet; then
             git commit -m "docs: Auto-generate Javadoc [ci skip]"
+            # Rebase on latest main; temporarily stash any other local changes
+            git -c rebase.autoStash=true pull --rebase origin main
             git push
           else
             echo "No changes to Javadoc. Skipping commit."

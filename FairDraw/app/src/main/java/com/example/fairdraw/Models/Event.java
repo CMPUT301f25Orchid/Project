@@ -1,6 +1,13 @@
 package com.example.fairdraw.Models;
+import com.example.fairdraw.DBs.EntrantDB;
+import com.example.fairdraw.Others.EntrantNotification;
+import com.example.fairdraw.Others.NotificationType;
 
+
+import com.example.fairdraw.DBs.EntrantDB;
+import com.example.fairdraw.Others.EntrantNotification;
 import com.example.fairdraw.Others.EventState;
+import com.example.fairdraw.Others.NotificationType;
 import com.example.fairdraw.R;
 import androidx.annotation.StringRes;
 
@@ -94,6 +101,9 @@ public class Event implements Serializable {
 
     // List of user IDs who declined their invitation or cancelled their attendance.
     private List<String> cancelledList;
+
+    // Tags/interests associated with this event.
+    private List<String> tags = new ArrayList<>();
 
     /**
      * Creates a new Event with the required fields. A UUID will be generated for the event.
@@ -568,6 +578,25 @@ public class Event implements Serializable {
         this.cancelledList = cancelledList;
     }
 
+    /**
+     * Returns the tags/interests for this event. Never returns null for Firestore compatibility.
+     *
+     * @return list of tags, never null
+     */
+    public List<String> getTags() {
+        if (tags == null) tags = new ArrayList<>();
+        return tags;
+    }
+
+    /**
+     * Sets the tags/interests for this event.
+     *
+     * @param tags list of tags to set
+     */
+    public void setTags(List<String> tags) {
+        this.tags = tags == null ? new ArrayList<>() : tags;
+    }
+
     // --- New helper methods to support UI button state/text ---
 
     /**
@@ -650,7 +679,10 @@ public class Event implements Serializable {
      */
     public List<String> drawLotteryWinners() {
         // Calculate how many new winners we need to draw.
+        ensureListsInitialized();
+        List<String> originalWaiting = new ArrayList<>(waitingList);
         int spotsToFill = capacity - enrolledList.size() - invitedList.size();
+
 
         // If there are no spots to fill, do nothing.
         if (spotsToFill <= 0) {

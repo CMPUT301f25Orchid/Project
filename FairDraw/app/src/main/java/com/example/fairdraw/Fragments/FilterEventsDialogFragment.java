@@ -3,6 +3,8 @@ package com.example.fairdraw.Fragments;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.RadioGroup;
 
@@ -12,6 +14,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.fairdraw.R;
+
+import java.util.ArrayList;
 
 /**
  * DialogFragment that displays filter controls for the events list.
@@ -25,6 +29,7 @@ public class FilterEventsDialogFragment extends DialogFragment {
     private static final String ARG_STATUS = "current_status";
     private static final String ARG_INTEREST = "current_interest";
     private static final String ARG_AVAILABILITY = "current_availability";
+    private static final String ARG_AVAILABLE_TAGS = "available_tags";
 
     /**
      * Listener invoked when filters are applied or cleared by the user.
@@ -53,11 +58,26 @@ public class FilterEventsDialogFragment extends DialogFragment {
      * @return configured FilterEventsDialogFragment
      */
     public static FilterEventsDialogFragment newInstance(String currentStatus, String currentInterest, int currentAvailability) {
+        return newInstance(currentStatus, currentInterest, currentAvailability, new ArrayList<>());
+    }
+
+    /**
+     * Create a new FilterEventsDialogFragment with optional current values and available tags.
+     *
+     * @param currentStatus current status filter, or "All"
+     * @param currentInterest current interest filter, or "All"
+     * @param currentAvailability current availability or -1 for any
+     * @param availableTags list of available tags for autocomplete
+     * @return configured FilterEventsDialogFragment
+     */
+    public static FilterEventsDialogFragment newInstance(String currentStatus, String currentInterest, 
+                                                          int currentAvailability, ArrayList<String> availableTags) {
         FilterEventsDialogFragment fragment = new FilterEventsDialogFragment();
         Bundle args = new Bundle();
         args.putString(ARG_STATUS, currentStatus);
         args.putString(ARG_INTEREST, currentInterest);
         args.putInt(ARG_AVAILABILITY, currentAvailability);
+        args.putStringArrayList(ARG_AVAILABLE_TAGS, availableTags);
         fragment.setArguments(args);
         return fragment;
     }
@@ -84,13 +104,23 @@ public class FilterEventsDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View view = getLayoutInflater().inflate(R.layout.filter_events_dialog, null);
 
-        // ✅ Retrieve current filters from arguments
+        // Retrieve current filters from arguments
         String currentStatus = "All";
+        String currentInterest = "All";
+        int currentAvailability = -1;
+        ArrayList<String> availableTags = new ArrayList<>();
+        
         if (getArguments() != null) {
             currentStatus = getArguments().getString(ARG_STATUS, "All");
+            currentInterest = getArguments().getString(ARG_INTEREST, "All");
+            currentAvailability = getArguments().getInt(ARG_AVAILABILITY, -1);
+            availableTags = getArguments().getStringArrayList(ARG_AVAILABLE_TAGS);
+            if (availableTags == null) {
+                availableTags = new ArrayList<>();
+            }
         }
 
-        // ✅ Pre-select the correct radio button for status
+        // Pre-select the correct radio button for status
         RadioGroup statusGroup = view.findViewById(R.id.statusGroup);
         if ("Open".equals(currentStatus)) {
             statusGroup.check(R.id.statusOpen);
@@ -100,6 +130,29 @@ public class FilterEventsDialogFragment extends DialogFragment {
             statusGroup.check(R.id.statusAll);
         }
 
+        // Setup interest autocomplete
+        AutoCompleteTextView interestAutocomplete = view.findViewById(R.id.filter_interest_autocomplete);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), 
+                android.R.layout.simple_dropdown_item_1line, availableTags);
+        interestAutocomplete.setAdapter(adapter);
+        interestAutocomplete.setThreshold(1);
+        
+        // Pre-fill the current interest if it's not "All"
+        if (!"All".equals(currentInterest)) {
+            interestAutocomplete.setText(currentInterest);
+        }
+
+        // Pre-select availability
+        RadioGroup availabilityGroup = view.findViewById(R.id.availabilityGroup);
+        if (currentAvailability == 0) {
+            availabilityGroup.check(R.id.availabilityNotFull);
+        } else if (currentAvailability == 1) {
+            availabilityGroup.check(R.id.availabilityFull);
+        } else if (currentAvailability == 2) {
+            availabilityGroup.check(R.id.availabilityHasWaitingList);
+        } else {
+            availabilityGroup.check(R.id.availabilityAll);
+        }
 
         Button applyBtn = view.findViewById(R.id.applyFiltersBtn);
         Button clearBtn = view.findViewById(R.id.clearFiltersBtn);
@@ -117,9 +170,22 @@ public class FilterEventsDialogFragment extends DialogFragment {
                     status = "All";
                 }
 
-                // These are still commented out, so they default to "All" and -1
-                String interest = "All";
+                // Get interest from autocomplete
+                String interest = interestAutocomplete.getText().toString().trim();
+                if (interest.isEmpty()) {
+                    interest = "All";
+                }
+
+                // Get availability from radio group
                 int availability = -1;
+                int checkedAvailabilityId = availabilityGroup.getCheckedRadioButtonId();
+                if (checkedAvailabilityId == R.id.availabilityNotFull) {
+                    availability = 0;
+                } else if (checkedAvailabilityId == R.id.availabilityFull) {
+                    availability = 1;
+                } else if (checkedAvailabilityId == R.id.availabilityHasWaitingList) {
+                    availability = 2;
+                }
 
                 listener.onFiltersApplied(status, interest, availability);
             }

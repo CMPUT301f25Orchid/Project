@@ -17,16 +17,14 @@ public class User implements Serializable {
     private String deviceId;
     private String fcmToken;
     private ArrayList<String> roles;
+    private boolean notificationsEnabled;
+    private String profilePicture;
 
     /**
      * No-argument constructor required by Firestore. Initializes the default roles list
      * with the "entrant" role.
      */
-    public User() {
-        this.roles = new ArrayList<String>();
-        roles.add("entrant");
-        roles.add("organizer");
-    }
+    public User() {}
 
     /**
      * Constructs a user with the provided profile fields and initializes default roles.
@@ -45,7 +43,7 @@ public class User implements Serializable {
         this.fcmToken = fcmToken;
         this.roles = new ArrayList<String>();
         this.roles.add("entrant");
-        this.roles.add("organizer");
+        this.notificationsEnabled = true;
     }
 
     // Getters (Firestore needs these)
@@ -79,6 +77,13 @@ public class User implements Serializable {
      * @return list of role strings
      */
     public ArrayList<String> getRoles() { return roles; }
+    /**
+     * Returns the URL of the user's profile picture.
+     * @return profile picture URL or null if unset
+     */
+    public String getProfilePicture() {
+        return profilePicture;
+    }
 
 
     // Setters (optional but nice to have)
@@ -112,4 +117,19 @@ public class User implements Serializable {
      * @param roles new list of role names
      */
     public void setRoles(ArrayList<String> roles) { this.roles = roles; }
+
+    public boolean isNotificationsEnabled() {
+        return notificationsEnabled;
+    }
+    public void setNotificationsEnabled(boolean notificationsEnabled) {
+        this.notificationsEnabled = notificationsEnabled;
+        }
+    /**
+     * Sets the URL of the user's profile picture.
+     * @param profilePicture URL to set
+     */
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
+
+    }
 }

@@ -13,6 +13,7 @@ materialVersion = "1.12.0"
 firebaseStorage = "22.0.1"
 cardview = "1.0.0"
 espressoIntents = "3.7.0"
+transportApi = "4.0.0"
 espressoContrib = "3.7.0"
 legacySupportV4 = "1.0.0"
 
@@ -30,6 +31,7 @@ material-v1120 = { module = "com.google.android.material:material", version.ref 
 firebase-storage = { group = "com.google.firebase", name = "firebase-storage", version.ref = "firebaseStorage" }
 cardview = { group = "androidx.cardview", name = "cardview", version.ref = "cardview" }
 espresso-intents = { group = "androidx.test.espresso", name = "espresso-intents", version.ref = "espressoIntents" }
+transport-api = { group = "com.google.android.datatransport", name = "transport-api", version.ref = "transportApi" }
 espresso-contrib = { group = "androidx.test.espresso", name = "espresso-contrib", version.ref = "espressoContrib" }
 legacy-support-v4 = { group = "androidx.legacy", name = "legacy-support-v4", version.ref = "legacySupportV4" }
 

@@ -20,4 +20,15 @@
     <color name="black_70">#B3000000</color>
     <color name="blue_info_bg">#E6F2FF</color>
 
+    <!-- Premium FairDraw Status Colors -->
+    <color name="selected">#2ECC71</color>        <!-- Emerald -->
+    <color name="checked_in">#3498DB</color>      <!-- Sapphire -->
+    <color name="invited">#F1C40F</color>         <!-- Royal Gold -->
+    <color name="registered">#95A5A6</color>      <!-- Slate Titanium -->
+    <color name="not_selected">#C0392B</color>    <!-- Velvet Crimson -->
+    <color name="cancelled">#8E44AD</color>       <!-- Mulberry -->
+    <color name="neutral">#95A5A6</color>         <!-- Fallback uses registered color -->
+
+
+
 </resources>
