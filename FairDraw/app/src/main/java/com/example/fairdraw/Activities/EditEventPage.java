@@ -157,6 +157,7 @@ public class EditEventPage extends Fragment {
 
         // Return to Organizer Main Page
         cancelEventEdit.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
+
         // Prefilling fields with event data
         if (event != null) {
             String openDate = dateFormat.format(event.getEventOpenRegDate());
@@ -171,8 +172,10 @@ public class EditEventPage extends Fragment {
             eventStartDate.setText(startDate);
             eventEndDate.setText(endDate);
             eventLocation.setText(event.getLocation());
+            if (event.getWaitingListLimit() != null){
+                eventLimit.setText(event.getWaitingListLimit().toString());
+            }
             eventPrice.setText(event.getPrice().toString());
-            eventLimit.setText(event.getWaitingListLimit().toString());
             eventGeolocation.check(event.getGeolocation() ? R.id.geo_yes : R.id.geo_no);
             
             // Pre-fill existing tags as chips
@@ -183,6 +186,7 @@ public class EditEventPage extends Fragment {
                 }
             }
         }
+
 
         // Updating event data
         confirmEventEdit.setOnClickListener(v->{
