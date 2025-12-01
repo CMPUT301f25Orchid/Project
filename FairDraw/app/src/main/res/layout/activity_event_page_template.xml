@@ -282,4 +282,50 @@
         android:textSize="25sp"
         app:layout_constraintBottom_toBottomOf="@+id/event_price"
         app:layout_constraintStart_toStartOf="@+id/textView9" />
+
+    <!-- Tags Section -->
+    <TextView
+        android:id="@+id/textView_tags_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Tags (Optional)"
+        android:textSize="17sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/event_limit" />
+
+    <LinearLayout
+        android:id="@+id/tag_input_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="4dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_tags_label">
+
+        <EditText
+            android:id="@+id/event_tag_input"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Enter tag"
+            android:inputType="text"
+            android:imeOptions="actionDone" />
+
+        <Button
+            android:id="@+id/btn_add_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add"
+            android:minWidth="60dp" />
+    </LinearLayout>
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chip_group_tags"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tag_input_layout" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
