@@ -487,6 +487,10 @@ enum com.example.fairdraw.Others.NotificationType {
 class com.example.fairdraw.Activities.OrganizerMainPage {
 # onCreate(arg0 : Bundle) : void
 }
+class com.example.fairdraw.Activities.OrganizerExportActivity {
+# onCreate(arg0 : Bundle) : void
++ bindEvent(arg0 : Event) : void
+}
 class com.example.fairdraw.Activities.DeepLinkRouterActivity {
 # onCreate(arg0 : Bundle) : void
 }
@@ -575,5 +579,6 @@ com.example.fairdraw.DBs.EventDB +.. com.example.fairdraw.DBs.EventDB$AddToWaitl
 androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.EditProfileActivity
 androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.TestDeepLinkActivity
 com.example.fairdraw.Activities.BaseTopBottomActivity <|-- com.example.fairdraw.Activities.OrganizerMainPage
+com.example.fairdraw.Activities.BaseTopBottomActivity <|-- com.example.fairdraw.Activities.OrganizerExportActivity
 androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.DeepLinkRouterActivity
 @enduml
