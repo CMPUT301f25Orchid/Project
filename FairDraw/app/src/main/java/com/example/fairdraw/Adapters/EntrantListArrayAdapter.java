@@ -1,12 +1,12 @@
 package com.example.fairdraw.Adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,6 +15,7 @@ import com.example.fairdraw.DBs.EventDB;
 import com.example.fairdraw.DBs.UserDB;
 import com.example.fairdraw.Others.ListItemEntrant;
 import com.example.fairdraw.R;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -177,8 +178,9 @@ public class EntrantListArrayAdapter extends RecyclerView.Adapter<EntrantListArr
                     EventDB.updateEvent(event, success -> {
                         if (!success) {
                             // Inform user of failure to persist; local removal already happened.
-                            // Use a Toast to notify; this is low-risk and non-blocking.
-                            Toast.makeText(context, R.string.error_updating_event, Toast.LENGTH_SHORT).show();
+                            // Use a Snackbar to notify; this is low-risk and non-blocking.
+                            View root = ((Activity)context).findViewById(android.R.id.content);
+                            Snackbar.make(root, R.string.error_updating_event, Snackbar.LENGTH_SHORT).show();
                         }
                     });
                 });

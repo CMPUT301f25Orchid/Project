@@ -6,7 +6,7 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
+import com.google.android.material.snackbar.Snackbar;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -55,13 +55,13 @@ public class EditProfileActivity extends AppCompatActivity {
             loadUserData(deviceId);
         } else {
             Log.e(TAG, "No USER_ID was passed to EditProfileActivity.");
-            Toast.makeText(this, "Cannot load user profile for editing.", Toast.LENGTH_LONG).show();
+            Snackbar.make(findViewById(android.R.id.content), "Cannot load user profile for editing.", Snackbar.LENGTH_LONG).show();
             finish();
         }
 
         // Set up button listeners
         cancelButton.setOnClickListener(v -> {
-            Toast.makeText(EditProfileActivity.this, "Changes discarded", Toast.LENGTH_SHORT).show();
+            Snackbar.make(findViewById(android.R.id.content), "Changes discarded", Snackbar.LENGTH_SHORT).show();
             finish();
         });
 
@@ -80,7 +80,7 @@ public class EditProfileActivity extends AppCompatActivity {
         UserDB.getUserOrNull(userId, (user, e) -> {
             if (e != null) {
                 Log.e(TAG, "Error loading user data.", e);
-                Toast.makeText(EditProfileActivity.this, "Failed to load data.", Toast.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(android.R.id.content), "Failed to load data.", Snackbar.LENGTH_SHORT).show();
                 return;
             }
 
@@ -94,14 +94,14 @@ public class EditProfileActivity extends AppCompatActivity {
                 });
             } else {
                 Log.w(TAG, "User with ID " + userId + " not found.");
-                Toast.makeText(EditProfileActivity.this, "User not found.", Toast.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(android.R.id.content), "User not found.", Snackbar.LENGTH_SHORT).show();
             }
         });
     }
 
     private void saveChanges() {
         if (currentUser == null) {
-            Toast.makeText(this, "Cannot save, user data not loaded.", Toast.LENGTH_SHORT).show();
+            Snackbar.make(findViewById(android.R.id.content), "Cannot save, user data not loaded.", Snackbar.LENGTH_SHORT).show();
             return;
         }
 
@@ -123,18 +123,13 @@ public class EditProfileActivity extends AppCompatActivity {
             if (ok) {
                 // Success
                 Log.d(TAG, "User profile updated successfully.");
-                Toast.makeText(EditProfileActivity.this, "Profile updated!", Toast.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(android.R.id.content), "Profile updated!", Snackbar.LENGTH_SHORT).show();
                 finish(); // Close the activity and return
             } else {
                 // Failure
                 Log.e(TAG, "Error updating user profile.", e);
-                Toast.makeText(EditProfileActivity.this, "Failed to update profile.", Toast.LENGTH_LONG).show();
+                Snackbar.make(findViewById(android.R.id.content), "Failed to update profile.", Snackbar.LENGTH_LONG).show();
             }
         });
     }
 }
-
-
-
-
-

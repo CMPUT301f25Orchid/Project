@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-public class OrganizerWaitListMapActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class OrganizerWaitListMapActivity extends BaseTopBottomActivity implements OnMapReadyCallback {
 
     private static final String TAG = "OrganizerWaitListMap";
 
@@ -51,6 +51,9 @@ public class OrganizerWaitListMapActivity extends AppCompatActivity implements O
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        initTopNav(com.example.fairdraw.Others.BarType.ORGANIZER);
+        initBottomNav(com.example.fairdraw.Others.BarType.ORGANIZER, findViewById(R.id.home_bottom_nav_bar));
 
         // Get event id from intent
         eventId = getIntent().getStringExtra("event_id");

@@ -5,7 +5,7 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+import com.google.android.material.snackbar.Snackbar;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -65,9 +65,9 @@ public class OrganizerManageEvent extends BaseTopBottomActivity {
     FirebaseImageStorageService storageService;
 
     // Fields used for ACTION_CREATE_DOCUMENT flow using Activity Result API
-    private ActivityResultLauncher<Intent> createFileLauncher;
-    private byte[] pendingCsvBytes = null;
-    private String pendingCsvFileName = null;
+    ActivityResultLauncher<Intent> createFileLauncher;
+    byte[] pendingCsvBytes = null;
+    String pendingCsvFileName = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,14 +83,14 @@ public class OrganizerManageEvent extends BaseTopBottomActivity {
             if (resultCode == RESULT_OK && data != null) {
                 Uri uri = data.getData();
                 if (uri == null) {
-                    Toast.makeText(this, "No location selected to save the CSV.", Toast.LENGTH_LONG).show();
+                    Snackbar.make(findViewById(android.R.id.content), "No location selected to save the CSV.", Snackbar.LENGTH_LONG).show();
                     pendingCsvBytes = null;
                     pendingCsvFileName = null;
                     return;
                 }
 
                 if (pendingCsvBytes == null) {
-                    Toast.makeText(this, "No CSV content to save.", Toast.LENGTH_LONG).show();
+                    Snackbar.make(findViewById(android.R.id.content), "No CSV content to save.", Snackbar.LENGTH_LONG).show();
                     pendingCsvFileName = null;
                     return;
                 }
@@ -101,7 +101,7 @@ public class OrganizerManageEvent extends BaseTopBottomActivity {
                     os.flush();
                 } catch (IOException ioe) {
                     Log.e("OrganizerManageEvent", "Failed to write CSV to selected Uri", ioe);
-                    Toast.makeText(this, "Failed to save CSV: " + ioe.getMessage(), Toast.LENGTH_LONG).show();
+                    Snackbar.make(findViewById(android.R.id.content), "Failed to save CSV: " + ioe.getMessage(), Snackbar.LENGTH_LONG).show();
                     pendingCsvBytes = null;
                     pendingCsvFileName = null;
                     return;
@@ -111,7 +111,7 @@ public class OrganizerManageEvent extends BaseTopBottomActivity {
                 String savedFileName = pendingCsvFileName;
                 pendingCsvBytes = null;
                 pendingCsvFileName = null;
-                Toast.makeText(this, "Saved CSV to chosen location: " + (savedFileName != null ? savedFileName : ""), Toast.LENGTH_LONG).show();
+                Snackbar.make(findViewById(android.R.id.content), "Saved CSV to chosen location: " + (savedFileName != null ? savedFileName : ""), Snackbar.LENGTH_LONG).show();
 
                 // Offer to share the newly created document
                 try {
@@ -127,7 +127,7 @@ public class OrganizerManageEvent extends BaseTopBottomActivity {
 
             } else {
                 // User cancelled or no data
-                Toast.makeText(this, "Save cancelled.", Toast.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(android.R.id.content), "Save cancelled.", Snackbar.LENGTH_SHORT).show();
                 pendingCsvBytes = null;
                 pendingCsvFileName = null;
             }
@@ -213,17 +213,17 @@ public class OrganizerManageEvent extends BaseTopBottomActivity {
 
         // Draw and invite button logic later
         btnDrawAndInvite.setOnClickListener(v -> {
-            Toast.makeText(this, "Draw and Invite clicked for event: " + eventId, Toast.LENGTH_SHORT).show();
+            Snackbar.make(findViewById(android.R.id.content), "Draw and Invite clicked for event: " + eventId, Snackbar.LENGTH_SHORT).show();
             EventDB.getEvent(eventId, (event) -> {
                 if (event != null) {
                     // Perform draw and invite logic here
-                    Toast.makeText(this, "Drawing and inviting entrants...", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(android.R.id.content), "Drawing and inviting entrants...", Snackbar.LENGTH_SHORT).show();
                     List<String> newInvitedEntrants = event.drawLotteryWinners();
 
                     // Update the event in the database
                     EventDB.updateEvent(event, success -> {
                         if (success) {
-                            Toast.makeText(OrganizerManageEvent.this, "Entrants drawn and updated!", Toast.LENGTH_SHORT).show();
+                            Snackbar.make(findViewById(android.R.id.content), "Entrants drawn and updated!", Snackbar.LENGTH_SHORT).show();
                             // now send the win notifications to the invited entrants
                             for (String entrantId : newInvitedEntrants) {
                                 EntrantDB.pushNotificationToUser(entrantId, new EntrantNotification(NotificationType.WIN, eventId, event.getTitle()), (ok, e1) -> {
@@ -249,11 +249,11 @@ public class OrganizerManageEvent extends BaseTopBottomActivity {
                                 }
                             }
                         } else {
-                            Toast.makeText(OrganizerManageEvent.this, "Failed to update event after drawing.", Toast.LENGTH_LONG).show();
+                            Snackbar.make(findViewById(android.R.id.content), "Failed to update event after drawing.", Snackbar.LENGTH_LONG).show();
                         }
                     });
                 } else {
-                    Toast.makeText(this, "Failed to retrieve event for drawing: ", Toast.LENGTH_LONG).show();
+                    Snackbar.make(findViewById(android.R.id.content), "Failed to retrieve event for drawing: ", Snackbar.LENGTH_LONG).show();
                 }
             });
         });
@@ -275,8 +275,8 @@ public class OrganizerManageEvent extends BaseTopBottomActivity {
             // Open the Dialog
             SendNotificationDialogFragment dialog = SendNotificationDialogFragment.newInstance(eventId);
             dialog.setListener((eventId1, audience, message) -> {
-                Toast.makeText(this,
-                        "Send to " + audience + " | " + message, Toast.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(android.R.id.content),
+                        "Send to " + audience + " | " + message, Snackbar.LENGTH_SHORT).show();
 
                 List<String> targetEntrants;
                 switch (audience) {
@@ -348,7 +348,7 @@ public class OrganizerManageEvent extends BaseTopBottomActivity {
      */
     private void exportEnrolledEntrantsToCsv(List<String> enrolledIds, String eventTitle) {
         if (enrolledIds == null || enrolledIds.isEmpty()) {
-            Toast.makeText(this, "No enrolled entrants to export.", Toast.LENGTH_SHORT).show();
+            Snackbar.make(findViewById(android.R.id.content), "No enrolled entrants to export.", Snackbar.LENGTH_SHORT).show();
             return;
         }
 
@@ -403,28 +403,28 @@ public class OrganizerManageEvent extends BaseTopBottomActivity {
             createFileLauncher.launch(intent);
         } catch (Exception ex) {
             Log.e("OrganizerManageEvent", "Failed to launch create document picker", ex);
-            Toast.makeText(this, "Unable to open save dialog: " + ex.getMessage(), Toast.LENGTH_LONG).show();
-        }
-    }
+            Snackbar.make(findViewById(android.R.id.content), "Unable to open save dialog: " + ex.getMessage(), Snackbar.LENGTH_LONG).show();
+         }
+     }
 
-    @NonNull
-    private static StringBuilder getStringBuilder(List<String[]> rows) {
-        StringBuilder sb = new StringBuilder();
-        for (String[] row : rows) {
-            for (int i = 0; i < row.length; i++) {
-                String cell = row[i] == null ? "" : row[i];
-                // Escape quotes
-                cell = cell.replace("\"", "\"\"");
-                if (cell.contains(",") || cell.contains("\n") || cell.contains("\"")) {
-                    sb.append('"').append(cell).append('"');
-                } else {
-                    sb.append(cell);
-                }
-                if (i < row.length - 1) sb.append(',');
-            }
-            sb.append('\n');
-        }
-        return sb;
-    }
+     @NonNull
+     private static StringBuilder getStringBuilder(List<String[]> rows) {
+         StringBuilder sb = new StringBuilder();
+         for (String[] row : rows) {
+             for (int i = 0; i < row.length; i++) {
+                 String cell = row[i] == null ? "" : row[i];
+                 // Escape quotes
+                 cell = cell.replace("\"", "\"\"");
+                 if (cell.contains(",") || cell.contains("\n") || cell.contains("\"")) {
+                     sb.append('\"').append(cell).append('\"');
+                 } else {
+                     sb.append(cell);
+                 }
+                 if (i < row.length - 1) sb.append(',');
+             }
+             sb.append('\n');
+         }
+         return sb;
+     }
 
-}
+ }
