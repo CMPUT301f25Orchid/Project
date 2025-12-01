@@ -85,6 +85,18 @@
             </intent-filter>
         </activity>
         <activity android:name=".Activities.EntrantNotificationsActivity" />
+        <activity
+            android:name=".Activities.AdminNotificationLogActivity"
+            android:exported="true" />
+
+
+
     </application>
+
+
+
+
+
+
 
 </manifest>

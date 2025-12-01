@@ -1,6 +1,13 @@
 package com.example.fairdraw.Models;
+import com.example.fairdraw.DBs.EntrantDB;
+import com.example.fairdraw.Others.EntrantNotification;
+import com.example.fairdraw.Others.NotificationType;
 
+
+import com.example.fairdraw.DBs.EntrantDB;
+import com.example.fairdraw.Others.EntrantNotification;
 import com.example.fairdraw.Others.EventState;
+import com.example.fairdraw.Others.NotificationType;
 import com.example.fairdraw.R;
 import androidx.annotation.StringRes;
 
@@ -650,7 +657,10 @@ public class Event implements Serializable {
      */
     public List<String> drawLotteryWinners() {
         // Calculate how many new winners we need to draw.
+        ensureListsInitialized();
+        List<String> originalWaiting = new ArrayList<>(waitingList);
         int spotsToFill = capacity - enrolledList.size() - invitedList.size();
+
 
         // If there are no spots to fill, do nothing.
         if (spotsToFill <= 0) {

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Reusable top bar: avatar (left) + Entrant / Organizer pills (right) -->
+<com.google.android.material.appbar.MaterialToolbar
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/topBar"
+    android:layout_width="match_parent"
+    android:layout_height="88dp"
+    android:background="#2E57FF"
+    app:title="">
+
+    <!-- Row content -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <!-- User image -->
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/imgAvatar"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@android:drawable/sym_def_app_icon"
+            android:contentDescription="User image"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"/>
+
+        <!-- Spacer -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <!-- Entrant pill -->
+        <!-- Use a LinearLayout to wrap the Entrant and Organizer buttons and then do the spacing using the Layout -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnEntrant"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="80dp"
+            android:layout_height="50dp"
+            android:text="Entrant"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#488EF6"
+            app:cornerRadius="9dp"
+            app:strokeColor="#FFFFFF"
+            android:textSize="12sp"/>
+
+        <Space
+            android:layout_width="8dp"
+            android:layout_height="0dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnOrganizer"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:backgroundTint="#488EF6"
+            android:text="Organizer"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp"
+            app:cornerRadius="9dp"
+            app:strokeColor="#FFFFFF" />
+        <Space
+            android:layout_width="8dp"
+            android:layout_height="0dp"/>
+        <!-- Organizer pill -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnAdmin"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="95dp"
+            android:layout_height="50dp"
+            android:text="Admin"
+            android:textAllCaps="false"
+            android:textColor="#488EF6"
+            android:backgroundTint="#FFFFFF"
+            app:cornerRadius="9dp"
+            app:strokeColor="#FFFFFF"
+            android:textSize="12sp"/>
+    </LinearLayout>
+</com.google.android.material.appbar.MaterialToolbar>
