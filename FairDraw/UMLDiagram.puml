@@ -226,6 +226,9 @@ class com.example.fairdraw.Others.EntrantNotification {
 + message : String
 + read : boolean
 }
+class com.example.fairdraw.Activities.AdminPicturesPage {
+# onCreate(arg0 : Bundle) : void
+}
 class com.example.fairdraw.Activities.EditEventPage {
 + onCreateView(arg0 : LayoutInflater, arg1 : ViewGroup, arg2 : Bundle) : View
 + onViewCreated(arg0 : View, arg1 : Bundle) : void
@@ -282,6 +285,14 @@ class com.example.fairdraw.Others.AdminNotificationLog {
 class com.example.fairdraw.Models.Admin {
 + getDeviceId() : String
 + setDeviceId(arg0 : String) : void
+}
+class com.example.fairdraw.Others.EntrantEventStatus {
++ {static} String REGISTERED
++ {static} String INVITED
++ {static} String SELECTED
++ {static} String NOT_SELECTED
++ {static} String CANCELLED
++ {static} String CHECKED_IN
 }
 class com.example.fairdraw.Activities.EntrantScan {
 # onCreate(arg0 : Bundle) : void
@@ -467,6 +478,7 @@ androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.Si
 androidx.fragment.app.DialogFragment <|-- com.example.fairdraw.Fragments.SendNotificationDialogFragment
 com.example.fairdraw.Fragments.SendNotificationDialogFragment +.. com.example.fairdraw.Fragments.SendNotificationDialogFragment$Listener
 java.io.Serializable <|.. com.example.fairdraw.Others.EntrantNotification
+androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.AdminPicturesPage
 androidx.fragment.app.Fragment <|-- com.example.fairdraw.Activities.EditEventPage
 com.google.android.gms.maps.OnMapReadyCallback <|.. com.example.fairdraw.Activities.OrganizerWaitListMapActivity
 com.example.fairdraw.Activities.BaseTopBottomActivity <|-- com.example.fairdraw.Activities.OrganizerWaitListMapActivity
