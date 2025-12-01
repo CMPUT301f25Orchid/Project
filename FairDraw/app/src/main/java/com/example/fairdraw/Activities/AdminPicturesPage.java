@@ -1,6 +1,7 @@
 package com.example.fairdraw.Activities;
 
 import android.os.Bundle;
+import android.widget.LinearLayout;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,9 +9,13 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.fairdraw.Others.BarType;
 import com.example.fairdraw.R;
 
-public class AdminPicturesPage extends AppCompatActivity {
+public class AdminPicturesPage extends BaseTopBottomActivity {
+
+
+    private LinearLayout pictureListContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,5 +27,12 @@ public class AdminPicturesPage extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        initTopNav(BarType.ADMIN);
+        initBottomNav(BarType.ADMIN, findViewById(R.id.bottom_nav));
+
+        pictureListContainer = findViewById(R.id.picture_list_container);
+
     }
 }
+
