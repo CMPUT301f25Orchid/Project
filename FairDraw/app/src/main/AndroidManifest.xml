@@ -28,6 +28,9 @@
             android:name=".Activities.OrganizerWaitListMapActivity"
             android:exported="false" />
         <activity
+            android:name=".Activities.AdminEventsPage"
+            android:exported="false" />
+        <activity
             android:name=".Activities.EditProfileActivity"
             android:exported="false" />
         <activity

@@ -1,5 +1,7 @@
 package com.example.fairdraw.Activities;
 
+import static androidx.core.content.ContextCompat.startActivity;
+
 import android.content.Intent;
 import android.view.View;
 import com.google.android.material.snackbar.Snackbar;
@@ -118,5 +120,18 @@ public class BaseTopBottomActivity extends AppCompatActivity {
                  }
              });
          }
+        View adminBtn = findViewById(R.id.btnAdmin);
+        if (adminBtn != null) {
+            adminBtn.setOnClickListener(v -> {
+                if (currentBar == BarType.ADMIN) {
+                    // Already an admin
+                    Snackbar.make(findViewById(android.R.id.content), "You are already an admin.", Snackbar.LENGTH_SHORT).show();
+                }
+                // Navigate to Admin main page
+                startActivity(new Intent(this, AdminEventsPage.class));
+            });
+        }
      }
  }
+
+
