@@ -32,7 +32,7 @@ public class OrganizerTest {
     }
 
     @Test
-    public void setEventsCreated_replacesList() {
+    public void setEventsCreated_replacesList_and_allowsNull() {
         Organizer o = new Organizer();
         ArrayList<String> newList = new ArrayList<>();
         newList.add("a");
@@ -40,6 +40,8 @@ public class OrganizerTest {
         o.setEventsCreated(newList);
         assertSame(newList, o.getEventsCreated());
         assertEquals(2, o.getEventsCreated().size());
+
+        o.setEventsCreated(null);
+        assertNull(o.getEventsCreated());
     }
 }
-

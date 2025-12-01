@@ -85,7 +85,13 @@ dependencies {
     implementation(libs.firebase.storage)
     implementation(libs.espresso.intents)
     implementation(libs.cardview)
+    testImplementation(libs.ext.junit)
+    androidTestImplementation("androidx.test.espresso:espresso-contrib:3.7.0") {
+        exclude("com.google.protobuf", "protobuf-lite")
+    }
     testImplementation(libs.junit)
+
+
     // Robolectric for JVM unit tests
     testImplementation("org.robolectric:robolectric:4.10.3")
     testImplementation("androidx.test:core:1.5.0")
@@ -109,4 +115,6 @@ dependencies {
 
     // Add this line to resolve the intent errors
     androidTestImplementation("androidx.test.espresso:espresso-intents:3.6.1")
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+    implementation("com.google.android.gms:play-services-maps:18.2.0")
 }

@@ -7,6 +7,7 @@ import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.example.fairdraw.R;
 
@@ -102,7 +103,7 @@ public class SendNotificationDialogFragment extends DialogFragment {
         btnSend.setOnClickListener(vv -> {
             String msg = etMessage.getText() != null ? etMessage.getText().toString().trim() : "";
             if (TextUtils.isEmpty(msg)) {
-                Toast.makeText(getContext(), "Message cannot be empty.", Toast.LENGTH_SHORT).show();
+                Snackbar.make(v, "Message cannot be empty.", Snackbar.LENGTH_SHORT).show();
                 return;
             }
             Audience audience = Audience.WAITING_LIST;

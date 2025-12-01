@@ -1,13 +1,17 @@
 package com.example.fairdraw.Activities;
 
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
@@ -17,8 +21,10 @@ import com.example.fairdraw.ServiceUtility.DevicePrefsManager;
 import com.example.fairdraw.ServiceUtility.FirebaseImageStorageService;
 import com.example.fairdraw.Models.Event;
 import com.example.fairdraw.R;
+import com.example.fairdraw.ServiceUtility.GeoService;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.firestore.ListenerRegistration;
 
 import java.text.NumberFormat;
@@ -50,6 +56,9 @@ public class EntrantEventDetails extends BaseTopBottomActivity {
     final boolean[] onWaitlist = {false};
     // Keep a reference to the last received Event so click handlers can consult helper methods immediately
     private Event currentEvent;
+    private GeoService geoService;
+    private String eventId;
+    private boolean pendingJoinAfterPermission = false;
 
 
     private void bindCell(int includeId, int iconRes, String title, String subtitle) {
@@ -82,6 +91,8 @@ public class EntrantEventDetails extends BaseTopBottomActivity {
         BottomNavigationView bottomNav = findViewById(R.id.home_bottom_nav_bar);
         if (bottomNav != null) bottomNav.setSelectedItemId(R.id.events_activity);
 
+        geoService = new GeoService(this);
+
         // grab views
         tvTitle     = findViewById(R.id.tvTitle);
         tvSummary   = findViewById(R.id.tvSummary);
@@ -90,9 +101,9 @@ public class EntrantEventDetails extends BaseTopBottomActivity {
         btnWaitlist = findViewById(R.id.btnWaitlist);
 
         // 1) get the eventId from intent
-        String eventId = getIntent().getStringExtra("event_id");
+        eventId = getIntent().getStringExtra("event_id");
         if (eventId == null || eventId.trim().isEmpty()) {
-            Toast.makeText(this, "Missing event id", Toast.LENGTH_LONG).show();
+            Snackbar.make(findViewById(android.R.id.content), "Missing event id", Snackbar.LENGTH_LONG).show();
             finish();
             return;
         }
@@ -100,7 +111,7 @@ public class EntrantEventDetails extends BaseTopBottomActivity {
         // 2) fetch Event and bind, and setup listener for realtime updates
         eventListener = EventDB.listenToEvent(eventId, event -> {
             if (event == null) {
-                Toast.makeText(this, "Unable to load event.", Toast.LENGTH_LONG).show();
+                Snackbar.make(findViewById(android.R.id.content), "Unable to load event.", Snackbar.LENGTH_LONG).show();
                 return;
             }
             // Cache the latest event for use in click callbacks
@@ -125,10 +136,7 @@ public class EntrantEventDetails extends BaseTopBottomActivity {
 
             bindEvent(event);
 
-            btnViewQrCode.setOnClickListener(v -> {
-                QrCodeFragment qrFragment = QrCodeFragment.newInstance(eventId,event.getTitle());
-                qrFragment.show(getSupportFragmentManager(), "QrCodeFragment");
-            });
+            setupQrButton(event);
         });
 
         storageService = new FirebaseImageStorageService();
@@ -154,34 +162,162 @@ public class EntrantEventDetails extends BaseTopBottomActivity {
                             btnWaitlist.setText(getString(R.string.join_lottery_waitlist));
                             btnWaitlist.setEnabled(true);
                         }
-                        Toast.makeText(this, "Removed from waitlist", Toast.LENGTH_SHORT).show();
+                        Snackbar.make(findViewById(android.R.id.content), "Removed from waitlist", Snackbar.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(this, "Failed to remove from waitlist", Toast.LENGTH_SHORT).show();
+                        Snackbar.make(findViewById(android.R.id.content), "Failed to remove from waitlist", Snackbar.LENGTH_SHORT).show();
                     }
                 });
             }
             else {
                 // Add to waitlist
-                EventDB.addToWaitlist(eventId, DevicePrefsManager.getDeviceId(this), success -> {
-                    if (success) {
-                        onWaitlist[0] = true;
-                        // After adding, use cached event if available to determine label/state.
-                        if (currentEvent != null) {
-                            // The cached event won't yet reflect the addition; present a leave affordance.
-                            btnWaitlist.setText(getString(R.string.leave_lottery_waitlist));
-                            btnWaitlist.setEnabled(true);
-                        } else {
-                            btnWaitlist.setText(getString(R.string.leave_lottery_waitlist));
-                            btnWaitlist.setEnabled(true);
-                        }
-                        Toast.makeText(this, "Added to waitlist", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(this, "Failed to add to waitlist", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                handleJoinWaitlistClick();
+
             }
         });
     }
+
+    /**
+     * Called when the user taps "Join waitlist".
+     * If the event requires geolocation, show a consent dialog.
+     * Otherwise, just join directly.
+     */
+    private void handleJoinWaitlistClick() {
+        if (currentEvent != null && Boolean.TRUE.equals(currentEvent.getGeolocation())) {
+            // This event requires geolocation -> show consent dialog
+            showGeoConsentDialog();
+        } else {
+            // No geolocation requirement -> just join without location
+            joinWaitlistInternal();
+        }
+    }
+
+    /**
+     * Small popup to inform the user that this event uses their location.
+     */
+    private void showGeoConsentDialog() {
+        new MaterialAlertDialogBuilder(this)
+                .setTitle("Use your location?")
+                .setMessage("This event uses your approximate location to help the organizer " +
+                        "understand where entrants are joining from. Your location will be " +
+                        "stored with your waitlist entry.")
+                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                .setPositiveButton("Agree", (dialog, which) -> {
+                    dialog.dismiss();
+                    startJoinWithLocation();
+                })
+                .show();
+    }
+
+    /**
+     * Ensure we have permission and then fetch location via GeoService.
+     */
+    private void startJoinWithLocation() {
+        if (!geoService.hasLocationPermission()) {
+            // Ask for permission, and mark that we should continue join afterwards.
+            pendingJoinAfterPermission = true;
+            geoService.requestLocationPermission(this);
+            return;
+        }
+
+        // Permission granted, get last known location
+        geoService.getLastKnownLocation(new GeoService.GeoCallback() {
+            @Override
+            public void onLocationResult(Location location) {
+                double lat = location.getLatitude();
+                double lng = location.getLongitude();
+
+                Log.d("EntrantEventDetails", "Location for waitlist join: " + lat + ", " + lng);
+
+                // Build the Event.EntrantLocation object and join
+                Event.EntrantLocation loc = new Event.EntrantLocation(lat, lng);
+
+                joinWaitlistInternal(loc);
+            }
+
+            @Override
+            public void onLocationError(String message) {
+                Log.w("EntrantEventDetails", "Location error: " + message);
+                // Do NOT join without location when event requires geolocation. Offer retry instead.
+                Snackbar.make(findViewById(android.R.id.content),
+                        "Could not get location. This event requires geolocation so you can't join without it.",
+                        Snackbar.LENGTH_LONG).show();
+
+                new MaterialAlertDialogBuilder(EntrantEventDetails.this)
+                        .setTitle("Location unavailable")
+                        .setMessage("We couldn't obtain your location. You can retry or cancel joining the waitlist.")
+                        .setPositiveButton("Retry", (dialog, which) -> {
+                            dialog.dismiss();
+                            // Try again (will request permission if needed)
+                            startJoinWithLocation();
+                        })
+                        .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                        .show();
+            }
+        });
+    }
+
+    /**
+     * The original "add to waitlist" logic, extracted into a helper.
+     */
+    private void joinWaitlistInternal() {
+        joinWaitlistInternal(null);
+    }
+
+    private void joinWaitlistInternal(@Nullable Event.EntrantLocation location) {
+        String deviceId = DevicePrefsManager.getDeviceId(this);
+
+        // If the event requires geolocation, disallow joining without a provided location.
+        if (currentEvent != null && Boolean.TRUE.equals(currentEvent.getGeolocation()) && location == null) {
+            new MaterialAlertDialogBuilder(this)
+                    .setTitle("Location required")
+                    .setMessage("This event requires that you share your location to join. Please agree to share your location to continue.")
+                    .setPositiveButton("Retry", (dialog, which) -> {
+                        dialog.dismiss();
+                        showGeoConsentDialog();
+                    })
+                    .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                    .show();
+            return;
+        }
+
+        // New overloaded DB method that accepts a location
+        EventDB.addToWaitlist(eventId, deviceId, location, success -> {
+            if (success) {
+                onWaitlist[0] = true;
+                btnWaitlist.setText(getString(R.string.leave_lottery_waitlist));
+                btnWaitlist.setEnabled(true);
+                Snackbar.make(findViewById(android.R.id.content), "Added to waitlist", Snackbar.LENGTH_SHORT).show();
+            } else {
+                Snackbar.make(findViewById(android.R.id.content), "Failed to add to waitlist", Snackbar.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == GeoService.LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (pendingJoinAfterPermission) {
+                    pendingJoinAfterPermission = false;
+                    // Now that we have permission, actually grab location and join
+                    startJoinWithLocation();
+                }
+            } else {
+                // Permission denied
+                if (pendingJoinAfterPermission) {
+                    pendingJoinAfterPermission = false;
+                }
+                Snackbar.make(findViewById(android.R.id.content),
+                        "Location permission is required for this event's geolocation feature.",
+                        Snackbar.LENGTH_SHORT).show();
+            }
+        }
+    }
+
 
     @Override
     protected void onDestroy() {
@@ -198,7 +334,15 @@ public class EntrantEventDetails extends BaseTopBottomActivity {
     private static int nz(@Nullable Integer i) {
         return i == null ? 0 : i;
     }
-    
+
+    void setupQrButton(Event event) {
+        btnViewQrCode.setOnClickListener(v -> {
+            QrCodeFragment qrFragment =
+                    QrCodeFragment.newInstance(eventId, event.getTitle());
+            qrFragment.show(getSupportFragmentManager(), "QrCodeFragment");
+        });
+    }
+
     private void bindEvent(Event e) {
         // title / summary
         setTextOrHide(tvTitle,  safe(e.getTitle(), "Event"));
@@ -252,7 +396,7 @@ public class EntrantEventDetails extends BaseTopBottomActivity {
                         .into(heroImage);
             } else {
                 // Handle error
-                Toast.makeText(this, "Failed to load event poster", Toast.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(android.R.id.content), "Failed to load event poster", Snackbar.LENGTH_SHORT).show();
                 Log.e("EntrantEventDetails", "Error loading event poster", urlTask.getException());
             }
         });

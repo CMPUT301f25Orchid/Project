@@ -9,6 +9,7 @@ permissions:
 
 jobs:
   build-and-commit-uml:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
 
     steps:
@@ -104,6 +105,9 @@ jobs:
           git add FairDraw/UMLDiagram.puml
           if ! git diff --staged --quiet; then
             git commit -m "docs: Auto-generate UML diagram [ci skip]"
+            # Rebase on latest main in case another workflow pushed first
+            # Rebase on latest main; temporarily stash any other local changes
+            git -c rebase.autoStash=true pull --rebase origin main
             git push
           else
             echo "No changes to UML diagram. Skipping commit."

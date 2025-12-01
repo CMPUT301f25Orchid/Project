@@ -41,7 +41,7 @@ public class EntrantTest {
         prefs.put("email", true);
         e.setNotificationPrefs(prefs);
         assertTrue(e.getNotificationPrefs().containsKey("email"));
-        assertTrue(e.getNotificationPrefs().get("email"));
+        assertEquals(Boolean.TRUE, e.getNotificationPrefs().get("email"));
 
         EntrantNotification n = new EntrantNotification();
         e.addNotification(n);
@@ -54,5 +54,13 @@ public class EntrantTest {
         e.setNotifications(newNotifs);
         assertSame(newNotifs, e.getNotifications());
     }
-}
 
+    @Test
+    public void setDeviceId_allowsNull_and_updates() {
+        Entrant e = new Entrant();
+        e.setDeviceId("d2");
+        assertEquals("d2", e.getDeviceId());
+        e.setDeviceId(null);
+        assertNull(e.getDeviceId());
+    }
+}
