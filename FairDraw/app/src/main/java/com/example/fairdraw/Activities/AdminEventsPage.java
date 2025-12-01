@@ -1,16 +1,18 @@
 package com.example.fairdraw.Activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.text.Editable;
+import android.text.TextWatcher;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -18,15 +20,16 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.fairdraw.DBs.EventDB;
+import com.example.fairdraw.DBs.UserDB;
 import com.example.fairdraw.Models.Event;
+import com.example.fairdraw.Models.User;
 import com.example.fairdraw.Others.BarType;
-import com.example.fairdraw.Others.EventState;
 import com.example.fairdraw.R;
 import com.example.fairdraw.ServiceUtility.FirebaseImageStorageService;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.ListenerRegistration;
 
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -34,6 +37,8 @@ public class AdminEventsPage extends BaseTopBottomActivity {
     private LinearLayout eventListContainer;
     private ListenerRegistration eventListener;
     private List<Event> allEvents;  // store full list
+    private EditText searchBar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +59,10 @@ public class AdminEventsPage extends BaseTopBottomActivity {
             return insets;
         });
         eventListContainer = findViewById(R.id.admin_event_list_container);
+        searchBar = findViewById(R.id.admin_search_bar);
+
+        // setup search filtering
+        setupSearchBar();
 
         // Fetch all events from Firestore, listen for real-time updates and display them
         eventListener = EventDB.listenToEvents(events -> {
@@ -66,6 +75,21 @@ public class AdminEventsPage extends BaseTopBottomActivity {
         });
 
     }
+
+    // Remove listener when activity is destroyed to avoid leaks
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (eventListener != null) {
+            try {
+                eventListener.remove();
+            } catch (Exception e) {
+                Log.w("AdminEventsPage", "Failed to remove event listener", e);
+            }
+            eventListener = null;
+        }
+    }
+
     private void showNoEventsMessage() {
         eventListContainer.removeAllViews(); // Clear previous views
         TextView emptyView = new TextView(this);
@@ -103,7 +127,18 @@ public class AdminEventsPage extends BaseTopBottomActivity {
             // Set values
             titleView.setText(event.getTitle());
             locationView.setText(event.getLocation());
-            organizerNameView.setText(event.getOrganizer());
+            UserDB.getUserOrNull(event.getOrganizer(), new UserDB.GetUserCallback() {
+                @Override
+                public void onCallback(@Nullable User user, @Nullable Exception e) {
+                    if(user != null) {
+                        organizerNameView.setText(user.getName());
+                    }
+                    else {
+                        organizerNameView.setText("Unknown Organizer");
+                        Log.e("AdminEventsPage", "Failed to load organizer for event " + event.getUuid());
+                    }
+                }
+            });
             eventIdView.setText("id: " + event.getUuid());
 
             //Implementing Deleting the event by CLEO_SLAYS!!
@@ -122,6 +157,55 @@ public class AdminEventsPage extends BaseTopBottomActivity {
 
             // Add card to layout
             eventListContainer.addView(cardView);
+        }
+    }
+
+    // New helper: set up a TextWatcher on the search bar to filter events
+    private void setupSearchBar() {
+        if (searchBar == null) return;
+        searchBar.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String query = s == null ? "" : s.toString();
+                filterAndDisplayEvents(query);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+    }
+
+    // Filter the cached `allEvents` by the query and display results. Matches title, location, or uuid.
+    private void filterAndDisplayEvents(String query) {
+        if (allEvents == null) {
+            // If we haven't loaded events yet, nothing to filter
+            return;
+        }
+        String input = query == null ? "" : query.trim().toLowerCase(Locale.ROOT);
+        if (input.isEmpty()) {
+            displayEvents(allEvents);
+            return;
+        }
+
+        List<Event> filtered = new ArrayList<>();
+        for (Event event : allEvents) {
+            if (event == null) continue;
+            String title = event.getTitle() == null ? "" : event.getTitle().toLowerCase(Locale.ROOT);
+            String location = event.getLocation() == null ? "" : event.getLocation().toLowerCase(Locale.ROOT);
+            String id = event.getUuid() == null ? "" : event.getUuid().toLowerCase(Locale.ROOT);
+
+            if (title.contains(input) || location.contains(input) || id.contains(input)) {
+                filtered.add(event);
+            }
+        }
+
+        if (filtered.isEmpty()) {
+            showNoEventsMessage();
+        } else {
+            displayEvents(filtered);
         }
     }
 }
