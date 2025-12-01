@@ -25,6 +25,16 @@ public class UserDB {
          */
         void onCallback(@Nullable User user, @Nullable Exception e);
     }
+    /**
+     * Callback interface for when multiple Users are fetched from the database.
+     */
+    public interface GetUsersCallback {
+        /**
+         * Called when the users retrieval operation is complete.
+         * @param users The retrieved list of User objects, or null if an error occurred.
+         */
+        void onCallback(@Nullable java.util.List<User> users);
+    }
 
     /**
      * Callback interface for checking if a user exists in the database.
@@ -150,29 +160,20 @@ public class UserDB {
                 .addOnSuccessListener(v -> cb.onCallback(true, null))
                 .addOnFailureListener(e -> cb.onCallback(false, e));
     }
+    public static ListenerRegistration listenToUsers(GetUsersCallback callback) {
+        return getUserCollection().addSnapshotListener((queryDocumentSnapshots, e) -> {
+            if (e != null) {
+                callback.onCallback(null);
+                return;
+            }
 
-//    /**
-//     * Generic callback for operations that succeed or fail without returning data.
-//     */
-//    public interface GeneralCallback {
-//        /**
-//         * Called when the operation is complete.
-//         * @param ok True if the operation was successful, false otherwise.
-//         * @param e The exception if an error occurred, or null otherwise.
-//         */
-//        void onCallback(boolean ok, @Nullable Exception e);
-//    }
-//
-//    /**
-//     * Deletes a user's role document from a specified collection (e.g., "Organisers", "Entrants").
-//     * @param collectionName The name of the role collection.
-//     * @param userId The ID of the user document to delete from that collection.
-//     * @param cb The callback to be invoked with the result.
-//     */
-//    public static void deleteRole(String collectionName, String userId, GeneralCallback cb) {
-//        FirebaseFirestore.getInstance().collection(collectionName).document(userId)
-//                .delete()
-//                .addOnSuccessListener(v -> cb.onCallback(true, null))
-//                .addOnFailureListener(e -> cb.onCallback(false, e));
-//    } DON'T FORGET TO MOVE GENERAL CALLBACK UP, CLOSER TO THE OTHER CALLBACK METHODS
+            if (queryDocumentSnapshots != null) {
+                java.util.List<User> users = queryDocumentSnapshots.toObjects(User.class);
+                callback.onCallback(users);
+            } else {
+                callback.onCallback(null);
+            }
+        });
+    }
+
 }

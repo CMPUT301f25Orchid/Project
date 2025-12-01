@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="14dp"
+    app:cardCornerRadius="14dp"
+    app:cardElevation="4dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+
+        <ImageView
+            android:id="@+id/user_profile_icon"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:src="@drawable/admin_profile_icon"
+            android:background="@drawable/profile_background"
+            android:padding="12dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:scaleType="centerInside"/>
+
+
+        <ImageButton
+            android:id="@+id/delete_user_button"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:background="@drawable/delete_icon"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="6dp"
+            android:padding="4dp"
+            android:layout_alignParentTop="true"/>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/user_profile_icon"
+            android:layout_toStartOf="@id/delete_user_button"
+            android:orientation="vertical"
+            android:layout_marginStart="12dp">
+
+
+            <TextView
+                android:id="@+id/user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Name"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#000000" />
+
+
+            <TextView
+                android:id="@+id/user_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Email"
+                android:textSize="15sp"
+                android:textColor="#333333"
+                android:layout_marginTop="2dp"/>
+
+            <TextView
+                android:id="@+id/user_profile_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="User Id: user 01-23-456"
+                android:textSize="15sp"
+                android:textColor="#777777"
+                android:layout_marginTop="6dp"/>
+
+            <TextView
+                android:id="@+id/date_joined"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="User since 15/08/2018"
+                android:textSize="15sp"
+                android:textColor="#777777"
+                android:layout_marginTop="2dp"/>
+
+        </LinearLayout>
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>
