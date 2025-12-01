@@ -20,7 +20,7 @@
             android:layout_height="100dp">
 
             <ImageView
-                android:id="@+id/eventpicture"
+                android:id="@+id/event_picture"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
