@@ -294,11 +294,23 @@ public class OrganizerManageEvent extends BaseTopBottomActivity {
                 EntrantNotification notification = new EntrantNotification(NotificationType.OTHER, eventId1, "No title");
                 notification.message = message;
                 for (String entrantId : targetEntrants) {
-                    EntrantDB.pushNotificationToUser(entrantId, notification, (ok, ex) -> {
-                        if (ok) {
-                            Log.d("OrganizerManageEvent", "Custom notification sent to entrant ID: " + entrantId);
+                    // Fetch the user's data to check their preference
+                    UserDB.getUserOrNull(entrantId, (user, userEx) -> {
+                        if (user != null && user.isNotificationsEnabled()) {
+                            // 2. User exists and has notifications ENABLED, so send it.
+                            EntrantDB.pushNotificationToUser(entrantId, notification, (ok, ex) -> {
+                                if (ok) {
+                                    Log.d("OrganizerManageEvent", "Custom notification sent to entrant ID: " + entrantId);
+                                } else {
+                                    Log.e("OrganizerManageEvent", "Failed to send custom notification to entrant ID: " + entrantId, ex);
+                                }
+                            });
+                        } else if (user == null) {
+                            // Log if we couldn't find the user document
+                            Log.w("OrganizerManageEvent", "Could not find user " + entrantId + " to check notification preferences.");
                         } else {
-                            Log.d("OrganizerManageEvent", "Failed to send custom notification to entrant ID: " + entrantId + " | " + (ex != null ? ex.getMessage() : "Unknown error"));
+                            // 3. User was found but has notifications DISABLED, so we skip them.
+                            Log.d("OrganizerManageEvent", "Skipping custom notification for user " + entrantId + " (notifications disabled).");
                         }
                     });
                 }
