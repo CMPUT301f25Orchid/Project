@@ -25,6 +25,10 @@
             android:name=".Activities.AdminPicturesPage"
             android:exported="false" />
 
+        <activity
+            android:name=".Activities.AdminManageProfiles"
+            android:exported="false" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDSa13q7kBXf_HRLjal_m3fm3OKyohl5hQ" />
