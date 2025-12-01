@@ -48,7 +48,11 @@ public class FilterUtils {
      * @return true if the event matches the status filter
      */
     public static boolean matchesStatus(Event event, String status) {
-        if (event == null || status == null || "All".equalsIgnoreCase(status)) {
+        if (event == null) {
+            return false;
+        }
+        
+        if (status == null || "All".equalsIgnoreCase(status)) {
             return true;
         }
         
