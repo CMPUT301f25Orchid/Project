@@ -185,6 +185,7 @@ class com.example.fairdraw.ServiceUtility.FirebaseImageStorageService {
 + deleteEventPoster(arg0 : String) : Task<Void>
 + eventPosterExists(arg0 : String) : Task<Boolean>
 + listAllEventPosters() : Task<List<EventPosterInfo>>
++ listenToEventPosters(arg0 : EventPostersCallback) : void
 + uploadEventQr(arg0 : String, arg1 : Bitmap, arg2 : int, arg3 : int) : Task<Uri>
 + uploadEventQr(arg0 : String, arg1 : Uri) : Task<Uri>
 + getEventQrDownloadUrl(arg0 : String) : Task<Uri>
@@ -195,6 +196,8 @@ class com.example.fairdraw.ServiceUtility.FirebaseImageStorageService {
 class com.example.fairdraw.ServiceUtility.FirebaseImageStorageService$EventPosterInfo {
 + eventId : String
 + downloadUri : Uri
+}
+interface com.example.fairdraw.ServiceUtility.FirebaseImageStorageService$EventPostersCallback {
 }
 class com.example.fairdraw.Fragments.DecisionFragment {
 + {static} newInstance(arg0 : EntrantNotification) : DecisionFragment
@@ -245,6 +248,8 @@ class com.example.fairdraw.Others.EntrantNotification {
 }
 class com.example.fairdraw.Activities.AdminPicturesPage {
 # onCreate(arg0 : Bundle) : void
+# onStart() : void
+# onStop() : void
 + displayPictures(arg0 : List<FirebaseImageStorageService.EventPosterInfo>) : void
 }
 class com.example.fairdraw.Activities.EditEventPage {
@@ -507,6 +512,7 @@ java.io.Serializable <|.. com.example.fairdraw.Models.User
 androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.ProfileActivity
 com.example.fairdraw.ServiceUtility.GeoService +.. com.example.fairdraw.ServiceUtility.GeoService$GeoCallback
 com.example.fairdraw.ServiceUtility.FirebaseImageStorageService +.. com.example.fairdraw.ServiceUtility.FirebaseImageStorageService$EventPosterInfo
+com.example.fairdraw.ServiceUtility.FirebaseImageStorageService +.. com.example.fairdraw.ServiceUtility.FirebaseImageStorageService$EventPostersCallback
 androidx.fragment.app.DialogFragment <|-- com.example.fairdraw.Fragments.DecisionFragment
 com.example.fairdraw.Adapters.Adapter <|-- com.example.fairdraw.Adapters.EntrantListArrayAdapter
 com.example.fairdraw.Adapters.EntrantListArrayAdapter +.. com.example.fairdraw.Adapters.EntrantListArrayAdapter$EntrantViewHolder
