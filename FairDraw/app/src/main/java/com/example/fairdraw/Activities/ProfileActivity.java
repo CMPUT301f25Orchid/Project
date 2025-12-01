@@ -7,7 +7,9 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.fairdraw.DBs.EntrantDB;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.activity.EdgeToEdge;
@@ -163,46 +165,39 @@ public class ProfileActivity extends AppCompatActivity {
 
 //    /**
 //     * Performs a cascading delete of user data.
-//     * 1. Deletes events organized by the user.
-//     * 2. Deletes the user's roles (Organiser, Entrant, etc.).
-//     * 3. Deletes the main user document.
-//     * 4. Navigates back to the sign-up screen.
-//     * 4. So rather we do this, delete them as an entrant, delete them as an organizer(Should delete events) , and delete them as admin. Then go back to home screens
+//     * 1. Deletes user from Entrant, Organiser, and Admin (if necessary) collection.
+//     * Deleting the user as an organizer makes changes to linked documents as necessary
+//     * 2. Deletes the main user document.
+//     * 3. Navigates back to the sign-up screen.
 //     * @param deviceId The ID of the user to delete.
 //     */
 //    private void performCascadingDelete(String deviceId) {
-//        // 1: Delete all events organized by this user.
-//        // NOTE: ANDREW WORKING ON THIS METHOD. WHEN DONE CHANGE AS NECESSARY
-//        // PERHAPS CHANGE CASCADE to instead have organizerdb.deleteorganizer etc instead of this event thing
-//        //SCROLL UP ON GEMINI TO SEE THE SUGGESTED METHOD THAT DELETES ALL EVENTS
-//        EventDB.deleteEventsByOrganizer(deviceId, (ok, e) -> {
-//            if (ok) {
-//                Log.d(TAG, "Successfully deleted events for user: " + deviceId);
-//                // 2: Now delete the user's role documents. We can do this in parallel.
-//                // NOTE: ADD/UNCOMMENT DELETE ROLE METHODS IN USERDB
-//                UserDB.deleteRole("Organisers", deviceId, (ok1, e1) -> {});
-//                UserDB.deleteRole("Entrants", deviceId, (ok2, e2) -> {});
-//                UserDB.deleteRole("Admins", deviceId, (ok3, e3) -> {}); // If you have an Admins collection
+//        // 1: Delete user from Entrant, Organiser and Admin collections.
+//        EntrantDB.deleteEntrant(deviceId,);
 //
-//                // 3: After a brief delay to allow role deletion to start, delete the main user document.
-//                UserDB.deleteUser(deviceId, (finalOk, finalE) -> {
-//                    if (finalOk) {
-//                        Log.d(TAG, "User account deleted successfully.");
-//                        Toast.makeText(ProfileActivity.this, "Account deleted.", Toast.LENGTH_SHORT).show();
+//        // 2: Now delete the user's role documents. We can do this in parallel.
+//        // NOTE: ADD/UNCOMMENT DELETE ROLE METHODS IN USERDB
+//        UserDB.deleteRole("Organisers", deviceId, (ok1, e1) -> {});
+//        UserDB.deleteRole("Entrants", deviceId, (ok2, e2) -> {});
+//        UserDB.deleteRole("Admins", deviceId, (ok3, e3) -> {}); // If you have an Admins collection
 //
-//                        // Step 4: Navigate back to the main sign-up/entry activity
-//                        Intent intent = new Intent(ProfileActivity.this, SignUpActivity.class);
-//                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                        startActivity(intent);
-//                        finish();
-//                    } else {
-//                        handleDeleteError(finalE);
-//                    }
-//                });
+//        // 3: After a brief delay to allow role deletion to start, delete the main user document.
+//        UserDB.deleteUser(deviceId, (finalOk, finalE) -> {
+//            if (finalOk) {
+//                Log.d(TAG, "User account deleted successfully.");
+//                Toast.makeText(ProfileActivity.this, "Account deleted.", Toast.LENGTH_SHORT).show();
+//
+//                // Step 4: Navigate back to the main sign-up/entry activity
+//                Intent intent = new Intent(ProfileActivity.this, SignUpActivity.class);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                startActivity(intent);
+//                finish();
 //            } else {
-//                handleDeleteError(e);
+//                handleDeleteError(finalE);
 //            }
-//        }); //DON'T FORGET TO ADD IT IN EDIT PROFILE ASW
+//        });
+//
+//         //DON'T FORGET TO ADD IT IN EDIT PROFILE ASW
 //    }
 
     private void handleDeleteError(Exception e) {
