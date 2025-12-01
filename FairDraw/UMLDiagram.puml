@@ -286,6 +286,7 @@ class com.example.fairdraw.Activities.AdminNotificationLogActivity$LogAdapter$Lo
 }
 class com.example.fairdraw.Activities.AdminEventsPage {
 # onCreate(arg0 : Bundle) : void
+# onDestroy() : void
 }
 class com.example.fairdraw.Others.AdminNotificationLog {
 + setTimestamp(arg0 : Date) : void
