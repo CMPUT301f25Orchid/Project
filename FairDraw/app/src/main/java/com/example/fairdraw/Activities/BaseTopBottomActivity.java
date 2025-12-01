@@ -43,7 +43,8 @@ public class BaseTopBottomActivity extends AppCompatActivity {
 
             events.setOnClickListener(v -> {
                 // Send to EntrantEventsActivity
-                // TODO
+                Intent intent = new Intent(this, EntrantMyEventsActivity.class);
+                startActivity(intent);
             });
 
             scan.setOnClickListener(v -> {
