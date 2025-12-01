@@ -21,9 +21,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FairDraw">
+        <activity
+            android:name=".Activities.AdminPicturesPage"
+            android:exported="false" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDSa13q7kBXf_HRLjal_m3fm3OKyohl5hQ" />
+
         <activity
             android:name=".Activities.OrganizerWaitListMapActivity"
             android:exported="false" />
@@ -91,15 +96,6 @@
         <activity
             android:name=".Activities.AdminNotificationLogActivity"
             android:exported="true" />
-
-
-
     </application>
-
-
-
-
-
-
 
 </manifest>
