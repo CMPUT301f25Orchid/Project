@@ -180,12 +180,17 @@ class com.example.fairdraw.ServiceUtility.FirebaseImageStorageService {
 + getEventPosterBytes(arg0 : String, arg1 : long) : Task<byte[]>
 + deleteEventPoster(arg0 : String) : Task<Void>
 + eventPosterExists(arg0 : String) : Task<Boolean>
++ listAllEventPosters() : Task<List<EventPosterInfo>>
 + uploadEventQr(arg0 : String, arg1 : Bitmap, arg2 : int, arg3 : int) : Task<Uri>
 + uploadEventQr(arg0 : String, arg1 : Uri) : Task<Uri>
 + getEventQrDownloadUrl(arg0 : String) : Task<Uri>
 + getEventQrBytes(arg0 : String, arg1 : long) : Task<byte[]>
 + deleteEventQr(arg0 : String) : Task<Void>
 + eventQrExists(arg0 : String) : Task<Boolean>
+}
+class com.example.fairdraw.ServiceUtility.FirebaseImageStorageService$EventPosterInfo {
++ eventId : String
++ downloadUri : Uri
 }
 class com.example.fairdraw.Fragments.DecisionFragment {
 + {static} newInstance(arg0 : EntrantNotification) : DecisionFragment
@@ -485,6 +490,7 @@ com.example.fairdraw.Models.Serializable <|.. com.example.fairdraw.Models.Event$
 java.io.Serializable <|.. com.example.fairdraw.Models.User
 androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.ProfileActivity
 com.example.fairdraw.ServiceUtility.GeoService +.. com.example.fairdraw.ServiceUtility.GeoService$GeoCallback
+com.example.fairdraw.ServiceUtility.FirebaseImageStorageService +.. com.example.fairdraw.ServiceUtility.FirebaseImageStorageService$EventPosterInfo
 androidx.fragment.app.DialogFragment <|-- com.example.fairdraw.Fragments.DecisionFragment
 com.example.fairdraw.Adapters.Adapter <|-- com.example.fairdraw.Adapters.EntrantListArrayAdapter
 com.example.fairdraw.Adapters.EntrantListArrayAdapter +.. com.example.fairdraw.Adapters.EntrantListArrayAdapter$EntrantViewHolder
