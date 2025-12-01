@@ -267,6 +267,9 @@ class com.example.fairdraw.Activities.AdminNotificationLogActivity$LogAdapter {
 }
 class com.example.fairdraw.Activities.AdminNotificationLogActivity$LogAdapter$LogViewHolder {
 }
+class com.example.fairdraw.Activities.AdminEventsPage {
+# onCreate(arg0 : Bundle) : void
+}
 class com.example.fairdraw.Others.AdminNotificationLog {
 + setTimestamp(arg0 : Date) : void
 + getEventId() : String
@@ -279,6 +282,14 @@ class com.example.fairdraw.Others.AdminNotificationLog {
 class com.example.fairdraw.Models.Admin {
 + getDeviceId() : String
 + setDeviceId(arg0 : String) : void
+}
+class com.example.fairdraw.Others.EntrantEventStatus {
++ {static} String REGISTERED
++ {static} String INVITED
++ {static} String SELECTED
++ {static} String NOT_SELECTED
++ {static} String CANCELLED
++ {static} String CHECKED_IN
 }
 class com.example.fairdraw.Activities.EntrantScan {
 # onCreate(arg0 : Bundle) : void
@@ -474,6 +485,7 @@ com.example.fairdraw.Activities.AdminNotificationLogActivity +.. com.example.fai
 com.example.fairdraw.Activities.Adapter <|-- com.example.fairdraw.Activities.AdminNotificationLogActivity$LogAdapter
 com.example.fairdraw.Activities.AdminNotificationLogActivity$LogAdapter +.. com.example.fairdraw.Activities.AdminNotificationLogActivity$LogAdapter$LogViewHolder
 com.example.fairdraw.Activities.ViewHolder <|-- com.example.fairdraw.Activities.AdminNotificationLogActivity$LogAdapter$LogViewHolder
+com.example.fairdraw.Activities.BaseTopBottomActivity <|-- com.example.fairdraw.Activities.AdminEventsPage
 java.io.Serializable <|.. com.example.fairdraw.Models.Admin
 com.example.fairdraw.Activities.BaseTopBottomActivity <|-- com.example.fairdraw.Activities.EntrantScan
 com.example.fairdraw.Activities.BaseTopBottomActivity <|-- com.example.fairdraw.Activities.EntrantNotificationsActivity

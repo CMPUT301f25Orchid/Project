@@ -205,14 +205,17 @@ public class CreateEventPage extends BaseTopBottomActivity {
                         Integer limit = Integer.parseInt(eventLimit.getText().toString());
                         event.setWaitingListLimit(limit);
                     }
-                    if (bannerPhoto != null){
-                        FirebaseImageStorageService storageService = new FirebaseImageStorageService();
-                        storageService.uploadEventPoster(event.getUuid(), bannerPhoto).addOnSuccessListener(uri -> {
-                            Log.d("CreateEventPage", "Banner photo uploaded for event: " + event.getUuid());
-                        }).addOnFailureListener(e -> {
-                            Log.e("CreateEventPage", "Error uploading banner photo for event: " + event.getUuid(), e);
-                        });
+                    if (bannerPhoto == null){
+                        // Use default banner image if none uploaded
+                        bannerPhoto = Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.default_event_banner);
                     }
+
+                    FirebaseImageStorageService storageService = new FirebaseImageStorageService();
+                    storageService.uploadEventPoster(event.getUuid(), bannerPhoto).addOnSuccessListener(uri -> {
+                        Log.d("CreateEventPage", "Banner photo uploaded for event: " + event.getUuid());
+                    }).addOnFailureListener(e -> {
+                        Log.e("CreateEventPage", "Error uploading banner photo for event: " + event.getUuid(), e);
+                    });
 
                     //Make QR code using DeepLinkUtil
                     Bundle extras = new Bundle();
@@ -222,7 +225,6 @@ public class CreateEventPage extends BaseTopBottomActivity {
                     try {
                         qr = QrUtil.generate(deepLinkUri.toString(), 800);
                         // Save QR code to Firebase Storage
-                        FirebaseImageStorageService storageService = new FirebaseImageStorageService();
                         storageService.uploadEventQr(event.getUuid(), qr, 90, 1000000).addOnSuccessListener(uri -> {
                             Log.d("CreateEventPage", "QR code uploaded for event: " + event.getUuid());
                         }).addOnFailureListener(e -> {
