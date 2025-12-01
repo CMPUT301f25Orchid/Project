@@ -96,6 +96,11 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color">
 <div class="block">Simple DTO for mapping an event ID to its poster download Uri.</div>
 </div>
+<div class="col-first odd-row-color"><code>static interface&nbsp;</code></div>
+<div class="col-second odd-row-color"><code><a href="FirebaseImageStorageService.EventPostersCallback.html" class="type-name-link" title="interface in com.example.fairdraw.ServiceUtility">FirebaseImageStorageService.EventPostersCallback</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Callback interface for receiving event poster list updates.</div>
+</div>
 </div>
 </section>
 </li>
@@ -193,46 +198,51 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Lists all event posters currently stored under the EVENTS_DIR.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.google.android.gms.tasks.Task&lt;<a href="https://developer.android.com/reference/android/net/Uri.html" title="class or interface in android.net" class="external-link">Uri</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#uploadEntrantProfile(java.lang.String,android.graphics.Bitmap,int,int)" class="member-name-link">uploadEntrantProfile</a><wbr>(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;entrantId,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#listenToEventPosters(com.example.fairdraw.ServiceUtility.FirebaseImageStorageService.EventPostersCallback)" class="member-name-link">listenToEventPosters</a><wbr>(<a href="FirebaseImageStorageService.EventPostersCallback.html" title="interface in com.example.fairdraw.ServiceUtility">FirebaseImageStorageService.EventPostersCallback</a>&nbsp;callback)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Fetches all event posters and delivers them via a callback.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.google.android.gms.tasks.Task&lt;<a href="https://developer.android.com/reference/android/net/Uri.html" title="class or interface in android.net" class="external-link">Uri</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#uploadEntrantProfile(java.lang.String,android.graphics.Bitmap,int,int)" class="member-name-link">uploadEntrantProfile</a><wbr>(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;entrantId,
  <a href="https://developer.android.com/reference/android/graphics/Bitmap.html" title="class or interface in android.graphics" class="external-link">Bitmap</a>&nbsp;bitmap,
  int&nbsp;jpegQuality,
  int&nbsp;maxBytes)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Uploads an entrant's profile picture from a Bitmap.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.google.android.gms.tasks.Task&lt;<a href="https://developer.android.com/reference/android/net/Uri.html" title="class or interface in android.net" class="external-link">Uri</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#uploadEntrantProfile(java.lang.String,android.net.Uri)" class="member-name-link">uploadEntrantProfile</a><wbr>(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;entrantId,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.google.android.gms.tasks.Task&lt;<a href="https://developer.android.com/reference/android/net/Uri.html" title="class or interface in android.net" class="external-link">Uri</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#uploadEntrantProfile(java.lang.String,android.net.Uri)" class="member-name-link">uploadEntrantProfile</a><wbr>(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;entrantId,
  <a href="https://developer.android.com/reference/android/net/Uri.html" title="class or interface in android.net" class="external-link">Uri</a>&nbsp;fileUri)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Uploads an entrant's profile picture from a file URI.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.google.android.gms.tasks.Task&lt;<a href="https://developer.android.com/reference/android/net/Uri.html" title="class or interface in android.net" class="external-link">Uri</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#uploadEventPoster(java.lang.String,android.graphics.Bitmap,int,int)" class="member-name-link">uploadEventPoster</a><wbr>(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.google.android.gms.tasks.Task&lt;<a href="https://developer.android.com/reference/android/net/Uri.html" title="class or interface in android.net" class="external-link">Uri</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#uploadEventPoster(java.lang.String,android.graphics.Bitmap,int,int)" class="member-name-link">uploadEventPoster</a><wbr>(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId,
  <a href="https://developer.android.com/reference/android/graphics/Bitmap.html" title="class or interface in android.graphics" class="external-link">Bitmap</a>&nbsp;bitmap,
  int&nbsp;jpegQuality,
  int&nbsp;maxBytes)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Uploads an event poster from a Bitmap.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.google.android.gms.tasks.Task&lt;<a href="https://developer.android.com/reference/android/net/Uri.html" title="class or interface in android.net" class="external-link">Uri</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#uploadEventPoster(java.lang.String,android.net.Uri)" class="member-name-link">uploadEventPoster</a><wbr>(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.google.android.gms.tasks.Task&lt;<a href="https://developer.android.com/reference/android/net/Uri.html" title="class or interface in android.net" class="external-link">Uri</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#uploadEventPoster(java.lang.String,android.net.Uri)" class="member-name-link">uploadEventPoster</a><wbr>(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId,
  <a href="https://developer.android.com/reference/android/net/Uri.html" title="class or interface in android.net" class="external-link">Uri</a>&nbsp;fileUri)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Uploads an event poster from a file URI.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.google.android.gms.tasks.Task&lt;<a href="https://developer.android.com/reference/android/net/Uri.html" title="class or interface in android.net" class="external-link">Uri</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#uploadEventQr(java.lang.String,android.graphics.Bitmap,int,int)" class="member-name-link">uploadEventQr</a><wbr>(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.google.android.gms.tasks.Task&lt;<a href="https://developer.android.com/reference/android/net/Uri.html" title="class or interface in android.net" class="external-link">Uri</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#uploadEventQr(java.lang.String,android.graphics.Bitmap,int,int)" class="member-name-link">uploadEventQr</a><wbr>(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId,
  <a href="https://developer.android.com/reference/android/graphics/Bitmap.html" title="class or interface in android.graphics" class="external-link">Bitmap</a>&nbsp;bitmap,
  int&nbsp;jpegQuality,
  int&nbsp;maxBytes)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Uploads an event QR image from a Bitmap.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.google.android.gms.tasks.Task&lt;<a href="https://developer.android.com/reference/android/net/Uri.html" title="class or interface in android.net" class="external-link">Uri</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#uploadEventQr(java.lang.String,android.net.Uri)" class="member-name-link">uploadEventQr</a><wbr>(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.google.android.gms.tasks.Task&lt;<a href="https://developer.android.com/reference/android/net/Uri.html" title="class or interface in android.net" class="external-link">Uri</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#uploadEventQr(java.lang.String,android.net.Uri)" class="member-name-link">uploadEventQr</a><wbr>(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId,
  <a href="https://developer.android.com/reference/android/net/Uri.html" title="class or interface in android.net" class="external-link">Uri</a>&nbsp;fileUri)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Uploads an event QR image from a file Uri.</div>
 </div>
 </div>
@@ -476,6 +486,24 @@ loadScripts(document, 'script');</script>
 <dt>Returns:</dt>
 <dd>A Task that resolves to a list of EventPosterInfo objects.
          Only events that actually have a poster are included.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="listenToEventPosters(com.example.fairdraw.ServiceUtility.FirebaseImageStorageService.EventPostersCallback)">
+<h3>listenToEventPosters</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">listenToEventPosters</span><wbr><span class="parameters">(@NonNull
+ <a href="FirebaseImageStorageService.EventPostersCallback.html" title="interface in com.example.fairdraw.ServiceUtility">FirebaseImageStorageService.EventPostersCallback</a>&nbsp;callback)</span></div>
+<div class="block">Fetches all event posters and delivers them via a callback.
+ <p>
+ This method provides a callback-based interface for fetching event posters,
+ making it easier to use in lifecycle-aware components. Unlike Firestore,
+ Firebase Storage does not support real-time listeners, so this performs
+ a one-time fetch when called.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>callback</code> - The callback to receive the list of event posters.
+                 Called with the list on success, or null on failure.</dd>
 </dl>
 </section>
 </li>

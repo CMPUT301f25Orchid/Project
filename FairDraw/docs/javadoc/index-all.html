@@ -572,6 +572,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Simple DTO for mapping an event ID to its poster download Uri.</div>
 </dd>
+<dt><a href="com/example/fairdraw/ServiceUtility/FirebaseImageStorageService.EventPostersCallback.html" class="type-name-link" title="interface in com.example.fairdraw.ServiceUtility">FirebaseImageStorageService.EventPostersCallback</a> - Interface in <a href="com/example/fairdraw/ServiceUtility/package-summary.html">com.example.fairdraw.ServiceUtility</a></dt>
+<dd>
+<div class="block">Callback interface for receiving event poster list updates.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:G">G</h2>
 <dl class="index">
@@ -945,6 +949,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Attach a real-time snapshot listener for a single event document.</div>
 </dd>
+<dt><a href="com/example/fairdraw/ServiceUtility/FirebaseImageStorageService.html#listenToEventPosters(com.example.fairdraw.ServiceUtility.FirebaseImageStorageService.EventPostersCallback)" class="member-name-link">listenToEventPosters(FirebaseImageStorageService.EventPostersCallback)</a> - Method in class com.example.fairdraw.ServiceUtility.<a href="com/example/fairdraw/ServiceUtility/FirebaseImageStorageService.html" title="class in com.example.fairdraw.ServiceUtility">FirebaseImageStorageService</a></dt>
+<dd>
+<div class="block">Fetches all event posters and delivers them via a callback.</div>
+</dd>
 <dt><a href="com/example/fairdraw/DBs/EventDB.html#listenToEvents(com.example.fairdraw.DBs.EventDB.GetEventsCallback)" class="member-name-link">listenToEvents(EventDB.GetEventsCallback)</a> - Static method in class com.example.fairdraw.DBs.<a href="com/example/fairdraw/DBs/EventDB.html" title="class in com.example.fairdraw.DBs">EventDB</a></dt>
 <dd>
 <div class="block">Attaches a snapshot listener to the events collection for real-time updates.</div>
@@ -1136,6 +1144,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Invoked when the events list read completes.</div>
 </dd>
+<dt><a href="com/example/fairdraw/ServiceUtility/FirebaseImageStorageService.EventPostersCallback.html#onCallback(java.util.List)" class="member-name-link">onCallback(List&lt;FirebaseImageStorageService.EventPosterInfo&gt;)</a> - Method in interface com.example.fairdraw.ServiceUtility.<a href="com/example/fairdraw/ServiceUtility/FirebaseImageStorageService.EventPostersCallback.html" title="interface in com.example.fairdraw.ServiceUtility">FirebaseImageStorageService.EventPostersCallback</a></dt>
+<dd>
+<div class="block">Called when the list of event posters is retrieved.</div>
+</dd>
 <dt><a href="com/example/fairdraw/DBs/EntrantDB.NotificationsListener.html#onChanged(java.util.List)" class="member-name-link">onChanged(List&lt;EntrantNotification&gt;)</a> - Method in interface com.example.fairdraw.DBs.<a href="com/example/fairdraw/DBs/EntrantDB.NotificationsListener.html" title="interface in com.example.fairdraw.DBs">EntrantDB.NotificationsListener</a></dt>
 <dd>
 <div class="block">Invoked when notifications change for the monitored entrant.</div>
@@ -1276,6 +1288,11 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Called when the user taps the Send button.</div>
 </dd>
+<dt><a href="com/example/fairdraw/Activities/AdminPicturesPage.html#onStart()" class="member-name-link">onStart()</a> - Method in class com.example.fairdraw.Activities.<a href="com/example/fairdraw/Activities/AdminPicturesPage.html" title="class in com.example.fairdraw.Activities">AdminPicturesPage</a></dt>
+<dd>
+<div class="block">Attach the Firestore listeners in onStart() so that the UI updates in real-time
+ whenever events are added, removed, or changed.</div>
+</dd>
 <dt><a href="com/example/fairdraw/Activities/EntrantMyEventsActivity.html#onStart()" class="member-name-link">onStart()</a> - Method in class com.example.fairdraw.Activities.<a href="com/example/fairdraw/Activities/EntrantMyEventsActivity.html" title="class in com.example.fairdraw.Activities">EntrantMyEventsActivity</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/example/fairdraw/Activities/EntrantNotificationsActivity.html#onStart()" class="member-name-link">onStart()</a> - Method in class com.example.fairdraw.Activities.<a href="com/example/fairdraw/Activities/EntrantNotificationsActivity.html" title="class in com.example.fairdraw.Activities">EntrantNotificationsActivity</a></dt>
@@ -1283,6 +1300,11 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/example/fairdraw/Fragments/SendNotificationDialogFragment.html#onStart()" class="member-name-link">onStart()</a> - Method in class com.example.fairdraw.Fragments.<a href="com/example/fairdraw/Fragments/SendNotificationDialogFragment.html" title="class in com.example.fairdraw.Fragments">SendNotificationDialogFragment</a></dt>
 <dd>
 <div class="block">Apply dialog window sizing adjustments when the dialog becomes visible.</div>
+</dd>
+<dt><a href="com/example/fairdraw/Activities/AdminPicturesPage.html#onStop()" class="member-name-link">onStop()</a> - Method in class com.example.fairdraw.Activities.<a href="com/example/fairdraw/Activities/AdminPicturesPage.html" title="class in com.example.fairdraw.Activities">AdminPicturesPage</a></dt>
+<dd>
+<div class="block">Remove all Firestore listeners in onStop() to prevent memory leaks and
+ unnecessary background updates when the activity is no longer visible.</div>
 </dd>
 <dt><a href="com/example/fairdraw/Activities/EntrantMyEventsActivity.html#onStop()" class="member-name-link">onStop()</a> - Method in class com.example.fairdraw.Activities.<a href="com/example/fairdraw/Activities/EntrantMyEventsActivity.html" title="class in com.example.fairdraw.Activities">EntrantMyEventsActivity</a></dt>
 <dd>&nbsp;</dd>
