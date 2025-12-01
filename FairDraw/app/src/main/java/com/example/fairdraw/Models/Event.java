@@ -102,6 +102,9 @@ public class Event implements Serializable {
     // List of user IDs who declined their invitation or cancelled their attendance.
     private List<String> cancelledList;
 
+    // List of tags associated with this event (e.g. "Sports", "Music", "Education")
+    private List<String> tags;
+
     /**
      * Creates a new Event with the required fields. A UUID will be generated for the event.
      *
@@ -573,6 +576,28 @@ public class Event implements Serializable {
      */
     public void setCancelledList(List<String> cancelledList) {
         this.cancelledList = cancelledList;
+    }
+
+    /**
+     * Returns the list of tags associated with this event. Never returns null;
+     * if no tags are set, returns an empty list (lazy initialization).
+     *
+     * @return list of tag strings, never null
+     */
+    public List<String> getTags() {
+        if (tags == null) {
+            tags = new ArrayList<>();
+        }
+        return tags;
+    }
+
+    /**
+     * Sets the list of tags for this event. If null is passed, an empty list is stored.
+     *
+     * @param tags list of tag strings to set
+     */
+    public void setTags(List<String> tags) {
+        this.tags = (tags != null) ? tags : new ArrayList<>();
     }
 
     // --- New helper methods to support UI button state/text ---

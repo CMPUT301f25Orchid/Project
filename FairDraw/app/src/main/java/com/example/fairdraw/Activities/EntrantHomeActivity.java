@@ -21,6 +21,7 @@ import com.example.fairdraw.DBs.EventDB;
 import com.example.fairdraw.Fragments.FilterEventsDialogFragment;
 import com.example.fairdraw.Models.Event;
 import com.example.fairdraw.Others.EventState;
+import com.example.fairdraw.Others.FilterUtils;
 import com.example.fairdraw.Others.BarType;
 import com.example.fairdraw.R;
 import com.example.fairdraw.ServiceUtility.FirebaseImageStorageService;
@@ -29,7 +30,6 @@ import com.google.firebase.firestore.ListenerRegistration;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
-import java.util.Calendar;
 
 /**
  * EntrantHomeActivity displays the home screen for entrants, showing a list of events
@@ -46,7 +46,7 @@ public class EntrantHomeActivity extends BaseTopBottomActivity {
     // Store current filter state
     private String currentStatusFilter = "All";
     private String currentInterestFilter = "All";
-    private int currentAvailabilityFilter = -1;
+    private int currentAvailabilityFilter = 0;
 
 
     @Override
@@ -111,7 +111,7 @@ public class EntrantHomeActivity extends BaseTopBottomActivity {
                     // Reset filter state to default
                     currentStatusFilter = "All";
                     currentInterestFilter = "All";
-                    currentAvailabilityFilter = -1;
+                    currentAvailabilityFilter = 0;
                     if (allEvents != null) {
                         displayEvents(allEvents);
                     }
@@ -213,48 +213,20 @@ public class EntrantHomeActivity extends BaseTopBottomActivity {
         }
     }
 
+    /**
+     * Applies the given filters to the events list and updates the UI.
+     *
+     * @param status       the status filter ("All", "Open", "Closed", "Draft")
+     * @param interest     the interest/tag filter (case-insensitive exact match, or "All")
+     * @param availability the availability filter (0=All, 1=HasFreeSpots, 2=Full, 3=HasWaitingList)
+     */
     private void applyFilters(String status, String interest, int availability) {
         if (allEvents == null) return;
 
-        List<Event> filtered = new java.util.ArrayList<>(allEvents);
+        // Use FilterUtils for robust filtering
+        List<Event> filtered = FilterUtils.applyFilters(allEvents, status, interest, availability);
 
-        // ✅ Filter by status
-        if (!status.equals("All")) {
-            filtered.removeIf(event -> {
-                if (status.equals("Open")) {
-                    return event.getState() != EventState.PUBLISHED;
-                } else if (status.equals("Closed")) {
-                    return event.getState() != EventState.CLOSED;
-                }
-                return false;
-            });
-        }
-
-        // ✅ Filter by interest (if stored in description)
-        if (!interest.equals("All")) {
-            filtered.removeIf(event ->
-                    !event.getDescription().toLowerCase()
-                            .contains(interest.toLowerCase())
-            );
-        }
-
-        // ✅ Filter by availability (Monday, Tuesday etc.)
-        if (availability != -1) {
-            filtered.removeIf(event -> {
-                if (event.getTime() == null) return true; // Remove if no date
-
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(event.getTime());
-
-                int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
-
-                // Compare the integer day of the week
-                return dayOfWeek != availability;
-            });
-        }
-
-
-        // ✅ Update UI
+        // Update UI
         if (filtered.isEmpty()) {
             showNoEventsMessage();
         } else {

@@ -122,44 +122,20 @@
                     android:layout_height="wrap_content" />
 
                 <RadioButton
-                    android:id="@+id/availabilityMon"
-                    android:text="Mondays"
+                    android:id="@+id/availabilityHasFreeSpots"
+                    android:text="Has Free Spots"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
                 <RadioButton
-                    android:id="@+id/availabilityTue"
-                    android:text="Tuesdays"
+                    android:id="@+id/availabilityFull"
+                    android:text="Full"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
                 <RadioButton
-                    android:id="@+id/availabilityWed"
-                    android:text="Wednesdays"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <RadioButton
-                    android:id="@+id/availabilityThu"
-                    android:text="Thursdays"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <RadioButton
-                    android:id="@+id/availabilityFri"
-                    android:text="Fridays"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <RadioButton
-                    android:id="@+id/availabilitySat"
-                    android:text="Saturdays"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <RadioButton
-                    android:id="@+id/availabilitySun"
-                    android:text="Sundays"
+                    android:id="@+id/availabilityHasWaitingList"
+                    android:text="Has Waiting List"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 

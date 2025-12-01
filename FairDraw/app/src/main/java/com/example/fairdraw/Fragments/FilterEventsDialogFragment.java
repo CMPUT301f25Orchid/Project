@@ -84,13 +84,17 @@ public class FilterEventsDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View view = getLayoutInflater().inflate(R.layout.filter_events_dialog, null);
 
-        // ✅ Retrieve current filters from arguments
+        // Retrieve current filters from arguments
         String currentStatus = "All";
+        String currentInterest = "All";
+        int currentAvailability = 0;
         if (getArguments() != null) {
             currentStatus = getArguments().getString(ARG_STATUS, "All");
+            currentInterest = getArguments().getString(ARG_INTEREST, "All");
+            currentAvailability = getArguments().getInt(ARG_AVAILABILITY, 0);
         }
 
-        // ✅ Pre-select the correct radio button for status
+        // Pre-select the correct radio button for status
         RadioGroup statusGroup = view.findViewById(R.id.statusGroup);
         if ("Open".equals(currentStatus)) {
             statusGroup.check(R.id.statusOpen);
@@ -100,6 +104,34 @@ public class FilterEventsDialogFragment extends DialogFragment {
             statusGroup.check(R.id.statusAll);
         }
 
+        // Pre-select the correct radio button for interest
+        RadioGroup interestsGroup = view.findViewById(R.id.interestsGroup);
+        if ("Sports and Recreation".equalsIgnoreCase(currentInterest)) {
+            interestsGroup.check(R.id.interestSports);
+        } else if ("Arts/Culture".equalsIgnoreCase(currentInterest)) {
+            interestsGroup.check(R.id.interestCulture);
+        } else if ("Education".equalsIgnoreCase(currentInterest)) {
+            interestsGroup.check(R.id.interestEducation);
+        } else {
+            interestsGroup.check(R.id.interestAll);
+        }
+
+        // Pre-select the correct radio button for availability
+        RadioGroup availabilityGroup = view.findViewById(R.id.availabilityGroup);
+        switch (currentAvailability) {
+            case 1:
+                availabilityGroup.check(R.id.availabilityHasFreeSpots);
+                break;
+            case 2:
+                availabilityGroup.check(R.id.availabilityFull);
+                break;
+            case 3:
+                availabilityGroup.check(R.id.availabilityHasWaitingList);
+                break;
+            default:
+                availabilityGroup.check(R.id.availabilityAll);
+                break;
+        }
 
         Button applyBtn = view.findViewById(R.id.applyFiltersBtn);
         Button clearBtn = view.findViewById(R.id.clearFiltersBtn);
@@ -117,9 +149,31 @@ public class FilterEventsDialogFragment extends DialogFragment {
                     status = "All";
                 }
 
-                // These are still commented out, so they default to "All" and -1
-                String interest = "All";
-                int availability = -1;
+                // Read interest selection
+                String interest;
+                int checkedInterestId = interestsGroup.getCheckedRadioButtonId();
+                if (checkedInterestId == R.id.interestSports) {
+                    interest = "Sports and Recreation";
+                } else if (checkedInterestId == R.id.interestCulture) {
+                    interest = "Arts/Culture";
+                } else if (checkedInterestId == R.id.interestEducation) {
+                    interest = "Education";
+                } else {
+                    interest = "All";
+                }
+
+                // Read availability selection
+                int availability;
+                int checkedAvailabilityId = availabilityGroup.getCheckedRadioButtonId();
+                if (checkedAvailabilityId == R.id.availabilityHasFreeSpots) {
+                    availability = 1;
+                } else if (checkedAvailabilityId == R.id.availabilityFull) {
+                    availability = 2;
+                } else if (checkedAvailabilityId == R.id.availabilityHasWaitingList) {
+                    availability = 3;
+                } else {
+                    availability = 0;
+                }
 
                 listener.onFiltersApplied(status, interest, availability);
             }
