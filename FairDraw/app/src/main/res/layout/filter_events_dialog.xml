@@ -65,41 +65,17 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Interests:"
+                android:text="Interest/Tag:"
                 android:textStyle="bold"
                 android:paddingTop="8dp" />
 
-            <RadioGroup
-                android:id="@+id/interestsGroup"
+            <AutoCompleteTextView
+                android:id="@+id/filter_interest_autocomplete"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <RadioButton
-                    android:id="@+id/interestAll"
-                    android:text="All"
-                    android:checked="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <RadioButton
-                    android:id="@+id/interestSports"
-                    android:text="Sports and Recreation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <RadioButton
-                    android:id="@+id/interestCulture"
-                    android:text="Arts/Culture"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <RadioButton
-                    android:id="@+id/interestEducation"
-                    android:text="Education"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-            </RadioGroup>
+                android:layout_height="wrap_content"
+                android:hint="Type to search tags"
+                android:completionThreshold="1"
+                android:inputType="text" />
 
             <!-- Availability -->
             <TextView
@@ -122,44 +98,20 @@
                     android:layout_height="wrap_content" />
 
                 <RadioButton
-                    android:id="@+id/availabilityMon"
-                    android:text="Mondays"
+                    android:id="@+id/availabilityNotFull"
+                    android:text="Has Free Spots"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
                 <RadioButton
-                    android:id="@+id/availabilityTue"
-                    android:text="Tuesdays"
+                    android:id="@+id/availabilityFull"
+                    android:text="Full"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
                 <RadioButton
-                    android:id="@+id/availabilityWed"
-                    android:text="Wednesdays"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <RadioButton
-                    android:id="@+id/availabilityThu"
-                    android:text="Thursdays"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <RadioButton
-                    android:id="@+id/availabilityFri"
-                    android:text="Fridays"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <RadioButton
-                    android:id="@+id/availabilitySat"
-                    android:text="Saturdays"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <RadioButton
-                    android:id="@+id/availabilitySun"
-                    android:text="Sundays"
+                    android:id="@+id/availabilityHasWaitingList"
+                    android:text="Has Waiting List"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 

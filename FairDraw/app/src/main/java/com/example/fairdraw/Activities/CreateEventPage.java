@@ -6,12 +6,16 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.text.InputType;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.activity.EdgeToEdge;
@@ -28,8 +32,10 @@ import androidx.core.view.WindowInsetsCompat;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import com.example.fairdraw.DBs.EventDB;
 import com.example.fairdraw.Models.Event;
@@ -67,6 +73,11 @@ public class CreateEventPage extends BaseTopBottomActivity {
     EditText eventLimit;
     RadioGroup eventGeolocation;
     DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+    
+    // Tag input fields
+    private ChipGroup chipGroupTags;
+    private EditText eventTagInput;
+    private Button btnAddTag;
 
 
 
@@ -113,6 +124,23 @@ public class CreateEventPage extends BaseTopBottomActivity {
         eventLimit = inputLayout.findViewById(R.id.event_limit);
         eventGeolocation = inputLayout.findViewById(R.id.event_geolocation);
         bottomNavInclude = findViewById(R.id.create_bottom_nav_bar);
+        
+        // Initialize tag input fields
+        chipGroupTags = inputLayout.findViewById(R.id.chip_group_tags);
+        eventTagInput = inputLayout.findViewById(R.id.event_tag_input);
+        btnAddTag = inputLayout.findViewById(R.id.btn_add_tag);
+        
+        // Setup tag add button click
+        btnAddTag.setOnClickListener(v -> addTagChip(eventTagInput.getText().toString()));
+        
+        // Setup IME Done action to add tag
+        eventTagInput.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                addTagChip(eventTagInput.getText().toString());
+                return true;
+            }
+            return false;
+        });
 
         // --- New: attach DatePickerDialogs to date EditTexts and disable keyboard input ---
         View.OnClickListener dateClickListener = v -> {
@@ -205,6 +233,11 @@ public class CreateEventPage extends BaseTopBottomActivity {
                         Integer limit = Integer.parseInt(eventLimit.getText().toString());
                         event.setWaitingListLimit(limit);
                     }
+                    
+                    // Collect tags from chips
+                    List<String> tags = collectTagsFromChips();
+                    event.setTags(tags);
+                    
                     if (bannerPhoto == null){
                         // Use default banner image if none uploaded
                         bannerPhoto = Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.default_event_banner);
@@ -273,5 +306,47 @@ public class CreateEventPage extends BaseTopBottomActivity {
             return true;
         });
 
+    }
+    
+    /**
+     * Adds a tag chip to the ChipGroup. Prevents duplicate tags (case-insensitive).
+     * @param tag The tag text to add
+     */
+    private void addTagChip(String tag) {
+        String normalizedTag = tag.trim();
+        if (normalizedTag.isEmpty()) {
+            return;
+        }
+        
+        // Check for case-insensitive duplicate
+        for (int i = 0; i < chipGroupTags.getChildCount(); i++) {
+            Chip existingChip = (Chip) chipGroupTags.getChildAt(i);
+            if (existingChip.getText().toString().equalsIgnoreCase(normalizedTag)) {
+                Snackbar.make(findViewById(android.R.id.content), "Tag already exists", Snackbar.LENGTH_SHORT).show();
+                eventTagInput.setText("");
+                return;
+            }
+        }
+        
+        // Inflate the chip layout and add it to the ChipGroup
+        Chip chip = (Chip) LayoutInflater.from(this).inflate(R.layout.standalone_chip, chipGroupTags, false);
+        chip.setText(normalizedTag);
+        chip.setCloseIconVisible(true);
+        chip.setOnCloseIconClickListener(v -> chipGroupTags.removeView(chip));
+        chipGroupTags.addView(chip);
+        eventTagInput.setText("");
+    }
+    
+    /**
+     * Collects all tags from the ChipGroup into a list.
+     * @return List of tag strings
+     */
+    private List<String> collectTagsFromChips() {
+        List<String> tags = new ArrayList<>();
+        for (int i = 0; i < chipGroupTags.getChildCount(); i++) {
+            Chip chip = (Chip) chipGroupTags.getChildAt(i);
+            tags.add(chip.getText().toString());
+        }
+        return tags;
     }
 }
