@@ -328,13 +328,20 @@ public class CreateEventPage extends BaseTopBottomActivity {
             }
         }
         
-        // Inflate the chip layout and add it to the ChipGroup
+        createAndAddChip(normalizedTag);
+        eventTagInput.setText("");
+    }
+    
+    /**
+     * Creates a chip with the given text and adds it to the ChipGroup.
+     * @param text The text to display on the chip
+     */
+    private void createAndAddChip(String text) {
         Chip chip = (Chip) LayoutInflater.from(this).inflate(R.layout.standalone_chip, chipGroupTags, false);
-        chip.setText(normalizedTag);
+        chip.setText(text);
         chip.setCloseIconVisible(true);
         chip.setOnCloseIconClickListener(v -> chipGroupTags.removeView(chip));
         chipGroupTags.addView(chip);
-        eventTagInput.setText("");
     }
     
     /**

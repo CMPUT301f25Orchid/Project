@@ -260,12 +260,7 @@ public class EditEventPage extends Fragment {
             }
         }
         
-        // Inflate the chip layout and add it to the ChipGroup
-        Chip chip = (Chip) LayoutInflater.from(requireContext()).inflate(R.layout.standalone_chip, chipGroupTags, false);
-        chip.setText(normalizedTag);
-        chip.setCloseIconVisible(true);
-        chip.setOnCloseIconClickListener(v -> chipGroupTags.removeView(chip));
-        chipGroupTags.addView(chip);
+        createAndAddChip(normalizedTag);
         eventTagInput.setText("");
     }
     
@@ -277,9 +272,16 @@ public class EditEventPage extends Fragment {
         if (tag == null || tag.trim().isEmpty()) {
             return;
         }
-        
+        createAndAddChip(tag.trim());
+    }
+    
+    /**
+     * Creates a chip with the given text and adds it to the ChipGroup.
+     * @param text The text to display on the chip
+     */
+    private void createAndAddChip(String text) {
         Chip chip = (Chip) LayoutInflater.from(requireContext()).inflate(R.layout.standalone_chip, chipGroupTags, false);
-        chip.setText(tag.trim());
+        chip.setText(text);
         chip.setCloseIconVisible(true);
         chip.setOnCloseIconClickListener(v -> chipGroupTags.removeView(chip));
         chipGroupTags.addView(chip);
