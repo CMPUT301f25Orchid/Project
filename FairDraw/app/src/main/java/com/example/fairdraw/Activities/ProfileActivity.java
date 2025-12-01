@@ -149,12 +149,12 @@ public class ProfileActivity extends AppCompatActivity {
             UserDB.upsertUser(currentUser, (ok, e) -> {
                 if (ok) {
                     String status = isEnabled ? "enabled" : "disabled";
-                    Toast.makeText(this, "Notifications " + status, Toast.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(android.R.id.content), "Notifications " + status, Snackbar.LENGTH_SHORT).show();
                     Log.d(TAG, "Notification preference updated successfully.");
                 } else {
                     // Revert the switch state on failure to provide accurate UI feedback
                     notificationSwitch.setChecked(!isEnabled);
-                    Toast.makeText(this, "Failed to update preference", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(android.R.id.content), "Failed to update preference", Snackbar.LENGTH_SHORT).show();
                     Log.e(TAG, "Failed to update notification preference.", e);
                 }
             });
@@ -207,7 +207,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void handleDeleteError(Exception e) {
         Log.e(TAG, "Failed to delete user account.", e);
-        Toast.makeText(ProfileActivity.this, "Failed to delete account.", Toast.LENGTH_SHORT).show();
+        Snackbar.make(findViewById(android.R.id.content), "Failed to delete account.", Snackbar.LENGTH_SHORT).show();
     }
 
 
