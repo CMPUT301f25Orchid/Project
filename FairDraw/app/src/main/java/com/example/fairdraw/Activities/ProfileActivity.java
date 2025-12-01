@@ -92,7 +92,7 @@ public class ProfileActivity extends AppCompatActivity {
         deleteAccButton.setOnClickListener(v -> {
             new AlertDialog.Builder(this)
                     .setTitle("Delete Account")
-                    .setMessage("Are you sure you want to delete your account? This will also remove all events you have organized. This action cannot be undone.")
+                    .setMessage("Are you sure you want to delete your account? This will also affect all events you have organized. This action cannot be undone.")
                     .setPositiveButton("Delete", (dialog, which) -> {
                         // User confirmed, start the deletion process
                         Snackbar.make(findViewById(android.R.id.content), "Deleting account...", Snackbar.LENGTH_SHORT).show();
