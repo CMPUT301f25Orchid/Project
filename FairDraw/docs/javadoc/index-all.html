@@ -540,6 +540,10 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:F">F</h2>
 <dl class="index">
+<dt><a href="com/example/fairdraw/Others/FilterUtils.html#filter(java.util.List,java.lang.String,java.lang.String,int)" class="member-name-link">filter(List&lt;Event&gt;, String, String, int)</a> - Static method in class com.example.fairdraw.Others.<a href="com/example/fairdraw/Others/FilterUtils.html" title="class in com.example.fairdraw.Others">FilterUtils</a></dt>
+<dd>
+<div class="block">Filters a list of events based on status, interest, and availability criteria.</div>
+</dd>
 <dt><a href="com/example/fairdraw/Fragments/FilterEventsDialogFragment.html" class="type-name-link" title="class in com.example.fairdraw.Fragments">FilterEventsDialogFragment</a> - Class in <a href="com/example/fairdraw/Fragments/package-summary.html">com.example.fairdraw.Fragments</a></dt>
 <dd>
 <div class="block">DialogFragment that displays filter controls for the events list.</div>
@@ -550,6 +554,12 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Listener invoked when filters are applied or cleared by the user.</div>
 </dd>
+<dt><a href="com/example/fairdraw/Others/FilterUtils.html" class="type-name-link" title="class in com.example.fairdraw.Others">FilterUtils</a> - Class in <a href="com/example/fairdraw/Others/package-summary.html">com.example.fairdraw.Others</a></dt>
+<dd>
+<div class="block">Utility class for filtering events based on status, interest (tags), and availability.</div>
+</dd>
+<dt><a href="com/example/fairdraw/Others/FilterUtils.html#%3Cinit%3E()" class="member-name-link">FilterUtils()</a> - Constructor for class com.example.fairdraw.Others.<a href="com/example/fairdraw/Others/FilterUtils.html" title="class in com.example.fairdraw.Others">FilterUtils</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/example/fairdraw/ServiceUtility/FirebaseImageStorageService.html" class="type-name-link" title="class in com.example.fairdraw.ServiceUtility">FirebaseImageStorageService</a> - Class in <a href="com/example/fairdraw/ServiceUtility/package-summary.html">com.example.fairdraw.ServiceUtility</a></dt>
 <dd>
 <div class="block">A service for interacting with Firebase Cloud Storage to manage entrant profile images and event posters.</div>
@@ -827,6 +837,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns the current state of the event.</div>
 </dd>
+<dt><a href="com/example/fairdraw/Models/Event.html#getTags()" class="member-name-link">getTags()</a> - Method in class com.example.fairdraw.Models.<a href="com/example/fairdraw/Models/Event.html" title="class in com.example.fairdraw.Models">Event</a></dt>
+<dd>
+<div class="block">Returns the tags/interests for this event.</div>
+</dd>
 <dt><a href="com/example/fairdraw/Fragments/QrCodeFragment.html#getTheme()" class="member-name-link">getTheme()</a> - Method in class com.example.fairdraw.Fragments.<a href="com/example/fairdraw/Fragments/QrCodeFragment.html" title="class in com.example.fairdraw.Fragments">QrCodeFragment</a></dt>
 <dd>
 <div class="block">Return the dialog theme used for this fragment's Dialog.</div>
@@ -957,6 +971,19 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/example/fairdraw/Activities/MainActivity.html#%3Cinit%3E()" class="member-name-link">MainActivity()</a> - Constructor for class com.example.fairdraw.Activities.<a href="com/example/fairdraw/Activities/MainActivity.html" title="class in com.example.fairdraw.Activities">MainActivity</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/example/fairdraw/Others/FilterUtils.html#matchesAvailability(com.example.fairdraw.Models.Event,int)" class="member-name-link">matchesAvailability(Event, int)</a> - Static method in class com.example.fairdraw.Others.<a href="com/example/fairdraw/Others/FilterUtils.html" title="class in com.example.fairdraw.Others">FilterUtils</a></dt>
+<dd>
+<div class="block">Checks if an event matches the availability filter.</div>
+</dd>
+<dt><a href="com/example/fairdraw/Others/FilterUtils.html#matchesInterest(com.example.fairdraw.Models.Event,java.lang.String)" class="member-name-link">matchesInterest(Event, String)</a> - Static method in class com.example.fairdraw.Others.<a href="com/example/fairdraw/Others/FilterUtils.html" title="class in com.example.fairdraw.Others">FilterUtils</a></dt>
+<dd>
+<div class="block">Checks if an event matches the interest filter by exact tag match (case-insensitive) 
+ or substring match in any tag.</div>
+</dd>
+<dt><a href="com/example/fairdraw/Others/FilterUtils.html#matchesStatus(com.example.fairdraw.Models.Event,java.lang.String)" class="member-name-link">matchesStatus(Event, String)</a> - Static method in class com.example.fairdraw.Others.<a href="com/example/fairdraw/Others/FilterUtils.html" title="class in com.example.fairdraw.Others">FilterUtils</a></dt>
+<dd>
+<div class="block">Checks if an event matches the status filter.</div>
+</dd>
 <dt><a href="com/example/fairdraw/Others/EntrantNotification.html#message" class="member-name-link">message</a> - Variable in class com.example.fairdraw.Others.<a href="com/example/fairdraw/Others/EntrantNotification.html" title="class in com.example.fairdraw.Others">EntrantNotification</a></dt>
 <dd>
 <div class="block">Optional message body for the notification.</div>
@@ -979,6 +1006,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/example/fairdraw/Fragments/FilterEventsDialogFragment.html#newInstance(java.lang.String,java.lang.String,int)" class="member-name-link">newInstance(String, String, int)</a> - Static method in class com.example.fairdraw.Fragments.<a href="com/example/fairdraw/Fragments/FilterEventsDialogFragment.html" title="class in com.example.fairdraw.Fragments">FilterEventsDialogFragment</a></dt>
 <dd>
 <div class="block">Create a new FilterEventsDialogFragment with optional current values.</div>
+</dd>
+<dt><a href="com/example/fairdraw/Fragments/FilterEventsDialogFragment.html#newInstance(java.lang.String,java.lang.String,int,java.util.ArrayList)" class="member-name-link">newInstance(String, String, int, ArrayList&lt;String&gt;)</a> - Static method in class com.example.fairdraw.Fragments.<a href="com/example/fairdraw/Fragments/FilterEventsDialogFragment.html" title="class in com.example.fairdraw.Fragments">FilterEventsDialogFragment</a></dt>
+<dd>
+<div class="block">Create a new FilterEventsDialogFragment with optional current values and available tags.</div>
 </dd>
 <dt><a href="com/example/fairdraw/Others/EntrantEventStatus.html#NOT_SELECTED" class="member-name-link">NOT_SELECTED</a> - Static variable in class com.example.fairdraw.Others.<a href="com/example/fairdraw/Others/EntrantEventStatus.html" title="class in com.example.fairdraw.Others">EntrantEventStatus</a></dt>
 <dd>&nbsp;</dd>
@@ -1572,6 +1603,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/example/fairdraw/Models/Event.html#setState(com.example.fairdraw.Others.EventState)" class="member-name-link">setState(EventState)</a> - Method in class com.example.fairdraw.Models.<a href="com/example/fairdraw/Models/Event.html" title="class in com.example.fairdraw.Models">Event</a></dt>
 <dd>
 <div class="block">Sets the event state.</div>
+</dd>
+<dt><a href="com/example/fairdraw/Models/Event.html#setTags(java.util.List)" class="member-name-link">setTags(List&lt;String&gt;)</a> - Method in class com.example.fairdraw.Models.<a href="com/example/fairdraw/Models/Event.html" title="class in com.example.fairdraw.Models">Event</a></dt>
+<dd>
+<div class="block">Sets the tags/interests for this event.</div>
 </dd>
 <dt><a href="com/example/fairdraw/Models/Event.html#setTime(java.util.Date)" class="member-name-link">setTime(Date)</a> - Method in class com.example.fairdraw.Models.<a href="com/example/fairdraw/Models/Event.html" title="class in com.example.fairdraw.Models">Event</a></dt>
 <dd>
