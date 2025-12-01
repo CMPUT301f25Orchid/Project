@@ -3,7 +3,9 @@ package com.example.fairdraw.Others;
 import com.example.fairdraw.Models.Event;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Utility class containing static methods for filtering events.
@@ -148,21 +150,24 @@ public class FilterUtils {
      * @return sorted list of distinct tags
      */
     public static List<String> extractAvailableTags(List<Event> events) {
-        List<String> availableTags = new ArrayList<>();
-        if (events == null) return availableTags;
+        if (events == null) return new ArrayList<>();
+        
+        // Use Set for O(1) duplicate checking
+        Set<String> tagSet = new HashSet<>();
         
         for (Event event : events) {
             if (event == null) continue;
             List<String> tags = event.getTags();
             if (tags == null) continue;
             for (String tag : tags) {
-                if (tag != null && !tag.isEmpty() && !availableTags.contains(tag)) {
-                    availableTags.add(tag);
+                if (tag != null && !tag.isEmpty()) {
+                    tagSet.add(tag);
                 }
             }
         }
         
-        // Sort alphabetically
+        // Convert to list and sort alphabetically
+        List<String> availableTags = new ArrayList<>(tagSet);
         availableTags.sort(String::compareToIgnoreCase);
         return availableTags;
     }

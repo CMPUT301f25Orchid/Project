@@ -20,4 +20,7 @@
 
     <!-- Error messages -->
     <string name="error_updating_event">Failed to update event. Changes may not be saved.</string>
+
+    <!-- Tag messages -->
+    <string name="tag_already_exists">Tag already exists</string>
 </resources>

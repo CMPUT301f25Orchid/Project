@@ -55,6 +55,7 @@ import com.example.fairdraw.ServiceUtility.QrUtil;
 public class CreateEventPage extends BaseTopBottomActivity {
 
     private ActivityResultLauncher<Intent> launcher;
+    private LayoutInflater layoutInflater;
     View bottomNavInclude;
     BottomNavigationView bottomNav;
     Uri bannerPhoto;
@@ -103,6 +104,8 @@ public class CreateEventPage extends BaseTopBottomActivity {
             return insets;
         });
 
+        // Cache LayoutInflater for tag chip creation
+        layoutInflater = LayoutInflater.from(this);
 
         // Get DeviceId
         final String deviceID = DevicePrefsManager.getDeviceId(this);
@@ -327,13 +330,13 @@ public class CreateEventPage extends BaseTopBottomActivity {
         for (int i = 0; i < chipGroupTags.getChildCount(); i++) {
             Chip existingChip = (Chip) chipGroupTags.getChildAt(i);
             if (existingChip.getText().toString().equalsIgnoreCase(tag)) {
-                Snackbar.make(findViewById(android.R.id.content), "Tag already exists", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(android.R.id.content), R.string.tag_already_exists, Snackbar.LENGTH_SHORT).show();
                 return;
             }
         }
 
-        // Inflate the chip from the layout
-        Chip chip = (Chip) LayoutInflater.from(this).inflate(R.layout.standalone_chip, chipGroupTags, false);
+        // Inflate the chip from the cached layout inflater
+        Chip chip = (Chip) layoutInflater.inflate(R.layout.standalone_chip, chipGroupTags, false);
         chip.setText(tag);
         chip.setOnCloseIconClickListener(v -> chipGroupTags.removeView(chip));
         chipGroupTags.addView(chip);
