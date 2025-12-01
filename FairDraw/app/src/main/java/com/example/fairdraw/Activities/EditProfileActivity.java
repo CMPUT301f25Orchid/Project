@@ -1,18 +1,23 @@
 package com.example.fairdraw.Activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.fairdraw.DBs.AdminDB;
 import com.example.fairdraw.DBs.EntrantDB;
 import com.example.fairdraw.DBs.OrganizerDB;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -38,6 +43,10 @@ public class EditProfileActivity extends AppCompatActivity {
     private MaterialSwitch notificationSwitch;
     private User currentUser; // Store the fetched user object
 
+    private ShapeableImageView avatarImageView;
+    private ActivityResultLauncher<Intent> imagePickerLauncher;
+    private Uri selectedImageUri = null;
+
 
 
     @Override
@@ -55,9 +64,22 @@ public class EditProfileActivity extends AppCompatActivity {
         emailEditText = findViewById(R.id.etEmail);
         phoneEditText = findViewById(R.id.etPhone);
         notificationSwitch = findViewById(R.id.swNotifications);
+        avatarImageView = findViewById(R.id.ivAvatar);
 
         // Get User ID
         deviceId = DevicePrefsManager.getDeviceId(this);
+
+        imagePickerLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        selectedImageUri = result.getData().getData();
+                        // Show a preview of the selected image
+                        Glide.with(this).load(selectedImageUri).circleCrop().into(avatarImageView);
+                        Snackbar.make(findViewById(android.R.id.content), "Image selected", Snackbar.LENGTH_SHORT).show();
+                    } else {
+                        Snackbar.make(findViewById(android.R.id.content), "No image selected", Snackbar.LENGTH_SHORT).show();
+                    }
+                });
 
         if (deviceId != null && !deviceId.isEmpty()) {
             loadUserData(deviceId);
@@ -101,6 +123,12 @@ public class EditProfileActivity extends AppCompatActivity {
             if (currentUser == null || buttonView.isPressed()) {
                 updateNotificationPreference(isChecked);
             }
+        });
+
+        avatarImageView.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_PICK);
+            intent.setType("image/*");
+            imagePickerLauncher.launch(intent);
         });
     }
 
@@ -191,6 +219,12 @@ public class EditProfileActivity extends AppCompatActivity {
                     emailEditText.setText(user.getEmail());
                     phoneEditText.setText(user.getPhoneNum());
                     notificationSwitch.setChecked(user.isNotificationsEnabled());
+                    if (user.getProfilePicture() != null && !user.getProfilePicture().isEmpty()) {
+                        Glide.with(EditProfileActivity.this)
+                                .load(Uri.parse(user.getProfilePicture()))
+                                .circleCrop()
+                                .into(avatarImageView);
+                    }
                 });
             } else {
                 Log.w(TAG, "User with ID " + userId + " not found.");
@@ -217,6 +251,11 @@ public class EditProfileActivity extends AppCompatActivity {
         currentUser.setEmail(newEmail);
         currentUser.setPhoneNum(newPhone);
         currentUser.setNotificationsEnabled(notificationsAreEnabled);
+
+        // Update the profile picture if a new image was selected
+        if (selectedImageUri != null) {
+            currentUser.setProfilePicture(selectedImageUri.toString());
+        }
 
         // Use the existing upsertUser method
         UserDB.upsertUser(currentUser, (ok, e) -> {

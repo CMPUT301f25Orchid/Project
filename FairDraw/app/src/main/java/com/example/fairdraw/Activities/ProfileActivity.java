@@ -2,14 +2,17 @@ package com.example.fairdraw.Activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.fairdraw.DBs.AdminDB;
 import com.example.fairdraw.DBs.EntrantDB;
 import com.example.fairdraw.DBs.OrganizerDB;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.activity.EdgeToEdge;
@@ -39,6 +42,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private ListenerRegistration userListener;
     private User currentUser;
+    private ShapeableImageView avatarImageView;
 
 
     /**
@@ -55,6 +59,7 @@ public class ProfileActivity extends AppCompatActivity {
         emailTextView = findViewById(R.id.etEmail);
         phoneTextView = findViewById(R.id.etPhone);
         notificationSwitch = findViewById(R.id.swNotifications);
+        avatarImageView = findViewById(R.id.ivAvatar);
 
         editButton = findViewById(R.id.btnEdit);
         returnButton = findViewById(R.id.btnReturnHome);
@@ -205,7 +210,12 @@ public class ProfileActivity extends AppCompatActivity {
                         emailTextView.setText(user.getEmail());
                         phoneTextView.setText(user.getPhoneNum());
                         notificationSwitch.setChecked(user.isNotificationsEnabled());
-
+                        if (user.getProfilePicture() != null && !user.getProfilePicture().isEmpty()) {
+                            Glide.with(ProfileActivity.this)
+                                    .load(Uri.parse(user.getProfilePicture()))
+                                    .circleCrop()
+                                    .into(avatarImageView);
+                        }
                     });
                 } else {
                     //User not found
