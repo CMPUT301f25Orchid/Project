@@ -83,6 +83,31 @@ public class BaseTopBottomActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, EntrantNotificationsActivity.class);
                 startActivity(intent);
             });
+        } else if (barType == BarType.ADMIN) {
+            // Admin bottom nav uses ids: home_activity, create_activity, settings_activity (scan), notifications_activity
+            View adminEvents = root.findViewById(R.id.admin_events_activity);
+            View profiles = root.findViewById(R.id.profiles_activity);
+            View pictures = root.findViewById(R.id.pictures_activity);
+            View logs = root.findViewById(R.id.logs_activity);
+
+            adminEvents.setOnClickListener(v -> {
+                Intent intent = new Intent(this, AdminEventsPage.class);
+                startActivity(intent);
+            });
+
+            profiles.setOnClickListener(v -> {
+                Intent intent = new Intent(this, AdminManageProfiles.class);
+                startActivity(intent);
+            });
+
+            pictures.setOnClickListener(v -> {
+                Intent intent = new Intent(this, AdminPicturesPage.class);
+                startActivity(intent);
+            });
+
+            logs.setOnClickListener(v -> {
+                // To be created when the activity is created.
+            });
         }
     }
 
