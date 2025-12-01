@@ -180,8 +180,6 @@ public class BaseTopBottomActivity extends AppCompatActivity {
             startActivity(intent);
         });
      }
- }
-    }
 
     private void highlightSelectedRole(BarType currentBar) {
         MaterialButton entrant = findViewById(R.id.btnEntrant);
