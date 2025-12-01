@@ -71,7 +71,7 @@ public class AdminNotificationLogActivity extends AppCompatActivity {
                 "Emily Witherspoon",
                 "Evening Yoga Session",
                 "device003",
-                NotificationType.OTHER
+                NotificationType.LOSE
         );
         dummyLogs.add(log3);
 

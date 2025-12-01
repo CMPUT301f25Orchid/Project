@@ -14,6 +14,10 @@ public class AdminNotificationLog {
     private Date timestamp;
 
     public AdminNotificationLog() {}
+
+    public AdminNotificationLog(String adminId, String removeOrganizer, String s, Date date) {
+    }
+
     public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
     }
@@ -28,11 +32,11 @@ public class AdminNotificationLog {
         this.userName = userName;
     }
 
-    // --- Getters for Firestore and the Adapter ---
     public String getEventId() { return eventId; }
     public String getEventTitle() { return eventTitle; }
     public String getRecipientDeviceId() { return recipientDeviceId; }
     public NotificationType getNotificationType() { return notificationType; }
     public String getUserName() { return userName; }
     public Date getTimestamp() { return timestamp; }
+
 }

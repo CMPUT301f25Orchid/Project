@@ -1,6 +1,7 @@
 package com.example.fairdraw.DBs;
 
 import com.example.fairdraw.Models.Organizer;
+import com.example.fairdraw.Others.AdminNotificationLog;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -126,7 +127,11 @@ public class OrganizerDB {
      * @param organizerId document id of the organizer to remove
      * @param callback callback invoked with success flag
      */
-    public static void removeOrganizerAndCleanupEvents(String organizerId, DeleteOrganizerCallback callback) {
+    public static void removeOrganizerAndCleanupEvents(
+            String organizerId,
+            String adminId,                        // NEW argument
+            DeleteOrganizerCallback callback) {
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference eventsCol = db.collection("events");
 
@@ -144,21 +149,32 @@ public class OrganizerDB {
             for (QueryDocumentSnapshot doc : snapshot) {
                 Date endDate = doc.getDate("endDate");
                 if (endDate == null || endDate.after(now)) {
-                    // current or upcoming event -> delete
                     batch.delete(doc.getReference());
                 } else {
-                    // past event -> keep but remove organizer identity
                     batch.update(doc.getReference(), "organizer", "Unknown organizer");
                 }
             }
 
-            // Delete the organizer document itself
             DocumentReference organizerRef = getOrganizerCollection().document(organizerId);
             batch.delete(organizerRef);
 
-            // Commit the batch
-            batch.commit().addOnCompleteListener(commitTask ->
-                    callback.onCallback(commitTask.isSuccessful()));
+            batch.commit().addOnCompleteListener(commitTask -> {
+
+                boolean success = commitTask.isSuccessful();
+
+                if (success) {
+                    // NEW logging block
+                    AdminNotificationLog log = new AdminNotificationLog(
+                            adminId,
+                            "REMOVE_ORGANIZER",
+                            "Organizer " + organizerId + " removed and events cleaned up",
+                            new Date()
+                    );
+                    AdminDB.logNotification(log);
+                }
+
+                callback.onCallback(success);
+            });
         });
     }
 }
