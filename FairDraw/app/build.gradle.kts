@@ -74,6 +74,7 @@ dependencies {
     implementation(libs.espresso.intents)
     implementation(libs.cardview)
     implementation(libs.legacy.support.v4)
+    implementation(libs.ext.junit)
     androidTestImplementation("androidx.test.espresso:espresso-contrib:3.7.0") {
         exclude("com.google.protobuf", "protobuf-lite")
     }

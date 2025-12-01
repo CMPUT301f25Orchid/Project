@@ -28,6 +28,13 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+/**
+ * Instrumented tests for the OrganizerMainPage.
+ * These tests verify that the user can successfully open pages to create and edit events.
+ * Also verifies that the user can see event details open the page to download the CSV
+ * of the final entrant list for the event.
+ *
+ */
 @RunWith(AndroidJUnit4.class)
 public class OrganizerActionTests {
     @Rule

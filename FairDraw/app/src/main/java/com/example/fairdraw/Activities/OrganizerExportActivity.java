@@ -38,6 +38,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ *  OrganizerExportActivity class allows organizers to export the final entrants list to a CSV file.
+ *  The resulting file is saved into the app external files directory and then shared using a FileProvider URI.
+ *  This class is used by the OrganizerManageEvent activity.
+ *
+ */
+
 public class OrganizerExportActivity extends BaseTopBottomActivity{
     String eventId;
     Event event;
@@ -238,7 +245,10 @@ public class OrganizerExportActivity extends BaseTopBottomActivity{
      * into the app external files directory and then shared using a FileProvider URI.
      */
     private void exportEnrolledEntrantsToCsv(List<String> enrolledIds, String eventTitle) {
-        if (enrolledIds == null || enrolledIds.isEmpty()) {
+        if (enrolledIds == null ) {
+            Toast.makeText(this, "No enrolled entrants to export.", Toast.LENGTH_SHORT).show();
+            return;
+        }else if(enrolledIds.isEmpty()){
             Toast.makeText(this, "No enrolled entrants to export.", Toast.LENGTH_SHORT).show();
             return;
         }
