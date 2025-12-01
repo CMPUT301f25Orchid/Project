@@ -199,8 +199,6 @@ public class AdminManageProfiles extends BaseTopBottomActivity {
         Snackbar.make(findViewById(android.R.id.content), "Failed to delete account.", Snackbar.LENGTH_SHORT).show();
     }
 
-//            DELETING PROFILES FOR CLEO_SLAYS TO IMPLEMENT
-
 
 
     private void setupSearchBar() {
