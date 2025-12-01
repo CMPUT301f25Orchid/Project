@@ -283,6 +283,14 @@ class com.example.fairdraw.Models.Admin {
 + getDeviceId() : String
 + setDeviceId(arg0 : String) : void
 }
+class com.example.fairdraw.Others.EntrantEventStatus {
++ {static} String REGISTERED
++ {static} String INVITED
++ {static} String SELECTED
++ {static} String NOT_SELECTED
++ {static} String CANCELLED
++ {static} String CHECKED_IN
+}
 class com.example.fairdraw.Activities.EntrantScan {
 # onCreate(arg0 : Bundle) : void
 # onResume() : void
