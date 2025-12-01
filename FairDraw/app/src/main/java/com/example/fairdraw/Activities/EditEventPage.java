@@ -15,9 +15,12 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.snackbar.Snackbar;
 
 import com.example.fairdraw.Models.Event;
@@ -26,7 +29,9 @@ import com.example.fairdraw.R;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Fragment used to edit an existing {@link com.example.fairdraw.Models.Event}.
@@ -58,6 +63,11 @@ public class EditEventPage extends Fragment {
     DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
     Event event = null;
     Integer index;
+    
+    // Tag input fields
+    private ChipGroup chipGroupTags;
+    private EditText eventTagInput;
+    private Button btnAddTag;
 
     /**
      * Required empty public constructor which attaches the fragment layout.
@@ -104,6 +114,23 @@ public class EditEventPage extends Fragment {
         eventGeolocation = inputLayout.findViewById(R.id.event_geolocation);
         confirmEventEdit = view.findViewById(R.id.confirm_event_edit);
         cancelEventEdit = view.findViewById(R.id.cancel_event_update);
+        
+        // Initialize tag input fields
+        chipGroupTags = inputLayout.findViewById(R.id.chip_group_tags);
+        eventTagInput = inputLayout.findViewById(R.id.event_tag_input);
+        btnAddTag = inputLayout.findViewById(R.id.btn_add_tag);
+        
+        // Setup tag add button click
+        btnAddTag.setOnClickListener(v -> addTagChip(eventTagInput.getText().toString()));
+        
+        // Setup IME Done action to add tag
+        eventTagInput.setOnEditorActionListener((v, actionId, evt) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                addTagChip(eventTagInput.getText().toString());
+                return true;
+            }
+            return false;
+        });
 
         // Create launcher to retrieve photo from library
         launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
@@ -147,6 +174,14 @@ public class EditEventPage extends Fragment {
             eventPrice.setText(event.getPrice().toString());
             eventLimit.setText(event.getWaitingListLimit().toString());
             eventGeolocation.check(event.getGeolocation() ? R.id.geo_yes : R.id.geo_no);
+            
+            // Pre-fill existing tags as chips
+            List<String> existingTags = event.getTags();
+            if (existingTags != null) {
+                for (String tag : existingTags) {
+                    addTagChipWithoutValidation(tag);
+                }
+            }
         }
 
         // Updating event data
@@ -182,6 +217,10 @@ public class EditEventPage extends Fragment {
                     event.setQrSlug(null);
                     event.setPosterPath(null);
                     event.setWaitingListLimit(null);
+                    
+                    // Collect tags from chips
+                    List<String> tags = collectTagsFromChips();
+                    event.setTags(tags);
 
                     if (!eventLimit.getText().toString().isEmpty()){
                         Integer limit = Integer.parseInt(eventLimit.getText().toString());
@@ -199,5 +238,65 @@ public class EditEventPage extends Fragment {
                 }
             }
         });
+    }
+    
+    /**
+     * Adds a tag chip to the ChipGroup. Prevents duplicate tags (case-insensitive).
+     * @param tag The tag text to add
+     */
+    private void addTagChip(String tag) {
+        String normalizedTag = tag.trim();
+        if (normalizedTag.isEmpty()) {
+            return;
+        }
+        
+        // Check for case-insensitive duplicate (O(n) is acceptable for small tag count)
+        for (int i = 0; i < chipGroupTags.getChildCount(); i++) {
+            Chip existingChip = (Chip) chipGroupTags.getChildAt(i);
+            if (existingChip.getText().toString().equalsIgnoreCase(normalizedTag)) {
+                Snackbar.make(requireView(), "Tag already exists", Snackbar.LENGTH_SHORT).show();
+                eventTagInput.setText("");
+                return;
+            }
+        }
+        
+        createAndAddChip(normalizedTag);
+        eventTagInput.setText("");
+    }
+    
+    /**
+     * Adds a tag chip without duplicate validation (used for pre-filling existing tags).
+     * @param tag The tag text to add
+     */
+    private void addTagChipWithoutValidation(String tag) {
+        if (tag == null || tag.trim().isEmpty()) {
+            return;
+        }
+        createAndAddChip(tag.trim());
+    }
+    
+    /**
+     * Creates a chip with the given text and adds it to the ChipGroup.
+     * @param text The text to display on the chip
+     */
+    private void createAndAddChip(String text) {
+        Chip chip = (Chip) LayoutInflater.from(requireContext()).inflate(R.layout.standalone_chip, chipGroupTags, false);
+        chip.setText(text);
+        chip.setCloseIconVisible(true);
+        chip.setOnCloseIconClickListener(v -> chipGroupTags.removeView(chip));
+        chipGroupTags.addView(chip);
+    }
+    
+    /**
+     * Collects all tags from the ChipGroup into a list.
+     * @return List of tag strings
+     */
+    private List<String> collectTagsFromChips() {
+        List<String> tags = new ArrayList<>();
+        for (int i = 0; i < chipGroupTags.getChildCount(); i++) {
+            Chip chip = (Chip) chipGroupTags.getChildAt(i);
+            tags.add(chip.getText().toString());
+        }
+        return tags;
     }
 }
