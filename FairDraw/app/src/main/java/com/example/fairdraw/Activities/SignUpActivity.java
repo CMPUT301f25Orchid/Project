@@ -5,12 +5,14 @@ import static com.example.fairdraw.DBs.OrganizerDB.getOrganizerCollection;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.fairdraw.DBs.EntrantDB;
 import com.example.fairdraw.R;
 import com.example.fairdraw.DBs.UserDB;
 import com.example.fairdraw.ServiceUtility.DevicePrefsManager;
@@ -45,11 +47,12 @@ public class SignUpActivity extends AppCompatActivity {
         submitBtn = findViewById(R.id.btnSignUp);
 
         submitBtn.setOnClickListener(v -> {
-            String name = nameEt.getText().toString().trim();
-            String email = emailEt.getText().toString().trim();
-            String phone = phoneEt.getText().toString().trim();
+            String name = (nameEt.getText() == null ? "" : nameEt.getText().toString().trim());
+            String email = (emailEt.getText() == null ? "" : emailEt.getText().toString().trim());
+            String phone = (phoneEt.getText() == null ? "" : phoneEt.getText().toString().trim());
 
-            if (TextUtils.isEmpty(name) || TextUtils.isEmpty(email) || TextUtils.isEmpty(phone)) {
+            // phone can be empty, but name and email are required
+            if (TextUtils.isEmpty(name) || TextUtils.isEmpty(email)) {
                 // Use Snackbar instead of Toast
                 Snackbar.make(
                         v,   // root view of the Activity
@@ -73,19 +76,27 @@ public class SignUpActivity extends AppCompatActivity {
             final String deviceId = DevicePrefsManager.getDeviceId(this);
             User user = new User(name, email, phone, deviceId, /*fcmToken*/ null);
 
-            // Add deviceID to organizer database
-            getOrganizerCollection().document(user.getDeviceId()).set(user);
-
             UserDB.upsertUser(user, (ok, e) -> {
                 if (!ok) {
                     String msg = (e != null) ? e.getMessage() : "Unknown error";
                     Snackbar.make(findViewById(android.R.id.content), "Failed to create account: " + msg, Snackbar.LENGTH_LONG).show();
                     return;
                 }
-                intent = new Intent(this, ProfileActivity.class);
-                intent.putExtra("deviceId", deviceId);
-                startActivity(intent);
-                finish();
+
+                // ✅ Ensure an Entrant document exists
+                Entrant entrant = new Entrant(deviceId);
+                EntrantDB.addEntrant(entrant, (success) -> {
+                    if (!success) {
+                        // You can log or show a non-blocking warning,
+                        // but don't block the user from continuing
+                        Log.w("SignUpActivity", "Failed to create Entrant doc");
+                    }
+
+                    Intent intent = new Intent(this, ProfileActivity.class);
+                    intent.putExtra("deviceId", deviceId);
+                    startActivity(intent);
+                    finish();
+                });
             });
         });
     }

@@ -56,6 +56,7 @@ public class OrganizerMainPage extends BaseTopBottomActivity {
         com.google.android.material.bottomnavigation.BottomNavigationView bottomNavView = findViewById(R.id.home_bottom_nav_bar);
         if (bottomNavView != null) bottomNavView.setSelectedItemId(R.id.home_activity);
 
+
         // Populate event list with database data
         db = FirebaseFirestore.getInstance();
         eventsRef = db.collection("events");

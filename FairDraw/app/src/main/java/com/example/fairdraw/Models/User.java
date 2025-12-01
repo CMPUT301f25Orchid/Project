@@ -22,11 +22,7 @@ public class User implements Serializable {
      * No-argument constructor required by Firestore. Initializes the default roles list
      * with the "entrant" role.
      */
-    public User() {
-        this.roles = new ArrayList<String>();
-        roles.add("entrant");
-        roles.add("organizer");
-    }
+    public User() {}
 
     /**
      * Constructs a user with the provided profile fields and initializes default roles.
@@ -45,7 +41,6 @@ public class User implements Serializable {
         this.fcmToken = fcmToken;
         this.roles = new ArrayList<String>();
         this.roles.add("entrant");
-        this.roles.add("organizer");
     }
 
     // Getters (Firestore needs these)
