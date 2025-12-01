@@ -31,6 +31,9 @@
             android:name=".Activities.EntrantMyEventsActivity"
             android:exported="false" />
         <activity
+            android:name=".Activities.AdminEventsPage"
+            android:exported="false" />
+        <activity
             android:name=".Activities.EditProfileActivity"
             android:exported="false" />
         <activity

@@ -139,6 +139,15 @@ public class EntrantHomeActivity extends BaseTopBottomActivity {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
 
         for (Event event : events) {
+            // If event is null, skip it
+            if (event == null) continue;
+
+            // If event uuid is null, skip it
+            if (event.getUuid() == null) {
+                Log.w("EntrantHomeActivity", "Skipping event with null UUID with title: " + event.getTitle());
+                continue;
+            }
+
             // Inflate the card layout
             CardView cardView = (CardView) inflater.inflate(R.layout.eventscard, eventListContainer, false);
 
