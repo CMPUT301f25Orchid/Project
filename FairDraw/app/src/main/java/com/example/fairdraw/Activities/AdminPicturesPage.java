@@ -99,25 +99,23 @@ public class AdminPicturesPage extends BaseTopBottomActivity {
 
     /**
      * Loads event posters from Firebase Storage and displays them.
+     * Uses the callback-based listenToEventPosters method for consistent error handling
+     * and a cleaner interface pattern matching other listener methods in the codebase.
      * For each poster, a real-time Firestore listener is attached for event data updates.
      */
     private void loadPictures() {
         FirebaseImageStorageService imageService = new FirebaseImageStorageService();
 
-        imageService.listAllEventPosters()
-                .addOnSuccessListener(eventPosters -> {
-                    // eventPosters is List<FirebaseImageStorageService.EventPosterInfo>
-                    // Bind to a RecyclerView / GridView:
-                    // - eventId -> label / subtitle
-                    // - downloadUri -> load with Glide/Picasso/etc
-
-                    displayPictures(eventPosters);
-                })
-                .addOnFailureListener(e -> {
-                    // Show a snack bar / error UI
-                    Log.e(TAG, "Failed to load pictures", e);
-                    Snackbar.make(findViewById(R.id.main), "Failed to load pictures", Snackbar.LENGTH_LONG).show();
-                });
+        // Use the callback-based method for fetching event posters
+        imageService.listenToEventPosters(eventPosters -> {
+            if (eventPosters != null) {
+                displayPictures(eventPosters);
+            } else {
+                // Show a snack bar / error UI
+                Log.e(TAG, "Failed to load pictures");
+                Snackbar.make(findViewById(R.id.main), "Failed to load pictures", Snackbar.LENGTH_LONG).show();
+            }
+        });
     }
 
     public void displayPictures(List<FirebaseImageStorageService.EventPosterInfo> eventPosters) {
