@@ -62,21 +62,16 @@
                 android:gravity="center_vertical"
                 android:paddingTop="10dp">
 
-                <ImageView
-                    android:id="@+id/delete_image_icon"
+                <ImageButton
+                    android:id="@+id/delete_image_button"
                     android:layout_width="22dp"
                     android:layout_height="22dp"
-                    android:src="@drawable/delete"
-                    android:tint="#D32F2F"
-                    android:layout_marginEnd="6dp" />
+                    android:background="@drawable/delete"
+                    android:layout_marginEnd="6dp"/>
 
-                <TextView
-                    android:id="@+id/delete_image_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="delete image"
-                    android:textColor="#D32F2F"
-                    android:textSize="14sp" />
+
+
+
             </LinearLayout>
 
 
