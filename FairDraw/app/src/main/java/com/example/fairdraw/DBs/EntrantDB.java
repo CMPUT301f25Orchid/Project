@@ -1,14 +1,18 @@
 package com.example.fairdraw.DBs;
 
+import android.util.Log;
+
 import com.example.fairdraw.Others.EntrantNotification;
 import com.example.fairdraw.Models.Entrant;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.SetOptions;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +23,8 @@ import java.util.Map;
  * into an entrant's notifications array.</p>
  */
 public class EntrantDB {
+
+    static String TAG = "EntrantDB";
 
     /**
      * Callback for when an Entrant is retrieved from the database.
@@ -63,6 +69,11 @@ public class EntrantDB {
          */
         void onCallback(boolean success);
     }
+
+    public interface SimpleCallback {
+        void onCallback(boolean success, Exception e);
+    }
+
 
     /**
      * Returns a CollectionReference pointing to the "entrants" collection.
@@ -125,6 +136,39 @@ public class EntrantDB {
                 .addOnCompleteListener(task -> callback.onCallback(task.isSuccessful()));
     }
 
+    /**
+     * Attach a real-time snapshot listener for a single entrant document.
+     *
+     * @param entrantId id of the entrant to listen to (usually deviceId)
+     * @param callback callback that receives Entrant updates
+     * @return ListenerRegistration handle which can be used to remove the listener
+     */
+    public static ListenerRegistration listenToEntrant(String entrantId, GetEntrantCallback callback) {
+
+        DocumentReference entrantRef = getEntrantCollection().document(entrantId);
+
+        return entrantRef.addSnapshotListener((snapshot, e) -> {
+            if (e != null) {
+                Log.e(TAG, "listenToEntrant: snapshot listener error for id " + entrantId, e);
+                callback.onCallback(null);
+                return;
+            }
+
+            if (snapshot != null && snapshot.exists()) {
+                try {
+                    Entrant entrant = snapshot.toObject(Entrant.class);
+                    callback.onCallback(entrant);
+                } catch (Exception ex) {
+                    Log.e(TAG, "listenToEntrant: failed to deserialize entrant with id " + entrantId, ex);
+                    callback.onCallback(null);
+                }
+            } else {
+                callback.onCallback(null);
+            }
+        });
+    }
+
+
     /***
      * Callback for when a notification is pushed to the database.
      */
@@ -179,4 +223,67 @@ public class EntrantDB {
                             .addOnFailureListener(e2 -> { if (callB != null) callB.onCallback(false, e2); });
                 });
     }
+
+    public static void addEventToHistory(
+            String entrantId,
+            String eventId,
+            String initialStatus,
+            SimpleCallback callback
+    ) {
+        DocumentReference ref = getEntrantCollection().document(entrantId);
+
+        Map<String, Object> statusObj = new HashMap<>();
+        statusObj.put("status", initialStatus);
+        statusObj.put("lastUpdated", FieldValue.serverTimestamp());
+
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("eventHistory", FieldValue.arrayUnion(eventId));
+        updates.put("eventHistoryStatus." + eventId, statusObj);
+
+        ref.update(updates)
+                .addOnSuccessListener(v -> {
+                    if (callback != null) callback.onCallback(true, null);
+                })
+                .addOnFailureListener(e -> {
+                    // Create the entire structure if missing
+                    Map<String, Object> init = new HashMap<>();
+                    init.put("eventHistory", Collections.singletonList(eventId));
+                    init.put("eventHistoryStatus",
+                            Collections.singletonMap(eventId, statusObj));
+
+                    ref.set(init, SetOptions.merge())
+                            .addOnSuccessListener(v2 -> {
+                                if (callback != null) callback.onCallback(true, null);
+                            })
+                            .addOnFailureListener(e2 -> {
+                                if (callback != null) callback.onCallback(false, e2);
+                            });
+                });
+    }
+
+    public static void updateEventHistoryStatus(
+            String entrantId,
+            String eventId,
+            String newStatus,
+            SimpleCallback callback
+    ) {
+        DocumentReference ref = getEntrantCollection().document(entrantId);
+
+        Map<String, Object> statusObj = new HashMap<>();
+        statusObj.put("status", newStatus);
+        statusObj.put("lastUpdated", FieldValue.serverTimestamp());
+
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("eventHistoryStatus." + eventId, statusObj);
+
+        ref.update(updates)
+                .addOnSuccessListener(v -> {
+                    if (callback != null) callback.onCallback(true, null);
+                })
+                .addOnFailureListener(e -> {
+                    if (callback != null) callback.onCallback(false, e);
+                });
+    }
+
+
 }

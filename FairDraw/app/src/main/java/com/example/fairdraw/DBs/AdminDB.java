@@ -1,6 +1,7 @@
 package com.example.fairdraw.DBs;
 
 import com.example.fairdraw.Models.Admin;
+import com.example.fairdraw.Others.AdminNotificationLog;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -16,6 +17,10 @@ public class AdminDB {
     /**
      * Callback for when an Admin is retrieved from the database.
      */
+    private static final String LOG_COLLECTION = "notification_logs";
+
+
+
     public interface GetAdminCallback {
         /**
          * Invoked when the admin read operation completes.
@@ -117,4 +122,24 @@ public class AdminDB {
         getAdminCollection().document(deviceId).delete()
                 .addOnCompleteListener(task -> callback.onCallback(task.isSuccessful()));
     }
+
+    /**
+     * Writes a single log record to the central 'notification_logs' collection.
+     * This is a simple "fire and forget" action with no callback.
+     * @param log The AdminNotificationLog object to be saved.
+     */
+    public static void logNotification(AdminNotificationLog log) {
+        FirebaseFirestore.getInstance().collection(LOG_COLLECTION).add(log);
+    }
+
+    /**
+     * Provides a Firestore Query for an admin screen to read all notification logs,
+     * sorted with the newest entries first.
+     * @return A Query object to be used with a FirestoreRecyclerAdapter or snapshot listener.
+     */
+    public static com.google.firebase.firestore.Query getNotificationLogsQuery() {
+        return FirebaseFirestore.getInstance().collection(LOG_COLLECTION)
+                .orderBy("timestamp", com.google.firebase.firestore.Query.Direction.DESCENDING);
+    }
+
 }

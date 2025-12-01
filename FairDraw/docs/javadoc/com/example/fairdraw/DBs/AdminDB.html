@@ -105,9 +105,7 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first even-row-color"><code>static interface&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="AdminDB.GetAdminCallback.html" class="type-name-link" title="interface in com.example.fairdraw.DBs">AdminDB.GetAdminCallback</a></code></div>
-<div class="col-last even-row-color">
-<div class="block">Callback for when an Admin is retrieved from the database.</div>
-</div>
+<div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static interface&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="AdminDB.UpdateAdminCallback.html" class="type-name-link" title="interface in com.example.fairdraw.DBs">AdminDB.UpdateAdminCallback</a></code></div>
 <div class="col-last odd-row-color">
@@ -162,6 +160,17 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getAdminCollection()" class="member-name-link">getAdminCollection</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns a reference to the Firestore collection that stores admins.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.google.firebase.firestore.Query</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getNotificationLogsQuery()" class="member-name-link">getNotificationLogsQuery</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Provides a Firestore Query for an admin screen to read all notification logs,
+ sorted with the newest entries first.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#logNotification(com.example.fairdraw.Others.AdminNotificationLog)" class="member-name-link">logNotification</a><wbr>(<a href="../Others/AdminNotificationLog.html" title="class in com.example.fairdraw.Others">AdminNotificationLog</a>&nbsp;log)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Writes a single log record to the central 'notification_logs' collection.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#updateAdmin(com.example.fairdraw.Models.Admin,com.example.fairdraw.DBs.AdminDB.UpdateAdminCallback)" class="member-name-link">updateAdmin</a><wbr>(<a href="../Models/Admin.html" title="class in com.example.fairdraw.Models">Admin</a>&nbsp;admin,
@@ -260,6 +269,30 @@ loadScripts(document, 'script');</script>
 <dt>Parameters:</dt>
 <dd><code>deviceId</code> - document id (device id) to delete</dd>
 <dd><code>callback</code> - callback invoked with success flag when the operation completes</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="logNotification(com.example.fairdraw.Others.AdminNotificationLog)">
+<h3>logNotification</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">logNotification</span><wbr><span class="parameters">(<a href="../Others/AdminNotificationLog.html" title="class in com.example.fairdraw.Others">AdminNotificationLog</a>&nbsp;log)</span></div>
+<div class="block">Writes a single log record to the central 'notification_logs' collection.
+ This is a simple "fire and forget" action with no callback.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>log</code> - The AdminNotificationLog object to be saved.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getNotificationLogsQuery()">
+<h3>getNotificationLogsQuery</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.firebase.firestore.Query</span>&nbsp;<span class="element-name">getNotificationLogsQuery</span>()</div>
+<div class="block">Provides a Firestore Query for an admin screen to read all notification logs,
+ sorted with the newest entries first.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>A Query object to be used with a FirestoreRecyclerAdapter or snapshot listener.</dd>
 </dl>
 </section>
 </li>

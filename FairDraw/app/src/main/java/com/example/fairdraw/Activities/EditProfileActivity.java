@@ -18,6 +18,7 @@ import com.example.fairdraw.DBs.UserDB;
 import com.example.fairdraw.Models.User;
 import com.example.fairdraw.R;
 import com.example.fairdraw.ServiceUtility.DevicePrefsManager;
+import com.google.android.material.materialswitch.MaterialSwitch;
 
 import org.w3c.dom.Text;
 
@@ -28,6 +29,8 @@ public class EditProfileActivity extends AppCompatActivity {
     private Button saveChangesButton, cancelButton, returnHomeButton;
     private EditText nameEditText, emailEditText, phoneEditText;
     private String deviceId; //Deviceid used to identify user
+
+    private MaterialSwitch notificationSwitch;
     private User currentUser; // Store the fetched user object
 
     @Override
@@ -43,6 +46,7 @@ public class EditProfileActivity extends AppCompatActivity {
         nameEditText = findViewById(R.id.etName);
         emailEditText = findViewById(R.id.etEmail);
         phoneEditText = findViewById(R.id.etPhone);
+        notificationSwitch = findViewById(R.id.swNotifications);
 
         // Get User ID
         deviceId = DevicePrefsManager.getDeviceId(this);
@@ -86,6 +90,7 @@ public class EditProfileActivity extends AppCompatActivity {
                     nameEditText.setText(user.getName());
                     emailEditText.setText(user.getEmail());
                     phoneEditText.setText(user.getPhoneNum());
+                    notificationSwitch.setChecked(user.isNotificationsEnabled());
                 });
             } else {
                 Log.w(TAG, "User with ID " + userId + " not found.");
@@ -104,14 +109,16 @@ public class EditProfileActivity extends AppCompatActivity {
         String newName = nameEditText.getText().toString().trim();
         String newEmail = emailEditText.getText().toString().trim();
         String newPhone = phoneEditText.getText().toString().trim();
+        boolean notificationsAreEnabled = notificationSwitch.isChecked();
 
 
         // Update the local currentUser object with the new data
         currentUser.setName(newName);
         currentUser.setEmail(newEmail);
         currentUser.setPhoneNum(newPhone);
+        currentUser.setNotificationsEnabled(notificationsAreEnabled);
 
-        // *** Use the existing upsertUser method ***
+        // Use the existing upsertUser method
         UserDB.upsertUser(currentUser, (ok, e) -> {
             if (ok) {
                 // Success

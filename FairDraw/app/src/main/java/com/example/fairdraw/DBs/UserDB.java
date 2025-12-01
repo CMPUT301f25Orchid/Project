@@ -150,4 +150,29 @@ public class UserDB {
                 .addOnSuccessListener(v -> cb.onCallback(true, null))
                 .addOnFailureListener(e -> cb.onCallback(false, e));
     }
+
+//    /**
+//     * Generic callback for operations that succeed or fail without returning data.
+//     */
+//    public interface GeneralCallback {
+//        /**
+//         * Called when the operation is complete.
+//         * @param ok True if the operation was successful, false otherwise.
+//         * @param e The exception if an error occurred, or null otherwise.
+//         */
+//        void onCallback(boolean ok, @Nullable Exception e);
+//    }
+//
+//    /**
+//     * Deletes a user's role document from a specified collection (e.g., "Organisers", "Entrants").
+//     * @param collectionName The name of the role collection.
+//     * @param userId The ID of the user document to delete from that collection.
+//     * @param cb The callback to be invoked with the result.
+//     */
+//    public static void deleteRole(String collectionName, String userId, GeneralCallback cb) {
+//        FirebaseFirestore.getInstance().collection(collectionName).document(userId)
+//                .delete()
+//                .addOnSuccessListener(v -> cb.onCallback(true, null))
+//                .addOnFailureListener(e -> cb.onCallback(false, e));
+//    } DON'T FORGET TO MOVE GENERAL CALLBACK UP, CLOSER TO THE OTHER CALLBACK METHODS
 }

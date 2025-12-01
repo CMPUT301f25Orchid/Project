@@ -18,6 +18,8 @@ public class User implements Serializable {
     private String fcmToken;
     private ArrayList<String> roles;
 
+    private boolean notificationsEnabled;
+
     /**
      * No-argument constructor required by Firestore. Initializes the default roles list
      * with the "entrant" role.
@@ -41,6 +43,7 @@ public class User implements Serializable {
         this.fcmToken = fcmToken;
         this.roles = new ArrayList<String>();
         this.roles.add("entrant");
+        this.notificationsEnabled = true;
     }
 
     // Getters (Firestore needs these)
@@ -107,4 +110,11 @@ public class User implements Serializable {
      * @param roles new list of role names
      */
     public void setRoles(ArrayList<String> roles) { this.roles = roles; }
+
+    public boolean isNotificationsEnabled() {
+        return notificationsEnabled;
+    }
+    public void setNotificationsEnabled(boolean notificationsEnabled) {
+        this.notificationsEnabled = notificationsEnabled;
+    }
 }

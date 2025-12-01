@@ -133,12 +133,21 @@ public class EntrantHomeActivity extends BaseTopBottomActivity {
     /**
      * Adds eventscard.xml for each Event
      */
-    private void displayEvents(List<Event> events) {
+    public void displayEvents(List<Event> events) {
         eventListContainer.removeAllViews(); // Clear previous views to prevent duplicates
         LayoutInflater inflater = LayoutInflater.from(this);
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
 
         for (Event event : events) {
+            // If event is null, skip it
+            if (event == null) continue;
+
+            // If event uuid is null, skip it
+            if (event.getUuid() == null) {
+                Log.w("EntrantHomeActivity", "Skipping event with null UUID with title: " + event.getTitle());
+                continue;
+            }
+
             // Inflate the card layout
             CardView cardView = (CardView) inflater.inflate(R.layout.eventscard, eventListContainer, false);
 
