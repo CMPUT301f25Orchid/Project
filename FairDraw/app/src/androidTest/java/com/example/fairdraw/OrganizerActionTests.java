@@ -3,20 +3,11 @@ package com.example.fairdraw;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
-import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.isSelected;
-import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withParentIndex;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
-import android.util.Log;
-import android.widget.DatePicker;
-
-import androidx.test.espresso.contrib.PickerActions;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -26,15 +17,9 @@ import com.example.fairdraw.DBs.EventDB;
 import com.example.fairdraw.Models.Event;
 import com.example.fairdraw.Others.OrganizerEventsDataHolder;
 import com.example.fairdraw.ServiceUtility.DevicePrefsManager;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-import com.example.fairdraw.Activities.OrganizerMainPage;
-
-import org.hamcrest.Matchers;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,25 +27,21 @@ import org.junit.runner.RunWith;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.UUID;
 
 @RunWith(AndroidJUnit4.class)
 public class OrganizerActionTests {
     @Rule
     public ActivityScenarioRule<OrganizerMainPage> activityRule = new ActivityScenarioRule<>(OrganizerMainPage.class);
 
-    // Event to be tested
-    Event event;
 
     // Create Event for each test
-    @Before
-    public void setUp() {
+    @BeforeClass
+    public static void setUp() {
 
         // Create new event and add to database
-        final String deviceId = DevicePrefsManager.getDeviceId(InstrumentationRegistry.getInstrumentation().getTargetContext());
+        String deviceId = DevicePrefsManager.getDeviceId(InstrumentationRegistry.getInstrumentation().getTargetContext());
         DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        event = new Event();
+        Event event = new Event();
         event.setTitle("Test Event");
         event.setDescription("Test Description");
         event.setCapacity(100);
@@ -75,7 +56,7 @@ public class OrganizerActionTests {
         catch (Exception ignored) {}
         event.setGeolocation(true);
         event.setWaitingListLimit(10);
-        event.setUuid(UUID.randomUUID().toString());
+        event.setUuid(deviceId);
         event.setOrganizer(deviceId);
         event.setInvitedList(new ArrayList<>());
         event.setCancelledList(new ArrayList<>());
@@ -86,10 +67,11 @@ public class OrganizerActionTests {
     }
 
     // Remove Created Event
-    @After
-    public void tearDown() {
+    @AfterClass
+    public static void tearDown() {
+        final String deviceId = DevicePrefsManager.getDeviceId(InstrumentationRegistry.getInstrumentation().getTargetContext());
         // Remove test event
-        EventDB.deleteEvent(event.getUuid(), success -> {});
+        EventDB.deleteEvent(deviceId, success -> {});
 
     }
 
@@ -123,7 +105,7 @@ public class OrganizerActionTests {
         onView(withId(R.id.event_edit_button)).perform(click());
 
         //Ensure activity open is event edit page
-        onView(withId(R.id.event_creation_input_layout)).check(matches(isDisplayed()));
+        onView(withId(R.id.edit_event_input_layout)).check(matches(isDisplayed()));
     }
 
     //Test event edit page goes to organizer main page

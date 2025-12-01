@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingTop="20dp"
     tools:context=".Activities.CreateEventPage">
 
     <TextView
@@ -13,6 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="1dp"
         android:text="Start Date *"
+        android:textColor="@color/black"
         android:textSize="17sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView15" />
@@ -23,6 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="7dp"
         android:text="Event Dates"
+        android:textColor="@color/black"
         android:textSize="17sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/event_registration_start_date" />
@@ -32,6 +35,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Open *"
+        android:textColor="@color/black"
         android:textSize="17sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView11" />
@@ -42,6 +46,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="60dp"
         android:text="Geolocation Requirement"
+        android:textColor="@color/black"
         android:textSize="17sp"
         app:layout_constraintStart_toEndOf="@+id/textView12"
         app:layout_constraintTop_toBottomOf="@+id/textView11" />
@@ -52,6 +57,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="65dp"
         android:text="Closes *"
+        android:textColor="@color/black"
         android:textSize="17sp"
         app:layout_constraintStart_toEndOf="@+id/textView14"
         app:layout_constraintTop_toBottomOf="@+id/textView11" />
@@ -62,6 +68,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="Registration Period"
+        android:textColor="@color/black"
         android:textSize="17sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/event_capacity" />
@@ -72,6 +79,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="48dp"
         android:text="Price *"
+        android:textColor="@color/black"
         android:textSize="17sp"
         app:layout_constraintStart_toEndOf="@+id/textView8"
         app:layout_constraintTop_toTopOf="@+id/textView8" />
@@ -83,6 +91,7 @@
         android:layout_marginStart="46dp"
         android:layout_marginTop="10dp"
         android:text="Waitlist Limit (Optional)"
+        android:textColor="@color/black"
         android:textSize="17sp"
         app:layout_constraintStart_toEndOf="@+id/textView9"
         app:layout_constraintTop_toBottomOf="@+id/event_location" />
@@ -92,6 +101,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Location *"
+        android:textColor="@color/black"
         android:textSize="17sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/event_description" />
@@ -110,6 +120,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Description *"
+        android:textColor="@color/black"
         android:textSize="17sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/event_title" />
@@ -120,6 +131,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="text"
+        android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
@@ -128,6 +140,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Event Poster Image (Optional)"
+        android:textColor="@color/black"
         android:textSize="17sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -139,6 +152,7 @@
         android:ems="10"
         android:gravity="start|top"
         android:inputType="textMultiLine"
+        android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
@@ -147,6 +161,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Event Title *"
+        android:textColor="@color/black"
         android:textSize="17sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/poster_upload" />
@@ -158,6 +173,7 @@
         android:layout_marginTop="1dp"
         android:ems="10"
         android:inputType="text"
+        android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
@@ -167,6 +183,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="Capacity *"
+        android:textColor="@color/black"
         android:textSize="17sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/event_location" />
@@ -177,6 +194,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="number"
+        android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
@@ -186,6 +204,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="number"
+        android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="@+id/textView10"
         app:layout_constraintTop_toBottomOf="@+id/textView10" />
 
@@ -195,6 +214,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="numberDecimal"
+        android:textColor="@color/black"
         app:layout_constraintStart_toEndOf="@+id/textView5"
         app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
@@ -205,6 +225,7 @@
         android:ems="10"
         android:hint="MM/DD/YYYY"
         android:inputType="date"
+        android:textColor="@color/black"
         android:textSize="15dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView14" />
@@ -216,6 +237,7 @@
         android:ems="10"
         android:hint="MM/DD/YYYY"
         android:inputType="date"
+        android:textColor="@color/black"
         android:textSize="15dp"
         app:layout_constraintStart_toStartOf="@+id/textView12"
         app:layout_constraintTop_toBottomOf="@+id/textView12" />
@@ -233,14 +255,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
-            android:text="Yes" />
+            android:text="Yes"
+            android:textColor="@color/black" />
 
         <RadioButton
             android:id="@+id/geo_no"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:text="No" />
+            android:text="No"
+            android:textColor="@color/black" />
     </RadioGroup>
 
     <EditText
@@ -250,6 +274,7 @@
         android:ems="10"
         android:hint="MM/DD/YYYY"
         android:inputType="date"
+        android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView16" />
 
@@ -260,6 +285,7 @@
         android:ems="10"
         android:hint="MM/DD/YYYY"
         android:inputType="date"
+        android:textColor="@color/black"
         app:layout_constraintStart_toEndOf="@+id/textView17"
         app:layout_constraintStart_toStartOf="@+id/textView17"
         app:layout_constraintTop_toBottomOf="@+id/textView17" />
@@ -270,6 +296,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="100dp"
         android:text="End Date *"
+        android:textColor="@color/black"
         android:textSize="17sp"
         app:layout_constraintStart_toEndOf="@+id/textView16"
         app:layout_constraintTop_toTopOf="@+id/textView16" />
@@ -279,6 +306,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="$"
+        android:textColor="@color/black"
         android:textSize="25sp"
         app:layout_constraintBottom_toBottomOf="@+id/event_price"
         app:layout_constraintStart_toStartOf="@+id/textView9" />
