@@ -73,10 +73,13 @@ dependencies {
     implementation(libs.firebase.storage)
     implementation(libs.espresso.intents)
     implementation(libs.cardview)
+    testImplementation(libs.ext.junit)
     androidTestImplementation("androidx.test.espresso:espresso-contrib:3.7.0") {
         exclude("com.google.protobuf", "protobuf-lite")
     }
     testImplementation(libs.junit)
+
+
     // Robolectric for JVM unit tests
     testImplementation("org.robolectric:robolectric:4.10.3")
     testImplementation("androidx.test:core:1.5.0")

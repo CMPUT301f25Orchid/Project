@@ -139,6 +139,8 @@ class com.example.fairdraw.Models.User {
 + setDeviceId(arg0 : String) : void
 + setFcmToken(arg0 : String) : void
 + setRoles(arg0 : ArrayList<String>) : void
++ isNotificationsEnabled() : boolean
++ setNotificationsEnabled(arg0 : boolean) : void
 }
 class com.example.fairdraw.Models.AreaStats {
 + increment() : void
@@ -255,6 +257,25 @@ class com.example.fairdraw.Others.ListItemEntrant {
 + getEntrantId() : String
 + setEntrantId(arg0 : String) : void
 }
+class com.example.fairdraw.Activities.AdminNotificationLogActivity {
+# onCreate(arg0 : Bundle) : void
+}
+class com.example.fairdraw.Activities.AdminNotificationLogActivity$LogAdapter {
++ onCreateViewHolder(arg0 : ViewGroup, arg1 : int) : LogViewHolder
++ onBindViewHolder(arg0 : LogViewHolder, arg1 : int) : void
++ getItemCount() : int
+}
+class com.example.fairdraw.Activities.AdminNotificationLogActivity$LogAdapter$LogViewHolder {
+}
+class com.example.fairdraw.Others.AdminNotificationLog {
++ setTimestamp(arg0 : Date) : void
++ getEventId() : String
++ getEventTitle() : String
++ getRecipientDeviceId() : String
++ getNotificationType() : NotificationType
++ getUserName() : String
++ getTimestamp() : Date
+}
 class com.example.fairdraw.Models.Admin {
 + getDeviceId() : String
 + setDeviceId(arg0 : String) : void
@@ -287,6 +308,7 @@ class com.example.fairdraw.DBs.OrganizerDB {
 + {static} addOrganizer(arg0 : Organizer, arg1 : AddOrganizerCallback) : void
 + {static} updateOrganizer(arg0 : Organizer, arg1 : UpdateOrganizerCallback) : void
 + {static} deleteOrganizer(arg0 : String, arg1 : DeleteOrganizerCallback) : void
++ {static} removeOrganizerAndCleanupEvents(arg0 : String, arg1 : String, arg2 : DeleteOrganizerCallback) : void
 }
 interface com.example.fairdraw.DBs.OrganizerDB$GetOrganizerCallback {
 }
@@ -340,6 +362,8 @@ class com.example.fairdraw.DBs.AdminDB {
 + {static} addAdmin(arg0 : Admin, arg1 : AddAdminCallback) : void
 + {static} updateAdmin(arg0 : Admin, arg1 : UpdateAdminCallback) : void
 + {static} deleteAdmin(arg0 : String, arg1 : DeleteAdminCallback) : void
++ {static} logNotification(arg0 : AdminNotificationLog) : void
++ {static} getNotificationLogsQuery() : com.google.firebase.firestore.Query
 }
 interface com.example.fairdraw.DBs.AdminDB$GetAdminCallback {
 }
@@ -445,6 +469,11 @@ com.google.android.gms.maps.OnMapReadyCallback <|.. com.example.fairdraw.Activit
 com.example.fairdraw.Activities.BaseTopBottomActivity <|-- com.example.fairdraw.Activities.OrganizerWaitListMapActivity
 com.example.fairdraw.Activities.BaseTopBottomActivity <|-- com.example.fairdraw.Activities.CreateEventPage
 androidx.fragment.app.DialogFragment <|-- com.example.fairdraw.Fragments.QrCodeFragment
+androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.AdminNotificationLogActivity
+com.example.fairdraw.Activities.AdminNotificationLogActivity +.. com.example.fairdraw.Activities.AdminNotificationLogActivity$LogAdapter
+com.example.fairdraw.Activities.Adapter <|-- com.example.fairdraw.Activities.AdminNotificationLogActivity$LogAdapter
+com.example.fairdraw.Activities.AdminNotificationLogActivity$LogAdapter +.. com.example.fairdraw.Activities.AdminNotificationLogActivity$LogAdapter$LogViewHolder
+com.example.fairdraw.Activities.ViewHolder <|-- com.example.fairdraw.Activities.AdminNotificationLogActivity$LogAdapter$LogViewHolder
 java.io.Serializable <|.. com.example.fairdraw.Models.Admin
 com.example.fairdraw.Activities.BaseTopBottomActivity <|-- com.example.fairdraw.Activities.EntrantScan
 com.example.fairdraw.Activities.BaseTopBottomActivity <|-- com.example.fairdraw.Activities.EntrantNotificationsActivity
