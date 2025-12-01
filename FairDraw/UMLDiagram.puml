@@ -241,6 +241,7 @@ class com.example.fairdraw.Others.EntrantNotification {
 }
 class com.example.fairdraw.Activities.AdminPicturesPage {
 # onCreate(arg0 : Bundle) : void
++ displayPictures(arg0 : List<FirebaseImageStorageService.EventPosterInfo>) : void
 }
 class com.example.fairdraw.Activities.EditEventPage {
 + onCreateView(arg0 : LayoutInflater, arg1 : ViewGroup, arg2 : Bundle) : View
@@ -503,7 +504,7 @@ androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.Ad
 androidx.fragment.app.DialogFragment <|-- com.example.fairdraw.Fragments.SendNotificationDialogFragment
 com.example.fairdraw.Fragments.SendNotificationDialogFragment +.. com.example.fairdraw.Fragments.SendNotificationDialogFragment$Listener
 java.io.Serializable <|.. com.example.fairdraw.Others.EntrantNotification
-androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.AdminPicturesPage
+com.example.fairdraw.Activities.BaseTopBottomActivity <|-- com.example.fairdraw.Activities.AdminPicturesPage
 androidx.fragment.app.Fragment <|-- com.example.fairdraw.Activities.EditEventPage
 com.google.android.gms.maps.OnMapReadyCallback <|.. com.example.fairdraw.Activities.OrganizerWaitListMapActivity
 com.example.fairdraw.Activities.BaseTopBottomActivity <|-- com.example.fairdraw.Activities.OrganizerWaitListMapActivity
