@@ -72,6 +72,13 @@ public class Entrant implements Serializable {
         this.eventHistory = eventHistory;
     }
 
+    public void addEventToHistoryOnce(String eventId) {
+        if (!eventHistory.contains(eventId)) {
+            eventHistory.add(eventId);
+        }
+    }
+
+
     /**
      * Returns the notification preferences map where keys are preference names (e.g. "email",
      * "phone") and values indicate whether that channel is enabled.
@@ -93,7 +100,8 @@ public class Entrant implements Serializable {
 
     /**
      * Updates notification preferences by copying entries from the provided map into the
-     * local preferences map. Existing keys will be overwritten.
+     * local preferences map.
+     * \Existing keys will be overwritten.
      *
      * @param newNotificationPrefs map of preference keys to boolean values
      */

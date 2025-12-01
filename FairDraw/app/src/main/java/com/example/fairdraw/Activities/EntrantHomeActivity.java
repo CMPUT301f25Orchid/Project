@@ -84,6 +84,8 @@ public class EntrantHomeActivity extends AppCompatActivity {
 
         myEvents.setOnClickListener(v -> {
             // TODO: Send to EntrantEventsActivity
+            Intent intent = new Intent(this, EntrantMyEventsActivity.class);
+            startActivity(intent);
         });
 
         scan.setOnClickListener(v -> {
