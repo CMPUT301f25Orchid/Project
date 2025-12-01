@@ -114,6 +114,8 @@ class com.example.fairdraw.Models.Event {
 + setEnrolledList(arg0 : List<String>) : void
 + getCancelledList() : List<String>
 + setCancelledList(arg0 : List<String>) : void
++ getTags() : List<String>
++ setTags(arg0 : List<String>) : void
 + isEnrolled(arg0 : String) : boolean
 + isInvited(arg0 : String) : boolean
 + isOnWaitingList(arg0 : String) : boolean
@@ -270,6 +272,12 @@ class com.example.fairdraw.Fragments.QrCodeFragment {
 + onViewCreated(arg0 : View, arg1 : Bundle) : void
 + getTheme() : int
 }
+class com.example.fairdraw.Others.FilterUtils {
++ {static} filter(arg0 : List<Event>, arg1 : String, arg2 : String, arg3 : int) : List<Event>
++ {static} matchesStatus(arg0 : Event, arg1 : String) : boolean
++ {static} matchesInterest(arg0 : Event, arg1 : String) : boolean
++ {static} matchesAvailability(arg0 : Event, arg1 : int) : boolean
+}
 class com.example.fairdraw.Others.ListItemEntrant {
 + getEntrantId() : String
 + setEntrantId(arg0 : String) : void
@@ -328,6 +336,7 @@ class com.example.fairdraw.Activities.EntrantNotificationsActivity {
 }
 class com.example.fairdraw.Fragments.FilterEventsDialogFragment {
 + {static} newInstance(arg0 : String, arg1 : String, arg2 : int) : FilterEventsDialogFragment
++ {static} newInstance(arg0 : String, arg1 : String, arg2 : int, arg3 : ArrayList<String>) : FilterEventsDialogFragment
 + setFilterListener(arg0 : FilterListener) : void
 + onCreateDialog(arg0 : Bundle) : Dialog
 }
