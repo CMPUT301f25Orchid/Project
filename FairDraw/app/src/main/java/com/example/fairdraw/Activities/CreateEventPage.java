@@ -11,12 +11,16 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 import android.text.InputType;
+import com.google.android.material.snackbar.Snackbar;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.example.fairdraw.Others.BarType;
+import com.example.fairdraw.R;
+import com.example.fairdraw.Activities.BaseTopBottomActivity;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -31,14 +35,10 @@ import com.example.fairdraw.DBs.EventDB;
 import com.example.fairdraw.Models.Event;
 import com.example.fairdraw.Others.EventState;
 import com.example.fairdraw.Others.OrganizerEventsDataHolder;
-import com.example.fairdraw.R;
 import com.example.fairdraw.ServiceUtility.DeepLinkUtil;
 import com.example.fairdraw.ServiceUtility.DevicePrefsManager;
 import com.example.fairdraw.ServiceUtility.FirebaseImageStorageService;
 import com.example.fairdraw.ServiceUtility.QrUtil;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.zxing.BarcodeFormat;
-import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 /**
  * Activity for creating a new event.
@@ -46,7 +46,7 @@ import com.journeyapps.barcodescanner.BarcodeEncoder;
  * Presents a form collecting event details and uploads a new Event object into
  * {@link com.example.fairdraw.Others.OrganizerEventsDataHolder} when the user confirms.
  */
-public class CreateEventPage extends AppCompatActivity {
+public class CreateEventPage extends BaseTopBottomActivity {
 
     private ActivityResultLauncher<Intent> launcher;
     View bottomNavInclude;
@@ -79,11 +79,21 @@ public class CreateEventPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_event_creation_page);
+        // Initialize organizer top & bottom nav if present
+        initTopNav(BarType.ORGANIZER);
+        BottomNavigationView bn = findViewById(R.id.home_bottom_nav_bar);
+        if (bn != null)
+        {
+            initBottomNav(BarType.ORGANIZER, bn);
+            bn.setSelectedItemId(R.id.create_activity);
+        }
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.organizer_navigation_bar), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+
         // Get DeviceId
         final String deviceID = DevicePrefsManager.getDeviceId(this);
 
@@ -145,10 +155,10 @@ public class CreateEventPage extends AppCompatActivity {
                 bannerPhoto = null;
                 if (result.getData() != null) {
                     bannerPhoto = result.getData().getData();
-                    Toast.makeText(this, "Image uploaded", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(android.R.id.content), "Image uploaded", Snackbar.LENGTH_SHORT).show();
                 }
                 else {
-                    Toast.makeText(this, "No image selected", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(android.R.id.content), "No image selected", Snackbar.LENGTH_SHORT).show();
                 }
             }
         });
@@ -165,7 +175,7 @@ public class CreateEventPage extends AppCompatActivity {
                     eventLocation.getText().toString().isEmpty() ||
                     eventPrice.getText().toString().isEmpty() ||
                     eventGeolocation.getCheckedRadioButtonId() == -1) {
-                Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(android.R.id.content), "Please fill in all fields", Snackbar.LENGTH_SHORT).show();
             } else {
                 try {
                     Date openDate = dateFormat.parse(eventRegistrationOpenDate.getText().toString());
@@ -235,7 +245,7 @@ public class CreateEventPage extends AppCompatActivity {
                 }
                 catch (Exception e) {
                     Log.e("CreateEventPage", "Error creating event", e);
-                    Toast.makeText(this, "Error creating event: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(android.R.id.content), "Error creating event: " + e.getMessage(), Snackbar.LENGTH_SHORT).show();
                 }
 
                 // Return to Organizer Main Page

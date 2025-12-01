@@ -6,6 +6,7 @@ import com.example.fairdraw.Models.User;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
 
 /**
  * Provides a high-level API for interacting with the "users" collection in Firestore.
@@ -89,6 +90,27 @@ public class UserDB {
     }
 
     /**
+     * Adds a snapshot listener to a user document for real-time updates.
+     * @param deviceId The device ID of the user to listen to.
+     * @param cb The callback to be invoked with the result on each update.
+     * @return A ListenerRegistration that can be used to remove the listener.
+     */
+    public static ListenerRegistration addUserSnapshotListener(String deviceId, GetUserCallback cb) {
+        return getUserCollection().document(deviceId).addSnapshotListener((snapshot, e) -> {
+            if (e != null) {
+                cb.onCallback(null, e);
+                return;
+            }
+
+            if (snapshot != null && snapshot.exists()) {
+                cb.onCallback(snapshot.toObject(User.class), null);
+            } else {
+                cb.onCallback(null, null);
+            }
+        });
+    }
+
+    /**
      * Asynchronously checks if a user with the given device ID exists in the database.
      *
      * @param deviceId The device ID to check.
@@ -128,4 +150,29 @@ public class UserDB {
                 .addOnSuccessListener(v -> cb.onCallback(true, null))
                 .addOnFailureListener(e -> cb.onCallback(false, e));
     }
+
+//    /**
+//     * Generic callback for operations that succeed or fail without returning data.
+//     */
+//    public interface GeneralCallback {
+//        /**
+//         * Called when the operation is complete.
+//         * @param ok True if the operation was successful, false otherwise.
+//         * @param e The exception if an error occurred, or null otherwise.
+//         */
+//        void onCallback(boolean ok, @Nullable Exception e);
+//    }
+//
+//    /**
+//     * Deletes a user's role document from a specified collection (e.g., "Organisers", "Entrants").
+//     * @param collectionName The name of the role collection.
+//     * @param userId The ID of the user document to delete from that collection.
+//     * @param cb The callback to be invoked with the result.
+//     */
+//    public static void deleteRole(String collectionName, String userId, GeneralCallback cb) {
+//        FirebaseFirestore.getInstance().collection(collectionName).document(userId)
+//                .delete()
+//                .addOnSuccessListener(v -> cb.onCallback(true, null))
+//                .addOnFailureListener(e -> cb.onCallback(false, e));
+//    } DON'T FORGET TO MOVE GENERAL CALLBACK UP, CLOSER TO THE OTHER CALLBACK METHODS
 }

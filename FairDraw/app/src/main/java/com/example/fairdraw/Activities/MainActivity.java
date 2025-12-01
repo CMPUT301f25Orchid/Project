@@ -9,9 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.Toast;
+import com.google.android.material.snackbar.Snackbar;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -68,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
                     previewImage.setImageURI(uri);
                     sampleBitmap = null; // if user picked, ignore sample
                 } else {
-                    Toast.makeText(this, "No image selected", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(android.R.id.content), "No image selected", Snackbar.LENGTH_SHORT).show();
                 }
             });
 
@@ -172,11 +170,11 @@ public class MainActivity extends AppCompatActivity {
         for (EntrantNotification notification : dummies) {
             EntrantDB.pushNotificationToUser(deviceId, notification, (ok, e) -> {
                 if (!ok) {
-                    Toast.makeText(this, "Seed failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(android.R.id.content), "Seed failed: " + e.getMessage(), Snackbar.LENGTH_SHORT).show();
                 }
             });
         }
-        Toast.makeText(this, "Seed request sent to entrants/" + deviceId, Toast.LENGTH_SHORT).show();
+        Snackbar.make(findViewById(android.R.id.content), "Seed request sent to entrants/" + deviceId, Snackbar.LENGTH_SHORT).show();
     }
 
     /**
@@ -186,10 +184,10 @@ public class MainActivity extends AppCompatActivity {
      */
     private void handleUploadTask(Task<Uri> task, String label) {
         task.addOnSuccessListener(uri -> {
-            Toast.makeText(this, label + " uploaded!\nURL:\notification" + uri, Toast.LENGTH_LONG).show();
+            Snackbar.make(findViewById(android.R.id.content), label + " uploaded!\nURL:\notification" + uri, Snackbar.LENGTH_LONG).show();
 
         }).addOnFailureListener(e -> {
-            Toast.makeText(this, "Upload failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            Snackbar.make(findViewById(android.R.id.content), "Upload failed: " + e.getMessage(), Snackbar.LENGTH_LONG).show();
         });
     }
 }
