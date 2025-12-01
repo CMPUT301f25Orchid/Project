@@ -9,12 +9,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+
+import com.example.fairdraw.Others.EntrantEventStatus;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.fairdraw.DBs.EntrantDB;
 import com.example.fairdraw.DBs.EventDB;
 import com.example.fairdraw.Models.Event;
 import com.example.fairdraw.Others.EntrantNotification;
@@ -39,16 +42,15 @@ public class DecisionFragment extends DialogFragment {
      * @param notification notification containing eventId and title
      * @return a configured DecisionFragment
      */
-    public DecisionFragment newInstance(EntrantNotification notification){
+    public static DecisionFragment newInstance(EntrantNotification notification){
         DecisionFragment.notification = notification;
         DecisionFragment fragment = new DecisionFragment();
         Bundle args = new Bundle();
         String eventName = notification.title;
         String eventId = notification.eventId;
-        String userId = DevicePrefsManager.getDeviceId(getContext());
+        // Do not attempt to read context here — fragment may not be attached yet.
         args.putString("eventName", eventName);
         args.putString("eventId", eventId);
-        args.putString("userId", userId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -88,7 +90,7 @@ public class DecisionFragment extends DialogFragment {
                         return;
                     }
 
-                    String userId = DevicePrefsManager.getDeviceId(getContext());
+                    String userId = DevicePrefsManager.getDeviceId(requireContext());
                     event.cancelLotteryWinner(userId);
                     EventDB.updateEvent(event, new EventDB.UpdateEventCallback() {
                         @Override
@@ -112,7 +114,7 @@ public class DecisionFragment extends DialogFragment {
                         return;
                     }
 
-                    String userId = DevicePrefsManager.getDeviceId(getContext());
+                    String userId = DevicePrefsManager.getDeviceId(requireContext());
                     event.acceptLotteryWinner(userId);
                     EventDB.updateEvent(event, new EventDB.UpdateEventCallback() {
                         @Override
@@ -120,7 +122,22 @@ public class DecisionFragment extends DialogFragment {
                             if (success) {
                                 Snackbar.make(view, "You have been added to the enrolled list", Snackbar.LENGTH_SHORT).show();
                                 Log.d("DecisionFragment", "Successfully updated event for accepting invitation");
+
+                                // Update Entrant event history
+                                String userId = DevicePrefsManager.getDeviceId(requireContext());
+
+                                EntrantDB.addEventToHistory(userId, event.getUuid(), EntrantEventStatus.REGISTERED, new EntrantDB.SimpleCallback() {
+                                    @Override
+                                    public void onCallback(boolean success, Exception e) {
+                                        if (success) {
+                                            Log.d("DecisionFragment", "Successfully updated entrant event history for event: " + event.getUuid());
+                                        } else {
+                                            Log.e("DecisionFragment", "Failed to update entrant event history", e);
+                                        }
+                                    }
+                                });
                             }
+
                             else {
                                 Snackbar.make(view, "Failed to accept invitation", Snackbar.LENGTH_SHORT).show();
                                 Log.e("DecisionFragment", "Failed to update event for accepting invitation");

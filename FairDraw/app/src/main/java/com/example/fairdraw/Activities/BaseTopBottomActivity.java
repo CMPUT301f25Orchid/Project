@@ -43,7 +43,8 @@ public class BaseTopBottomActivity extends AppCompatActivity {
 
             events.setOnClickListener(v -> {
                 // Send to EntrantEventsActivity
-                // TODO
+                Intent intent = new Intent(this, EntrantMyEventsActivity.class);
+                startActivity(intent);
             });
 
             scan.setOnClickListener(v -> {
@@ -61,8 +62,6 @@ public class BaseTopBottomActivity extends AppCompatActivity {
             // Organizer bottom nav uses ids: home_activity, create_activity, settings_activity (scan), notifications_activity
             View home = root.findViewById(R.id.home_activity);
             View create = root.findViewById(R.id.create_activity);
-            View scan = root.findViewById(R.id.settings_activity);
-            View notifications = root.findViewById(R.id.notifications_activity);
 
             home.setOnClickListener(v -> {
                 Intent intent = new Intent(this, OrganizerMainPage.class);
@@ -74,15 +73,6 @@ public class BaseTopBottomActivity extends AppCompatActivity {
                 startActivity(intent);
             });
 
-            scan.setOnClickListener(v -> {
-                // Leave empty
-            });
-
-            notifications.setOnClickListener(v -> {
-                // Reuse entrant notifications screen for now
-                Intent intent = new Intent(this, EntrantNotificationsActivity.class);
-                startActivity(intent);
-            });
         } else if (barType == BarType.ADMIN) {
             // Admin bottom nav uses ids: home_activity, create_activity, settings_activity (scan), notifications_activity
             View adminEvents = root.findViewById(R.id.admin_events_activity);
