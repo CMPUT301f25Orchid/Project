@@ -166,11 +166,13 @@ public class ProfileActivity extends AppCompatActivity {
 //     * 2. Deletes the user's roles (Organiser, Entrant, etc.).
 //     * 3. Deletes the main user document.
 //     * 4. Navigates back to the sign-up screen.
+//     * 4. So rather we do this, delete them as an entrant, delete them as an organizer(Should delete events) , and delete them as admin. Then go back to home screens
 //     * @param deviceId The ID of the user to delete.
 //     */
 //    private void performCascadingDelete(String deviceId) {
 //        // 1: Delete all events organized by this user.
 //        // NOTE: ANDREW WORKING ON THIS METHOD. WHEN DONE CHANGE AS NECESSARY
+//        // PERHAPS CHANGE CASCADE to instead have organizerdb.deleteorganizer etc instead of this event thing
 //        //SCROLL UP ON GEMINI TO SEE THE SUGGESTED METHOD THAT DELETES ALL EVENTS
 //        EventDB.deleteEventsByOrganizer(deviceId, (ok, e) -> {
 //            if (ok) {
