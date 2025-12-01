@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Model representing an entrant in the application. An Entrant holds entrant-specific
@@ -15,6 +16,7 @@ import java.util.List;
 public class Entrant implements Serializable {
     private String deviceId;
     private ArrayList<String> eventHistory = new ArrayList<>();
+    private Map<String, Map<String, Object>> eventHistoryStatus;
     private ArrayList<EntrantNotification> notifications = new ArrayList<>();
 
     // Just email and phone true or false
@@ -72,6 +74,14 @@ public class Entrant implements Serializable {
         this.eventHistory = eventHistory;
     }
 
+    public Map<String, Map<String, Object>> getEventHistoryStatus() {
+        return eventHistoryStatus;
+    }
+
+    public void setEventHistoryStatus(Map<String, Map<String, Object>> eventHistoryStatus) {
+        this.eventHistoryStatus = eventHistoryStatus;
+    }
+
     /**
      * Returns the notification preferences map where keys are preference names (e.g. "email",
      * "phone") and values indicate whether that channel is enabled.
@@ -93,7 +103,8 @@ public class Entrant implements Serializable {
 
     /**
      * Updates notification preferences by copying entries from the provided map into the
-     * local preferences map. Existing keys will be overwritten.
+     * local preferences map.
+     * \Existing keys will be overwritten.
      *
      * @param newNotificationPrefs map of preference keys to boolean values
      */
