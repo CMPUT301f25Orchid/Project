@@ -78,6 +78,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Adds an event id to the entrant's event history.</div>
 </dd>
+<dt><a href="com/example/fairdraw/DBs/EntrantDB.html#addEventToHistory(java.lang.String,java.lang.String,java.lang.String,com.example.fairdraw.DBs.EntrantDB.SimpleCallback)" class="member-name-link">addEventToHistory(String, String, String, EntrantDB.SimpleCallback)</a> - Static method in class com.example.fairdraw.DBs.<a href="com/example/fairdraw/DBs/EntrantDB.html" title="class in com.example.fairdraw.DBs">EntrantDB</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/example/fairdraw/Models/Entrant.html#addNotification(com.example.fairdraw.Others.EntrantNotification)" class="member-name-link">addNotification(EntrantNotification)</a> - Method in class com.example.fairdraw.Models.<a href="com/example/fairdraw/Models/Entrant.html" title="class in com.example.fairdraw.Models">Entrant</a></dt>
 <dd>
 <div class="block">Adds a notification to the entrant's notification list.</div>
@@ -199,6 +201,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">The event is closed and no longer active.</div>
 </dd>
+<dt><a href="com/example/fairdraw/Others/EntrantEventStatus.html#colorForStatus(android.content.Context,java.lang.String)" class="member-name-link">colorForStatus(Context, String)</a> - Static method in class com.example.fairdraw.Others.<a href="com/example/fairdraw/Others/EntrantEventStatus.html" title="class in com.example.fairdraw.Others">EntrantEventStatus</a></dt>
+<dd>
+<div class="block">Map an entrant-event status to a consistent color.</div>
+</dd>
 <dt><a href="com/example/fairdraw/Activities/package-summary.html">com.example.fairdraw.Activities</a> - package com.example.fairdraw.Activities</dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/example/fairdraw/Adapters/package-summary.html">com.example.fairdraw.Adapters</a> - package com.example.fairdraw.Adapters</dt>
@@ -275,6 +281,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Helper to manage a stable device identifier stored in SharedPreferences.</div>
 </dd>
+<dt><a href="com/example/fairdraw/Activities/EntrantHomeActivity.html#displayEvents(java.util.List)" class="member-name-link">displayEvents(List&lt;Event&gt;)</a> - Method in class com.example.fairdraw.Activities.<a href="com/example/fairdraw/Activities/EntrantHomeActivity.html" title="class in com.example.fairdraw.Activities">EntrantHomeActivity</a></dt>
+<dd>
+<div class="block">Adds eventscard.xml for each Event</div>
+</dd>
 <dt><a href="com/example/fairdraw/Others/EventState.html#DRAFT" class="member-name-link">DRAFT</a> - Enum constant in enum class com.example.fairdraw.Others.<a href="com/example/fairdraw/Others/EventState.html" title="enum class in com.example.fairdraw.Others">EventState</a></dt>
 <dd>
 <div class="block">The event is in draft mode, not yet published.</div>
@@ -340,6 +350,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Callback for when a notification is pushed to the database.</div>
 </dd>
+<dt><a href="com/example/fairdraw/DBs/EntrantDB.SimpleCallback.html" class="type-name-link" title="interface in com.example.fairdraw.DBs">EntrantDB.SimpleCallback</a> - Interface in <a href="com/example/fairdraw/DBs/package-summary.html">com.example.fairdraw.DBs</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/example/fairdraw/DBs/EntrantDB.UpdateEntrantCallback.html" class="type-name-link" title="interface in com.example.fairdraw.DBs">EntrantDB.UpdateEntrantCallback</a> - Interface in <a href="com/example/fairdraw/DBs/package-summary.html">com.example.fairdraw.DBs</a></dt>
 <dd>
 <div class="block">Callback for when an Entrant is updated in the database.</div>
@@ -377,6 +389,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/example/fairdraw/Models/Event.EntrantLocation.html#%3Cinit%3E()" class="member-name-link">EntrantLocation()</a> - Constructor for class com.example.fairdraw.Models.<a href="com/example/fairdraw/Models/Event.EntrantLocation.html" title="class in com.example.fairdraw.Models">Event.EntrantLocation</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/example/fairdraw/Models/Event.EntrantLocation.html#%3Cinit%3E(java.lang.Double,java.lang.Double)" class="member-name-link">EntrantLocation(Double, Double)</a> - Constructor for class com.example.fairdraw.Models.<a href="com/example/fairdraw/Models/Event.EntrantLocation.html" title="class in com.example.fairdraw.Models">Event.EntrantLocation</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/example/fairdraw/Activities/EntrantMyEventsActivity.html" class="type-name-link" title="class in com.example.fairdraw.Activities">EntrantMyEventsActivity</a> - Class in <a href="com/example/fairdraw/Activities/package-summary.html">com.example.fairdraw.Activities</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/example/fairdraw/Activities/EntrantMyEventsActivity.html#%3Cinit%3E()" class="member-name-link">EntrantMyEventsActivity()</a> - Constructor for class com.example.fairdraw.Activities.<a href="com/example/fairdraw/Activities/EntrantMyEventsActivity.html" title="class in com.example.fairdraw.Activities">EntrantMyEventsActivity</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/example/fairdraw/Others/EntrantNotification.html" class="type-name-link" title="class in com.example.fairdraw.Others">EntrantNotification</a> - Class in <a href="com/example/fairdraw/Others/package-summary.html">com.example.fairdraw.Others</a></dt>
 <dd>
@@ -643,6 +659,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns the event history for this entrant.</div>
 </dd>
+<dt><a href="com/example/fairdraw/Models/Entrant.html#getEventHistoryStatus()" class="member-name-link">getEventHistoryStatus()</a> - Method in class com.example.fairdraw.Models.<a href="com/example/fairdraw/Models/Entrant.html" title="class in com.example.fairdraw.Models">Entrant</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/example/fairdraw/Others/AdminNotificationLog.html#getEventId()" class="member-name-link">getEventId()</a> - Method in class com.example.fairdraw.Others.<a href="com/example/fairdraw/Others/AdminNotificationLog.html" title="class in com.example.fairdraw.Others">AdminNotificationLog</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/example/fairdraw/Models/Event.html#getEventOpenRegDate()" class="member-name-link">getEventOpenRegDate()</a> - Method in class com.example.fairdraw.Models.<a href="com/example/fairdraw/Models/Event.html" title="class in com.example.fairdraw.Models">Event</a></dt>
@@ -881,6 +899,10 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:L">L</h2>
 <dl class="index">
+<dt><a href="com/example/fairdraw/DBs/EntrantDB.html#listenToEntrant(java.lang.String,com.example.fairdraw.DBs.EntrantDB.GetEntrantCallback)" class="member-name-link">listenToEntrant(String, EntrantDB.GetEntrantCallback)</a> - Static method in class com.example.fairdraw.DBs.<a href="com/example/fairdraw/DBs/EntrantDB.html" title="class in com.example.fairdraw.DBs">EntrantDB</a></dt>
+<dd>
+<div class="block">Attach a real-time snapshot listener for a single entrant document.</div>
+</dd>
 <dt><a href="com/example/fairdraw/DBs/EventDB.html#listenToEvent(java.lang.String,com.example.fairdraw.DBs.EventDB.GetEventCallback)" class="member-name-link">listenToEvent(String, EventDB.GetEventCallback)</a> - Static method in class com.example.fairdraw.DBs.<a href="com/example/fairdraw/DBs/EventDB.html" title="class in com.example.fairdraw.DBs">EventDB</a></dt>
 <dd>
 <div class="block">Attach a real-time snapshot listener for a single event document.</div>
@@ -922,7 +944,7 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:N">N</h2>
 <dl class="index">
-<dt><a href="com/example/fairdraw/Fragments/DecisionFragment.html#newInstance(com.example.fairdraw.Others.EntrantNotification)" class="member-name-link">newInstance(EntrantNotification)</a> - Method in class com.example.fairdraw.Fragments.<a href="com/example/fairdraw/Fragments/DecisionFragment.html" title="class in com.example.fairdraw.Fragments">DecisionFragment</a></dt>
+<dt><a href="com/example/fairdraw/Fragments/DecisionFragment.html#newInstance(com.example.fairdraw.Others.EntrantNotification)" class="member-name-link">newInstance(EntrantNotification)</a> - Static method in class com.example.fairdraw.Fragments.<a href="com/example/fairdraw/Fragments/DecisionFragment.html" title="class in com.example.fairdraw.Fragments">DecisionFragment</a></dt>
 <dd>
 <div class="block">Create a new DecisionFragment for the supplied notification.</div>
 </dd>
@@ -1021,6 +1043,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Invoked when the push completes.</div>
 </dd>
+<dt><a href="com/example/fairdraw/DBs/EntrantDB.SimpleCallback.html#onCallback(boolean,java.lang.Exception)" class="member-name-link">onCallback(boolean, Exception)</a> - Method in interface com.example.fairdraw.DBs.<a href="com/example/fairdraw/DBs/EntrantDB.SimpleCallback.html" title="interface in com.example.fairdraw.DBs">EntrantDB.SimpleCallback</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/example/fairdraw/DBs/UserDB.DeleteCallback.html#onCallback(boolean,java.lang.Exception)" class="member-name-link">onCallback(boolean, Exception)</a> - Method in interface com.example.fairdraw.DBs.<a href="com/example/fairdraw/DBs/UserDB.DeleteCallback.html" title="interface in com.example.fairdraw.DBs">UserDB.DeleteCallback</a></dt>
 <dd>
 <div class="block">Called when the delete operation is complete.</div>
@@ -1083,6 +1107,8 @@ loadScripts(document, 'script');</script>
 <div class="block">Activity lifecycle entry point.</div>
 </dd>
 <dt><a href="com/example/fairdraw/Activities/EntrantHomeActivity.html#onCreate(android.os.Bundle)" class="member-name-link">onCreate(Bundle)</a> - Method in class com.example.fairdraw.Activities.<a href="com/example/fairdraw/Activities/EntrantHomeActivity.html" title="class in com.example.fairdraw.Activities">EntrantHomeActivity</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/example/fairdraw/Activities/EntrantMyEventsActivity.html#onCreate(android.os.Bundle)" class="member-name-link">onCreate(Bundle)</a> - Method in class com.example.fairdraw.Activities.<a href="com/example/fairdraw/Activities/EntrantMyEventsActivity.html" title="class in com.example.fairdraw.Activities">EntrantMyEventsActivity</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/example/fairdraw/Activities/EntrantNotificationsActivity.html#onCreate(android.os.Bundle)" class="member-name-link">onCreate(Bundle)</a> - Method in class com.example.fairdraw.Activities.<a href="com/example/fairdraw/Activities/EntrantNotificationsActivity.html" title="class in com.example.fairdraw.Activities">EntrantNotificationsActivity</a></dt>
 <dd>&nbsp;</dd>
@@ -1191,12 +1217,16 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Called when the user taps the Send button.</div>
 </dd>
+<dt><a href="com/example/fairdraw/Activities/EntrantMyEventsActivity.html#onStart()" class="member-name-link">onStart()</a> - Method in class com.example.fairdraw.Activities.<a href="com/example/fairdraw/Activities/EntrantMyEventsActivity.html" title="class in com.example.fairdraw.Activities">EntrantMyEventsActivity</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/example/fairdraw/Activities/EntrantNotificationsActivity.html#onStart()" class="member-name-link">onStart()</a> - Method in class com.example.fairdraw.Activities.<a href="com/example/fairdraw/Activities/EntrantNotificationsActivity.html" title="class in com.example.fairdraw.Activities">EntrantNotificationsActivity</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/example/fairdraw/Fragments/SendNotificationDialogFragment.html#onStart()" class="member-name-link">onStart()</a> - Method in class com.example.fairdraw.Fragments.<a href="com/example/fairdraw/Fragments/SendNotificationDialogFragment.html" title="class in com.example.fairdraw.Fragments">SendNotificationDialogFragment</a></dt>
 <dd>
 <div class="block">Apply dialog window sizing adjustments when the dialog becomes visible.</div>
 </dd>
+<dt><a href="com/example/fairdraw/Activities/EntrantMyEventsActivity.html#onStop()" class="member-name-link">onStop()</a> - Method in class com.example.fairdraw.Activities.<a href="com/example/fairdraw/Activities/EntrantMyEventsActivity.html" title="class in com.example.fairdraw.Activities">EntrantMyEventsActivity</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/example/fairdraw/Activities/EntrantNotificationsActivity.html#onStop()" class="member-name-link">onStop()</a> - Method in class com.example.fairdraw.Activities.<a href="com/example/fairdraw/Activities/EntrantNotificationsActivity.html" title="class in com.example.fairdraw.Activities">EntrantNotificationsActivity</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/example/fairdraw/Activities/EditEventPage.html#onViewCreated(android.view.View,android.os.Bundle)" class="member-name-link">onViewCreated(View, Bundle)</a> - Method in class com.example.fairdraw.Activities.<a href="com/example/fairdraw/Activities/EditEventPage.html" title="class in com.example.fairdraw.Activities">EditEventPage</a></dt>
@@ -1422,6 +1452,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Replaces the event history list.</div>
 </dd>
+<dt><a href="com/example/fairdraw/Models/Entrant.html#setEventHistoryStatus(java.util.Map)" class="member-name-link">setEventHistoryStatus(Map&lt;String, Map&lt;String, Object&gt;&gt;)</a> - Method in class com.example.fairdraw.Models.<a href="com/example/fairdraw/Models/Entrant.html" title="class in com.example.fairdraw.Models">Entrant</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/example/fairdraw/Models/Event.html#setEventOpenRegDate(java.util.Date)" class="member-name-link">setEventOpenRegDate(Date)</a> - Method in class com.example.fairdraw.Models.<a href="com/example/fairdraw/Models/Event.html" title="class in com.example.fairdraw.Models">Event</a></dt>
 <dd>
 <div class="block">Sets the registration open date.</div>
@@ -1592,6 +1624,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Update an existing event document.</div>
 </dd>
+<dt><a href="com/example/fairdraw/DBs/EntrantDB.html#updateEventHistoryStatus(java.lang.String,java.lang.String,java.lang.String,com.example.fairdraw.DBs.EntrantDB.SimpleCallback)" class="member-name-link">updateEventHistoryStatus(String, String, String, EntrantDB.SimpleCallback)</a> - Static method in class com.example.fairdraw.DBs.<a href="com/example/fairdraw/DBs/EntrantDB.html" title="class in com.example.fairdraw.DBs">EntrantDB</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/example/fairdraw/DBs/OrganizerDB.html#updateOrganizer(com.example.fairdraw.Models.Organizer,com.example.fairdraw.DBs.OrganizerDB.UpdateOrganizerCallback)" class="member-name-link">updateOrganizer(Organizer, OrganizerDB.UpdateOrganizerCallback)</a> - Static method in class com.example.fairdraw.DBs.<a href="com/example/fairdraw/DBs/OrganizerDB.html" title="class in com.example.fairdraw.DBs">OrganizerDB</a></dt>
 <dd>
 <div class="block">Update an existing Organizer document.</div>

@@ -119,8 +119,11 @@ loadScripts(document, 'script');</script>
 <div class="block">Callback for when a notification is pushed to the database.</div>
 </div>
 <div class="col-first odd-row-color"><code>static interface&nbsp;</code></div>
-<div class="col-second odd-row-color"><code><a href="EntrantDB.UpdateEntrantCallback.html" class="type-name-link" title="interface in com.example.fairdraw.DBs">EntrantDB.UpdateEntrantCallback</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-second odd-row-color"><code><a href="EntrantDB.SimpleCallback.html" class="type-name-link" title="interface in com.example.fairdraw.DBs">EntrantDB.SimpleCallback</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static interface&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="EntrantDB.UpdateEntrantCallback.html" class="type-name-link" title="interface in com.example.fairdraw.DBs">EntrantDB.UpdateEntrantCallback</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">Callback for when an Entrant is updated in the database.</div>
 </div>
 </div>
@@ -157,21 +160,33 @@ loadScripts(document, 'script');</script>
 <div class="block">Create a new Entrant document.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#deleteEntrant(java.lang.String,com.example.fairdraw.DBs.EntrantDB.DeleteEntrantCallback)" class="member-name-link">deleteEntrant</a><wbr>(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;deviceId,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#addEventToHistory(java.lang.String,java.lang.String,java.lang.String,com.example.fairdraw.DBs.EntrantDB.SimpleCallback)" class="member-name-link">addEventToHistory</a><wbr>(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;entrantId,
+ <a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId,
+ <a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;initialStatus,
+ <a href="EntrantDB.SimpleCallback.html" title="interface in com.example.fairdraw.DBs">EntrantDB.SimpleCallback</a>&nbsp;callback)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#deleteEntrant(java.lang.String,com.example.fairdraw.DBs.EntrantDB.DeleteEntrantCallback)" class="member-name-link">deleteEntrant</a><wbr>(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;deviceId,
  <a href="EntrantDB.DeleteEntrantCallback.html" title="interface in com.example.fairdraw.DBs">EntrantDB.DeleteEntrantCallback</a>&nbsp;callback)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Delete an Entrant document by device id.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getEntrant(java.lang.String,com.example.fairdraw.DBs.EntrantDB.GetEntrantCallback)" class="member-name-link">getEntrant</a><wbr>(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;deviceId,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getEntrant(java.lang.String,com.example.fairdraw.DBs.EntrantDB.GetEntrantCallback)" class="member-name-link">getEntrant</a><wbr>(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;deviceId,
  <a href="EntrantDB.GetEntrantCallback.html" title="interface in com.example.fairdraw.DBs">EntrantDB.GetEntrantCallback</a>&nbsp;callback)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Asynchronously fetch an Entrant document by device id.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.google.firebase.firestore.CollectionReference</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getEntrantCollection()" class="member-name-link">getEntrantCollection</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.google.firebase.firestore.CollectionReference</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getEntrantCollection()" class="member-name-link">getEntrantCollection</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns a CollectionReference pointing to the "entrants" collection.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.google.firebase.firestore.ListenerRegistration</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#listenToEntrant(java.lang.String,com.example.fairdraw.DBs.EntrantDB.GetEntrantCallback)" class="member-name-link">listenToEntrant</a><wbr>(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;entrantId,
+ <a href="EntrantDB.GetEntrantCallback.html" title="interface in com.example.fairdraw.DBs">EntrantDB.GetEntrantCallback</a>&nbsp;callback)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Attach a real-time snapshot listener for a single entrant document.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#pushNotificationToUser(java.lang.String,com.example.fairdraw.Others.EntrantNotification,com.example.fairdraw.DBs.EntrantDB.PushNotificationCallback)" class="member-name-link">pushNotificationToUser</a><wbr>(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;deviceId,
@@ -186,6 +201,12 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Update an existing Entrant document.</div>
 </div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#updateEventHistoryStatus(java.lang.String,java.lang.String,java.lang.String,com.example.fairdraw.DBs.EntrantDB.SimpleCallback)" class="member-name-link">updateEventHistoryStatus</a><wbr>(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;entrantId,
+ <a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId,
+ <a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;newStatus,
+ <a href="EntrantDB.SimpleCallback.html" title="interface in com.example.fairdraw.DBs">EntrantDB.SimpleCallback</a>&nbsp;callback)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -281,6 +302,21 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="listenToEntrant(java.lang.String,com.example.fairdraw.DBs.EntrantDB.GetEntrantCallback)">
+<h3>listenToEntrant</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.firebase.firestore.ListenerRegistration</span>&nbsp;<span class="element-name">listenToEntrant</span><wbr><span class="parameters">(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;entrantId,
+ <a href="EntrantDB.GetEntrantCallback.html" title="interface in com.example.fairdraw.DBs">EntrantDB.GetEntrantCallback</a>&nbsp;callback)</span></div>
+<div class="block">Attach a real-time snapshot listener for a single entrant document.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>entrantId</code> - id of the entrant to listen to (usually deviceId)</dd>
+<dd><code>callback</code> - callback that receives Entrant updates</dd>
+<dt>Returns:</dt>
+<dd>ListenerRegistration handle which can be used to remove the listener</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="pushNotificationToUser(java.lang.String,com.example.fairdraw.Others.EntrantNotification,com.example.fairdraw.DBs.EntrantDB.PushNotificationCallback)">
 <h3>pushNotificationToUser</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">pushNotificationToUser</span><wbr><span class="parameters">(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;deviceId,
@@ -294,6 +330,24 @@ loadScripts(document, 'script');</script>
 <dd><code>notification</code> - notification to push</dd>
 <dd><code>callB</code> - optional callback to receive operation result</dd>
 </dl>
+</section>
+</li>
+<li>
+<section class="detail" id="addEventToHistory(java.lang.String,java.lang.String,java.lang.String,com.example.fairdraw.DBs.EntrantDB.SimpleCallback)">
+<h3>addEventToHistory</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">addEventToHistory</span><wbr><span class="parameters">(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;entrantId,
+ <a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId,
+ <a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;initialStatus,
+ <a href="EntrantDB.SimpleCallback.html" title="interface in com.example.fairdraw.DBs">EntrantDB.SimpleCallback</a>&nbsp;callback)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="updateEventHistoryStatus(java.lang.String,java.lang.String,java.lang.String,com.example.fairdraw.DBs.EntrantDB.SimpleCallback)">
+<h3>updateEventHistoryStatus</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">updateEventHistoryStatus</span><wbr><span class="parameters">(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;entrantId,
+ <a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId,
+ <a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;newStatus,
+ <a href="EntrantDB.SimpleCallback.html" title="interface in com.example.fairdraw.DBs">EntrantDB.SimpleCallback</a>&nbsp;callback)</span></div>
 </section>
 </li>
 </ul>
