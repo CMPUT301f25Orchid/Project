@@ -139,6 +139,8 @@ class com.example.fairdraw.Models.User {
 + setDeviceId(arg0 : String) : void
 + setFcmToken(arg0 : String) : void
 + setRoles(arg0 : ArrayList<String>) : void
++ isNotificationsEnabled() : boolean
++ setNotificationsEnabled(arg0 : boolean) : void
 }
 class com.example.fairdraw.Models.AreaStats {
 + increment() : void
