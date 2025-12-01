@@ -11,8 +11,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.fairdraw.DBs.EntrantDB;
 import com.example.fairdraw.DBs.EventDB;
 import com.example.fairdraw.DBs.UserDB;
+import com.example.fairdraw.Others.EntrantEventStatus;
 import com.example.fairdraw.Others.ListItemEntrant;
 import com.example.fairdraw.R;
 import com.google.android.material.snackbar.Snackbar;
@@ -181,6 +183,15 @@ public class EntrantListArrayAdapter extends RecyclerView.Adapter<EntrantListArr
                             // Use a Snackbar to notify; this is low-risk and non-blocking.
                             View root = ((Activity)context).findViewById(android.R.id.content);
                             Snackbar.make(root, R.string.error_updating_event, Snackbar.LENGTH_SHORT).show();
+                        }
+                        else {
+                            EntrantDB.addEventToHistory(entrantId, eventId, EntrantEventStatus.CANCELLED, (historySuccess, e) -> {
+                                if (!historySuccess) {
+                                    // Inform user of failure to update entrant history
+                                    View root = ((Activity)context).findViewById(android.R.id.content);
+                                    Snackbar.make(root, "Failed to update entrant's history", Snackbar.LENGTH_SHORT).show();
+                                }
+                            });
                         }
                     });
                 });

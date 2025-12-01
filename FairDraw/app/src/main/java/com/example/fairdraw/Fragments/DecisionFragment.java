@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+
+import com.example.fairdraw.Others.EntrantEventStatus;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.NonNull;
@@ -124,16 +126,15 @@ public class DecisionFragment extends DialogFragment {
                                 // Update Entrant event history
                                 String userId = DevicePrefsManager.getDeviceId(requireContext());
 
-                                EntrantDB.getEntrant(userId, entrant -> {
-                                    if (entrant == null) return;
-
-                                    entrant.addEventToHistoryOnce(notification.eventId);
-
-                                    EntrantDB.updateEntrant(entrant, success2 -> {
-                                        if (success2) {
-                                            Log.d("DecisionFragment", "Event added to entrant history");
+                                EntrantDB.addEventToHistory(userId, event.getUuid(), EntrantEventStatus.REGISTERED, new EntrantDB.SimpleCallback() {
+                                    @Override
+                                    public void onCallback(boolean success, Exception e) {
+                                        if (success) {
+                                            Log.d("DecisionFragment", "Successfully updated entrant event history for event: " + event.getUuid());
+                                        } else {
+                                            Log.e("DecisionFragment", "Failed to update entrant event history", e);
                                         }
-                                    });
+                                    }
                                 });
                             }
 

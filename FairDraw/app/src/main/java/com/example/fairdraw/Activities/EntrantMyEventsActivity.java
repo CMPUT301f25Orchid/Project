@@ -2,6 +2,7 @@ package com.example.fairdraw.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -18,9 +19,11 @@ import com.example.fairdraw.DBs.EventDB;
 import com.example.fairdraw.Models.Entrant;
 import com.example.fairdraw.Models.Event;
 import com.example.fairdraw.Others.BarType;
+import com.example.fairdraw.Others.EntrantEventStatus;
 import com.example.fairdraw.R;
 import com.example.fairdraw.ServiceUtility.DevicePrefsManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.ListenerRegistration;
 
 import com.google.android.material.card.MaterialCardView;
@@ -28,6 +31,7 @@ import android.graphics.Color;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class EntrantMyEventsActivity extends BaseTopBottomActivity {
 
@@ -72,80 +76,76 @@ public class EntrantMyEventsActivity extends BaseTopBottomActivity {
             return;
         }
 
-        reg = EntrantDB.getEntrantCollection()
-                .document(deviceId)
-                .addSnapshotListener((snap, err) -> {
-                    if (err != null || snap == null || !snap.exists()) {
-                        populateEmpty();
-                        return;
-                    }
+        reg = EntrantDB.listenToEntrant(deviceId, entrant -> {
+            if (entrant == null) {
+                populateEmpty();
+                return;
+            }
 
-                    Entrant entrant = snap.toObject(Entrant.class);
-                    if (entrant == null) {
-                        populateEmpty();
-                        return;
-                    }
+            List<String> history = entrant.getEventHistory();
+            Map<String, Map<String, Object>> statusMap = entrant.getEventHistoryStatus();
 
-                    List<String> history = entrant.getEventHistory();
-                    if (history == null || history.isEmpty()) {
-                        populateEmpty();
-                        return;
-                    }
+            // Print debug info to logcat
+            Log.d("EntrantMyEventsActivity", "Fetched entrant event history: " + history);
+            Log.d("EntrantMyEventsActivity", "Fetched entrant event history status map: " + statusMap);
 
-                    // Clear previous rows
-                    historyContainer.removeAllViews();
+            if (history == null || history.isEmpty()) {
+                populateEmpty();
+                return;
+            }
 
-                    // For each event id, inflate a row and populate it (async fetch of Event)
-                    for (String eventId : history) {
-                        final View row = inflater.inflate(R.layout.history_card, historyContainer, false);
+            // Clear previous rows
+            historyContainer.removeAllViews();
+            LayoutInflater inflater = LayoutInflater.from(this);
 
-                        TextView tvTitle = row.findViewById(R.id.tvTitle);
-                        TextView tvDate = row.findViewById(R.id.tvDate);
-                        MaterialCardView statusStrip = row.findViewById(R.id.statusStrip);
+            // For each event id, inflate a row and populate it (async fetch of Event)
+            for (String eventId : history) {
+                final View row = inflater.inflate(R.layout.history_card, historyContainer, false);
 
-                        // show placeholder until event loads
-                        tvTitle.setText(eventId);
-                        tvDate.setText("Loading...");
-                        statusStrip.setCardBackgroundColor(Color.parseColor("#BDBDBD"));
+                TextView tvTitle = row.findViewById(R.id.tvTitle);
+                TextView tvDate = row.findViewById(R.id.tvDate);
+                MaterialCardView statusStrip = row.findViewById(R.id.statusStrip);
 
-                        historyContainer.addView(row);
+                // show placeholder until event loads
+                tvTitle.setText(eventId);
+                tvDate.setText("Loading...");
+                statusStrip.setCardBackgroundColor(Color.parseColor("#BDBDBD"));
 
-                        // Fetch event details and update the row when available
-                        EventDB.getEvent(eventId, event -> {
-                            runOnUiThread(() -> {
-                                if (event != null) {
-                                    String title = event.getTitle() == null ? eventId : event.getTitle();
-                                    tvTitle.setText(title);
-                                    if (event.getTime() != null) {
-                                        tvDate.setText("Date · " + event.getTime().toString());
-                                    } else {
-                                        tvDate.setText("");
-                                    }
+                historyContainer.addView(row);
 
-                                    // Simple status color mapping
-                                    if (event.getState() != null) {
-                                        switch (event.getState()) {
-                                            case PUBLISHED:
-                                                statusStrip.setCardBackgroundColor(Color.parseColor("#BFF2A6"));
-                                                break;
-                                            case CLOSED:
-                                                statusStrip.setCardBackgroundColor(Color.parseColor("#F2A6A6"));
-                                                break;
-                                            default:
-                                                statusStrip.setCardBackgroundColor(Color.parseColor("#E6E6E6"));
-                                        }
-                                    } else {
-                                        statusStrip.setCardBackgroundColor(Color.parseColor("#E6E6E6"));
-                                    }
-                                } else {
-                                    tvTitle.setText(eventId);
-                                    tvDate.setText("(event not found)");
-                                    statusStrip.setCardBackgroundColor(Color.parseColor("#E6E6E6"));
-                                }
-                            });
-                        });
-                    }
+                // Fetch event details and update the row when available
+                EventDB.getEvent(eventId, event -> {
+                    runOnUiThread(() -> {
+                        if (event != null) {
+                            String title = event.getTitle() == null ? eventId : event.getTitle();
+                            tvTitle.setText(title);
+
+                            Map<String, Object> statusObj = statusMap.get(eventId);
+                            assert statusObj != null;
+                            String entrantStatus = (String) statusObj.get("status");
+                            Timestamp lastUpdated = (Timestamp) statusObj.get("lastUpdated");
+
+                            if (lastUpdated != null) {
+                                assert entrantStatus != null;
+                                tvDate.setText(String.format("%s · %s", entrantStatus.toUpperCase(), lastUpdated.toDate().toString()));
+                            } else {
+                                tvDate.setText("");
+                            }
+
+                            if (entrantStatus != null) {
+                                statusStrip.setCardBackgroundColor(
+                                        EntrantEventStatus.colorForStatus(this, entrantStatus)
+                                );
+                            }
+                        } else {
+                            tvTitle.setText(eventId);
+                            tvDate.setText("(event not found)");
+                            statusStrip.setCardBackgroundColor(Color.parseColor("#E6E6E6"));
+                        }
+                    });
                 });
+            }
+        });
     }
 
     @Override

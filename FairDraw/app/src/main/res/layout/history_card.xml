@@ -72,7 +72,7 @@
                     android:layout_height="10dp"
                     android:layout_marginStart="8dp"
                     app:cardCornerRadius="6dp"
-                    app:cardBackgroundColor="#BFF2A6" />
+                    app:cardBackgroundColor="@color/neutral" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
