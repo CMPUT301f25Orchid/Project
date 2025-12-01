@@ -2,6 +2,7 @@ package com.example.fairdraw.Models;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Represents a general application user. This model contains common user attributes
@@ -19,12 +20,19 @@ public class User implements Serializable {
     private ArrayList<String> roles;
     private boolean notificationsEnabled;
     private String profilePicture;
+    // New field: date the user joined the app. Uses java.util.Date which maps cleanly to Firestore.
+    private Date dateJoined;
 
     /**
      * No-argument constructor required by Firestore. Initializes the default roles list
      * with the "entrant" role.
      */
-    public User() {}
+    public User() {
+        // ensure defaults are initialized for Firestore-created instances
+        this.roles = new ArrayList<String>();
+        this.roles.add("entrant");
+        this.notificationsEnabled = true;
+    }
 
     /**
      * Constructs a user with the provided profile fields and initializes default roles.
@@ -36,6 +44,13 @@ public class User implements Serializable {
      * @param fcmToken firebase cloud messaging token for push notifications
      */
     public User(String name, String email, String phoneNum, String deviceId, String fcmToken) {
+        this(name, email, phoneNum, deviceId, fcmToken, new Date());
+    }
+
+    /**
+     * Full constructor including explicit dateJoined. Useful for tests and explicit creation.
+     */
+    public User(String name, String email, String phoneNum, String deviceId, String fcmToken, Date dateJoined) {
         this.name = name;
         this.email = email;
         this.phoneNum = phoneNum;
@@ -44,6 +59,7 @@ public class User implements Serializable {
         this.roles = new ArrayList<String>();
         this.roles.add("entrant");
         this.notificationsEnabled = true;
+        this.dateJoined = dateJoined;
     }
 
     // Getters (Firestore needs these)
@@ -84,6 +100,12 @@ public class User implements Serializable {
     public String getProfilePicture() {
         return profilePicture;
     }
+
+    /**
+     * Returns the date the user joined the application. May be null for older users.
+     * @return dateJoined or null
+     */
+    public Date getDateJoined() { return dateJoined; }
 
 
     // Setters (optional but nice to have)
@@ -132,4 +154,10 @@ public class User implements Serializable {
         this.profilePicture = profilePicture;
 
     }
+
+    /**
+     * Sets the date when the user joined the app.
+     * @param dateJoined date to set
+     */
+    public void setDateJoined(Date dateJoined) { this.dateJoined = dateJoined; }
 }

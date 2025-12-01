@@ -80,6 +80,7 @@
                         android:src="@drawable/search_icon" />
 
                     <EditText
+                        android:id="@+id/admin_search_bar"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@android:color/transparent"
