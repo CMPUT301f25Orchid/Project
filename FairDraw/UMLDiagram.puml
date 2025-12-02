@@ -141,7 +141,6 @@ class com.example.fairdraw.Models.User {
 + getDeviceId() : String
 + getFcmToken() : String
 + getRoles() : ArrayList<String>
-+ getProfilePicture() : String
 + getDateJoined() : Date
 + setName(arg0 : String) : void
 + setEmail(arg0 : String) : void
@@ -151,7 +150,6 @@ class com.example.fairdraw.Models.User {
 + setRoles(arg0 : ArrayList<String>) : void
 + isNotificationsEnabled() : boolean
 + setNotificationsEnabled(arg0 : boolean) : void
-+ setProfilePicture(arg0 : String) : void
 + setDateJoined(arg0 : Date) : void
 }
 class com.example.fairdraw.Models.AreaStats {
