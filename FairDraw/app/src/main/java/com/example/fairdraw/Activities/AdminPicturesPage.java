@@ -19,6 +19,7 @@ import com.example.fairdraw.DBs.EventDB;
 import com.example.fairdraw.Others.BarType;
 import com.example.fairdraw.R;
 import com.example.fairdraw.ServiceUtility.FirebaseImageStorageService;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.ListenerRegistration;
 
@@ -52,6 +53,10 @@ public class AdminPicturesPage extends BaseTopBottomActivity {
 
         initTopNav(BarType.ADMIN);
         initBottomNav(BarType.ADMIN, findViewById(R.id.admin_bottom_nav));
+
+        BottomNavigationView bottomNav = findViewById(R.id.admin_bottom_nav);
+        if (bottomNav != null) bottomNav.setSelectedItemId(R.id.pictures_activity);
+
 
         pictureListContainer = findViewById(R.id.picture_list_container);
     }

@@ -21,6 +21,8 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.example.fairdraw.Models.*;
 
+import java.util.Date;
+
 /**
  * Screen used to create a new user account. Collects basic user info and writes a
  * {@link com.example.fairdraw.Models.User} to Firestore using {@link UserDB#upsertUser}.
@@ -74,7 +76,8 @@ public class SignUpActivity extends AppCompatActivity {
             }
 
             final String deviceId = DevicePrefsManager.getDeviceId(this);
-            User user = new User(name, email, phone, deviceId, /*fcmToken*/ null);
+            // set dateJoined to now
+            User user = new User(name, email, phone, deviceId, /*fcmToken*/ null, new Date());
 
             UserDB.upsertUser(user, (ok, e) -> {
                 if (!ok) {

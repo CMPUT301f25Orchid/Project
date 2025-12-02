@@ -107,8 +107,13 @@ loadScripts(document, 'script');</script>
 <div class="block">Callback interface for when a User is fetched from the database.</div>
 </div>
 <div class="col-first odd-row-color"><code>static interface&nbsp;</code></div>
-<div class="col-second odd-row-color"><code><a href="UserDB.WriteCallback.html" class="type-name-link" title="interface in com.example.fairdraw.DBs">UserDB.WriteCallback</a></code></div>
+<div class="col-second odd-row-color"><code><a href="UserDB.GetUsersCallback.html" class="type-name-link" title="interface in com.example.fairdraw.DBs">UserDB.GetUsersCallback</a></code></div>
 <div class="col-last odd-row-color">
+<div class="block">Callback interface for when multiple Users are fetched from the database.</div>
+</div>
+<div class="col-first even-row-color"><code>static interface&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="UserDB.WriteCallback.html" class="type-name-link" title="interface in com.example.fairdraw.DBs">UserDB.WriteCallback</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">Callback interface for write operations (add/update) on a User.</div>
 </div>
 </div>
@@ -156,16 +161,19 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Asynchronously retrieves a User object from the database.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#upsertUser(com.example.fairdraw.Models.User,com.example.fairdraw.DBs.UserDB.WriteCallback)" class="member-name-link">upsertUser</a><wbr>(<a href="../Models/User.html" title="class in com.example.fairdraw.Models">User</a>&nbsp;user,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.google.firebase.firestore.ListenerRegistration</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#listenToUsers(com.example.fairdraw.DBs.UserDB.GetUsersCallback)" class="member-name-link">listenToUsers</a><wbr>(<a href="UserDB.GetUsersCallback.html" title="interface in com.example.fairdraw.DBs">UserDB.GetUsersCallback</a>&nbsp;callback)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#upsertUser(com.example.fairdraw.Models.User,com.example.fairdraw.DBs.UserDB.WriteCallback)" class="member-name-link">upsertUser</a><wbr>(<a href="../Models/User.html" title="class in com.example.fairdraw.Models">User</a>&nbsp;user,
  <a href="UserDB.WriteCallback.html" title="interface in com.example.fairdraw.DBs">UserDB.WriteCallback</a>&nbsp;cb)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Creates or updates a user in the database.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#userExists(java.lang.String,com.example.fairdraw.DBs.UserDB.ExistsCallback)" class="member-name-link">userExists</a><wbr>(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;deviceId,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#userExists(java.lang.String,com.example.fairdraw.DBs.UserDB.ExistsCallback)" class="member-name-link">userExists</a><wbr>(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;deviceId,
  <a href="UserDB.ExistsCallback.html" title="interface in com.example.fairdraw.DBs">UserDB.ExistsCallback</a>&nbsp;cb)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Asynchronously checks if a user with the given device ID exists in the database.</div>
 </div>
 </div>
@@ -270,6 +278,12 @@ loadScripts(document, 'script');</script>
 <dd><code>cb</code> - The callback to be invoked with the result. On success: cb.onCallback(true, null).
            On failure: cb.onCallback(false, exception).</dd>
 </dl>
+</section>
+</li>
+<li>
+<section class="detail" id="listenToUsers(com.example.fairdraw.DBs.UserDB.GetUsersCallback)">
+<h3>listenToUsers</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.firebase.firestore.ListenerRegistration</span>&nbsp;<span class="element-name">listenToUsers</span><wbr><span class="parameters">(<a href="UserDB.GetUsersCallback.html" title="interface in com.example.fairdraw.DBs">UserDB.GetUsersCallback</a>&nbsp;callback)</span></div>
 </section>
 </li>
 </ul>
