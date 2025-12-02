@@ -2,6 +2,7 @@ package com.example.fairdraw.DBs;
 
 import android.util.Log;
 
+import com.example.fairdraw.Others.AdminNotificationLog;
 import com.example.fairdraw.Others.EntrantNotification;
 import com.example.fairdraw.Models.Entrant;
 import com.google.firebase.firestore.CollectionReference;
@@ -212,17 +213,45 @@ public class EntrantDB {
         DocumentReference ref = getEntrantCollection().document(deviceId);
 
         ref.update("notifications", FieldValue.arrayUnion(notification))
-                .addOnSuccessListener(v -> { if (callB != null) callB.onCallback(true, null); })
+                .addOnSuccessListener(v -> {
+                    Log.d(TAG, "pushNotificationToUser: successfully pushed notification to user " + deviceId);
+                    AdminNotificationLog log = new AdminNotificationLog(
+                            deviceId,
+                            notification.title,
+                            notification.type,
+                            notification.eventId
+
+                    );
+                    Log.d(TAG, "pushNotificationToUser: logging admin notification: " + log.recipientDeviceId + ", " + log.notificationType + ", " + log.eventId);
+                    AdminDB.logNotification(log);
+                    if (callB != null) callB.onCallback(true, null);
+                })
                 .addOnFailureListener(e -> {
-                    // Doc/field missing -> create it
-                    Map<String, List<EntrantNotification>> init =
-                            Collections.singletonMap("notifications", Collections.singletonList(notification));
+                    // Create the notifications array if missing
+                    Map<String, List<EntrantNotification>> init = Collections.singletonMap(
+                            "notifications",
+                            Collections.singletonList(notification)
+                    );
+                    init.put("notifications", Collections.singletonList(notification));
 
                     ref.set(init, SetOptions.merge())
-                            .addOnSuccessListener(v2 -> { if (callB != null) callB.onCallback(true, null); })
-                            .addOnFailureListener(e2 -> { if (callB != null) callB.onCallback(false, e2); });
+                            .addOnSuccessListener(v2 -> {
+                                AdminNotificationLog log = new AdminNotificationLog(
+                                        deviceId,
+                                        notification.title,
+                                        notification.type,
+                                        notification.eventId
+                                );
+                                AdminDB.logNotification(log);
+                                if (callB != null) callB.onCallback(true, null);
+
+                            })
+                            .addOnFailureListener(e2 -> {
+                                if (callB != null) callB.onCallback(false, e2);
+                            });
                 });
     }
+
 
     public static void addEventToHistory(
             String entrantId,

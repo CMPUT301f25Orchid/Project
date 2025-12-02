@@ -307,13 +307,12 @@ class com.example.fairdraw.Activities.AdminEventsPage {
 # onDestroy() : void
 }
 class com.example.fairdraw.Others.AdminNotificationLog {
++ eventId : String
++ eventTitle : String
++ recipientDeviceId : String
++ notificationType : String
++ timestamp : Date
 + setTimestamp(arg0 : Date) : void
-+ getEventId() : String
-+ getEventTitle() : String
-+ getRecipientDeviceId() : String
-+ getNotificationType() : NotificationType
-+ getUserName() : String
-+ getTimestamp() : Date
 }
 class com.example.fairdraw.Models.Admin {
 + getDeviceId() : String
@@ -538,12 +537,13 @@ com.google.android.gms.maps.OnMapReadyCallback <|.. com.example.fairdraw.Activit
 com.example.fairdraw.Activities.BaseTopBottomActivity <|-- com.example.fairdraw.Activities.OrganizerWaitListMapActivity
 com.example.fairdraw.Activities.BaseTopBottomActivity <|-- com.example.fairdraw.Activities.CreateEventPage
 androidx.fragment.app.DialogFragment <|-- com.example.fairdraw.Fragments.QrCodeFragment
-androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.AdminNotificationLogActivity
+com.example.fairdraw.Activities.BaseTopBottomActivity <|-- com.example.fairdraw.Activities.AdminNotificationLogActivity
 com.example.fairdraw.Activities.AdminNotificationLogActivity +.. com.example.fairdraw.Activities.AdminNotificationLogActivity$LogAdapter
 com.example.fairdraw.Activities.Adapter <|-- com.example.fairdraw.Activities.AdminNotificationLogActivity$LogAdapter
 com.example.fairdraw.Activities.AdminNotificationLogActivity$LogAdapter +.. com.example.fairdraw.Activities.AdminNotificationLogActivity$LogAdapter$LogViewHolder
 com.example.fairdraw.Activities.ViewHolder <|-- com.example.fairdraw.Activities.AdminNotificationLogActivity$LogAdapter$LogViewHolder
 com.example.fairdraw.Activities.BaseTopBottomActivity <|-- com.example.fairdraw.Activities.AdminEventsPage
+java.io.Serializable <|.. com.example.fairdraw.Others.AdminNotificationLog
 java.io.Serializable <|.. com.example.fairdraw.Models.Admin
 com.example.fairdraw.Activities.BaseTopBottomActivity <|-- com.example.fairdraw.Activities.EntrantScan
 com.example.fairdraw.Activities.BaseTopBottomActivity <|-- com.example.fairdraw.Activities.EntrantMyEventsActivity

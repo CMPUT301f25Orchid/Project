@@ -7,22 +7,31 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.fairdraw.DBs.AdminDB;
+import com.example.fairdraw.DBs.UserDB;
 import com.example.fairdraw.Others.AdminNotificationLog;
+import com.example.fairdraw.Others.BarType;
 import com.example.fairdraw.Others.NotificationType;
 import com.example.fairdraw.R;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdminNotificationLogActivity extends AppCompatActivity {
+public class AdminNotificationLogActivity extends BaseTopBottomActivity {
 
     private RecyclerView recyclerView;
     private LogAdapter adapter;
-    private final List<AdminNotificationLog> dummyLogs = new ArrayList<>();
+    private final List<AdminNotificationLog> logs = new ArrayList<>();
+    private ListenerRegistration logsListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,49 +44,46 @@ public class AdminNotificationLogActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
 
-        adapter = new LogAdapter(dummyLogs);
+        initBottomNav(BarType.ADMIN, findViewById(R.id.admin_bottom_nav));
+        initTopNav(BarType.ADMIN);
+        adapter = new LogAdapter(logs);
         recyclerView.setAdapter(adapter);
-
-        loadDummyData();
+        startListeningForLogs();
     }
 
-    /**
-     * Create several dummy logs so you can see multiple rows
-     */
-    private void loadDummyData() {
-        dummyLogs.clear();
 
-        // 1 Anne Hathaway sent to all entrants
-        AdminNotificationLog log1 = new AdminNotificationLog(
-                "event1",
-                "Anne Hathaway",
-                "Swimming Lessons For Beginners",
-                "device001",
-                NotificationType.OTHER
-        );
-        dummyLogs.add(log1);
+    private void startListeningForLogs(){
+        logsListener = AdminDB.getNotificationLogsQuery().addSnapshotListener((@Nullable QuerySnapshot snapshot, @Nullable FirebaseFirestoreException e) -> {
+            if (e != null) {
+                System.err.println("Error getting notification logs: " + e);
+                return;
+            }
 
-        // 2 Brian Johnson sent to all cancelled entrants
-        AdminNotificationLog log2 = new AdminNotificationLog(
-                "event2",
-                "Brian Johnson",
-                "Advanced Rock Climbing",
-                "device002",
-                NotificationType.OTHER
-        );
-        dummyLogs.add(log2);
+            if (snapshot != null) {
+                List<AdminNotificationLog> newItems = new ArrayList<>();
+                for (DocumentSnapshot doc : snapshot.getDocuments()) {
+                    AdminNotificationLog log = doc.toObject(AdminNotificationLog.class);
+                    if (log != null) {
+                        newItems.add(log);
+                    }
+                }
+                logs.clear();
+                logs.addAll(newItems);
+                adapter.notifyDataSetChanged();
+            }
+            List<AdminNotificationLog> newItems = new ArrayList<>();
+            for (DocumentSnapshot doc : snapshot.getDocuments()) {
+                AdminNotificationLog log = doc.toObject(AdminNotificationLog.class);
+                if (log != null) {
+                    newItems.add(log);
+                }
+            }
 
-        // 3 Emily Witherspoon sent to selected entrants
-        AdminNotificationLog log3 = new AdminNotificationLog(
-                "event3",
-                "Emily Witherspoon",
-                "Evening Yoga Session",
-                "device003",
-                NotificationType.LOSE
-        );
-        dummyLogs.add(log3);
+            logs.clear();
+            logs.addAll(newItems);
+            adapter.notifyDataSetChanged();
+        });
 
-        adapter.notifyDataSetChanged();
     }
 
     // simple RecyclerView adapter using the item_admin_notification_log row
@@ -128,11 +134,11 @@ public class AdminNotificationLogActivity extends AppCompatActivity {
              */
             void bind(AdminNotificationLog log, int position) {
                 // first line: "<name> sent a notification"
-                String userName = log.getUserName();
-                if (userName == null || userName.isEmpty()) {
-                    userName = "Unknown organizer";
-                }
-                tvSenderLine.setText(userName + " sent a notification");
+                UserDB.getUserOrNull(log.recipientDeviceId, (user, e) -> {
+                    String userName = (user != null && user.getName() != null)
+                            ? user.getName() : "Unknown organizer";
+                    tvSenderLine.setText(userName + " sent a notification");
+                });
 
                 // second line: audience text based on which dummy row
                 String audience;
