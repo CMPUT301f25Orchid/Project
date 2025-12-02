@@ -53,6 +53,8 @@ public class EditProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Redirect to splash if user doc missing
+        ActivityUtils.ensureUserExistsOrRedirect(this);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_profile_edit);
 

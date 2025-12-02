@@ -36,6 +36,8 @@ public class AdminNotificationLogActivity extends BaseTopBottomActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Ensure user exists; redirect to splash if missing
+        ActivityUtils.ensureUserExistsOrRedirect(this);
         setContentView(R.layout.activity_admin_notification_log);
 
         recyclerView = findViewById(R.id.recyclerNotificationLogs);

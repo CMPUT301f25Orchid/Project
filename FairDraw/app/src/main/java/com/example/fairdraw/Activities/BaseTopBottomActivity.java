@@ -29,6 +29,29 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
  * click handlers which route to other entrant activities (home, scan, notifications, etc.).
  */
 public class BaseTopBottomActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(android.os.Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // Ensure user exists; if not, redirect to splash. This runs for all subclasses that call super.onCreate.
+        ActivityUtils.ensureUserExistsOrRedirect(this);
+
+        // Check if the user has the role of admin, if not hide the admin button
+        String deviceId = DevicePrefsManager.getDeviceId(this);
+        UserDB.getUserOrNull(deviceId, (user, e) -> {
+            if (user != null) {
+                MaterialButton adminBtn = findViewById(R.id.btnAdmin);
+                if (adminBtn != null) {
+                    if (!user.getRoles().contains("admin")) {
+                        adminBtn.setVisibility(View.GONE);
+                    } else {
+                        adminBtn.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        });
+    }
+
     /**
      * Initialize the bottom navigation click listeners for a given bar type.
      * <p>
@@ -226,5 +249,3 @@ public class BaseTopBottomActivity extends AppCompatActivity {
 
 
 }
-
-
