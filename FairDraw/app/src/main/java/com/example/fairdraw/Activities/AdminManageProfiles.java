@@ -182,12 +182,6 @@ public class AdminManageProfiles extends BaseTopBottomActivity {
                 Log.d(TAG, "User account deleted successfully.");
                 Snackbar.make(findViewById(android.R.id.content), "Account deleted.", Snackbar.LENGTH_SHORT).show();
 
-
-                // Navigate back to the main sign-up/entry activity
-                Intent intent = new Intent(AdminManageProfiles.this, SignUpActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                finish();
             } else {
                 handleDeleteError(finalE);
             }
@@ -198,7 +192,6 @@ public class AdminManageProfiles extends BaseTopBottomActivity {
         Log.e(TAG, "Failed to delete user account.", e);
         Snackbar.make(findViewById(android.R.id.content), "Failed to delete account.", Snackbar.LENGTH_SHORT).show();
     }
-
 
 
     private void setupSearchBar() {

@@ -51,6 +51,8 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Redirect to splash if the underlying user doc is missing or deleted
+        ActivityUtils.ensureUserExistsOrRedirect(this);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_profile);
 

@@ -27,6 +27,14 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
  * click handlers which route to other entrant activities (home, scan, notifications, etc.).
  */
 public class BaseTopBottomActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(android.os.Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // Ensure user exists; if not, redirect to splash. This runs for all subclasses that call super.onCreate.
+        ActivityUtils.ensureUserExistsOrRedirect(this);
+    }
+
     /**
      * Initialize the bottom navigation click listeners for a given bar type.
      * <p>
@@ -221,5 +229,3 @@ public class BaseTopBottomActivity extends AppCompatActivity {
 
 
 }
-
-

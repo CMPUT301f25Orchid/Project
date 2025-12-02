@@ -29,6 +29,8 @@ public class DeepLinkRouterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Redirect to splash if underlying user doc missing
+        ActivityUtils.ensureUserExistsOrRedirect(this);
 
         Intent in = getIntent();
         Uri data = (in != null) ? in.getData() : null;
