@@ -1,5 +1,9 @@
 package com.example.fairdraw.Models;
 
+import android.net.Uri;
+
+import com.example.fairdraw.ServiceUtility.FirebaseImageStorageService;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,7 +23,6 @@ public class User implements Serializable {
     private String fcmToken;
     private ArrayList<String> roles;
     private boolean notificationsEnabled;
-    private String profilePicture;
     // New field: date the user joined the app. Uses java.util.Date which maps cleanly to Firestore.
     private Date dateJoined;
 
@@ -93,13 +96,6 @@ public class User implements Serializable {
      * @return list of role strings
      */
     public ArrayList<String> getRoles() { return roles; }
-    /**
-     * Returns the URL of the user's profile picture.
-     * @return profile picture URL or null if unset
-     */
-    public String getProfilePicture() {
-        return profilePicture;
-    }
 
     /**
      * Returns the date the user joined the application. May be null for older users.
@@ -145,14 +141,6 @@ public class User implements Serializable {
     }
     public void setNotificationsEnabled(boolean notificationsEnabled) {
         this.notificationsEnabled = notificationsEnabled;
-        }
-    /**
-     * Sets the URL of the user's profile picture.
-     * @param profilePicture URL to set
-     */
-    public void setProfilePicture(String profilePicture) {
-        this.profilePicture = profilePicture;
-
     }
 
     /**

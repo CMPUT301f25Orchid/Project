@@ -4,11 +4,13 @@ import static androidx.core.content.ContextCompat.startActivity;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
 import com.example.fairdraw.DBs.UserDB;
 import com.example.fairdraw.ServiceUtility.DevicePrefsManager;
+import com.example.fairdraw.ServiceUtility.FirebaseImageStorageService;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -36,6 +38,9 @@ public class BaseTopBottomActivity extends AppCompatActivity {
      * @param barType the type of navigation bar to initialise (e.g. ENTRANT)
      * @param root the inflated BottomNavigationView container that holds the nav item views
      */
+
+    private static final String TAG = "BaseTopBottomActivity";
+
     protected void initBottomNav(BarType barType, BottomNavigationView root) {
         if (barType == BarType.ENTRANT) {
             View home = root.findViewById(R.id.home_activity);
@@ -164,16 +169,15 @@ public class BaseTopBottomActivity extends AppCompatActivity {
         // Load user avatar from Firestore ---
         if (deviceId != null && !deviceId.isEmpty()) {
             UserDB.getUserOrNull(deviceId, (user, e) -> {
-                if (user != null && user.getProfilePicture() != null && !user.getProfilePicture().isEmpty()) {
-                    // User has a profile picture, load it
-                    runOnUiThread(() -> {
-                        Glide.with(this)
-                                .load(Uri.parse(user.getProfilePicture()))
-                                .circleCrop()
-                                .into(userProfileButton);
-                    });
-                }
+                new FirebaseImageStorageService().getEntrantProfileDownloadUrl(deviceId).addOnSuccessListener(uri -> {
+                    Glide.with(this).load(uri).circleCrop().into(userProfileButton);
+                }).addOnFailureListener(e1 -> {
+                    Log.e(TAG, "Failed to load profile picture.", e);
+                });
             });
+        }
+        else {
+            Log.e(TAG, "No USER_ID was passed to EditProfileActivity.");
         }
 
         userProfileButton.setOnClickListener(v -> {

@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide;
 import com.example.fairdraw.DBs.AdminDB;
 import com.example.fairdraw.DBs.EntrantDB;
 import com.example.fairdraw.DBs.OrganizerDB;
+import com.example.fairdraw.ServiceUtility.FirebaseImageStorageService;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -210,12 +211,13 @@ public class ProfileActivity extends AppCompatActivity {
                         emailTextView.setText(user.getEmail());
                         phoneTextView.setText(user.getPhoneNum());
                         notificationSwitch.setChecked(user.isNotificationsEnabled());
-                        if (user.getProfilePicture() != null && !user.getProfilePicture().isEmpty()) {
-                            Glide.with(ProfileActivity.this)
-                                    .load(Uri.parse(user.getProfilePicture()))
-                                    .circleCrop()
-                                    .into(avatarImageView);
-                        }
+                        // Fetch user profile picture from image storage
+                        FirebaseImageStorageService imageStorage = new FirebaseImageStorageService();
+                        imageStorage.getEntrantProfileDownloadUrl(deviceId).addOnSuccessListener(uri -> {
+                            Glide.with(ProfileActivity.this).load(uri).circleCrop().into(avatarImageView);
+                        }).addOnFailureListener(e1 -> {
+                            Log.e(TAG, "Failed to load profile picture.", e);
+                        });
                     });
                 } else {
                     //User not found
