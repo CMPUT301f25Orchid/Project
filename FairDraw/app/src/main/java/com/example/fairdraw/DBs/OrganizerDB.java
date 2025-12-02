@@ -168,7 +168,9 @@ public class OrganizerDB {
                             adminId,
                             "REMOVE_ORGANIZER",
                             "Organizer " + organizerId + " removed and events cleaned up",
-                            new Date()
+                            //fixed audience to ADMIN only for this action
+                            "ADMIN"
+
                     );
                     AdminDB.logNotification(log);
                 }

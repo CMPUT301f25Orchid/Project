@@ -104,7 +104,8 @@ public class BaseTopBottomActivity extends AppCompatActivity {
             });
 
             logs.setOnClickListener(v -> {
-                // To be created when the activity is created.
+                Intent intent = new Intent(this, AdminNotificationLogActivity.class);
+                startActivity(intent);
             });
         }
     }
