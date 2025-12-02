@@ -20,6 +20,8 @@ public class TestDeepLinkActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Protect app state: redirect to splash if user missing
+        ActivityUtils.ensureUserExistsOrRedirect(this);
 
         // Minimal UI that lists all extras received
         ScrollView sc = new ScrollView(this);
