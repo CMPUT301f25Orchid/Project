@@ -141,6 +141,7 @@ class com.example.fairdraw.Models.User {
 + getFcmToken() : String
 + getRoles() : ArrayList<String>
 + getProfilePicture() : String
++ getDateJoined() : Date
 + setName(arg0 : String) : void
 + setEmail(arg0 : String) : void
 + setPhoneNum(arg0 : String) : void
@@ -150,6 +151,7 @@ class com.example.fairdraw.Models.User {
 + isNotificationsEnabled() : boolean
 + setNotificationsEnabled(arg0 : boolean) : void
 + setProfilePicture(arg0 : String) : void
++ setDateJoined(arg0 : Date) : void
 }
 class com.example.fairdraw.Models.AreaStats {
 + increment() : void
@@ -185,6 +187,7 @@ class com.example.fairdraw.ServiceUtility.FirebaseImageStorageService {
 + deleteEventPoster(arg0 : String) : Task<Void>
 + eventPosterExists(arg0 : String) : Task<Boolean>
 + listAllEventPosters() : Task<List<EventPosterInfo>>
++ listenToEventPosters(arg0 : EventPostersCallback) : void
 + uploadEventQr(arg0 : String, arg1 : Bitmap, arg2 : int, arg3 : int) : Task<Uri>
 + uploadEventQr(arg0 : String, arg1 : Uri) : Task<Uri>
 + getEventQrDownloadUrl(arg0 : String) : Task<Uri>
@@ -195,6 +198,8 @@ class com.example.fairdraw.ServiceUtility.FirebaseImageStorageService {
 class com.example.fairdraw.ServiceUtility.FirebaseImageStorageService$EventPosterInfo {
 + eventId : String
 + downloadUri : Uri
+}
+interface com.example.fairdraw.ServiceUtility.FirebaseImageStorageService$EventPostersCallback {
 }
 class com.example.fairdraw.Fragments.DecisionFragment {
 + {static} newInstance(arg0 : EntrantNotification) : DecisionFragment
@@ -212,6 +217,7 @@ class com.example.fairdraw.Activities.SignUpActivity {
 }
 class com.example.fairdraw.Activities.AdminManageProfiles {
 # onCreate(arg0 : Bundle) : void
+# onDestroy() : void
 }
 enum com.example.fairdraw.Others.EventState {
 +  DRAFT
@@ -245,6 +251,8 @@ class com.example.fairdraw.Others.EntrantNotification {
 }
 class com.example.fairdraw.Activities.AdminPicturesPage {
 # onCreate(arg0 : Bundle) : void
+# onStart() : void
+# onStop() : void
 + displayPictures(arg0 : List<FirebaseImageStorageService.EventPosterInfo>) : void
 }
 class com.example.fairdraw.Activities.EditEventPage {
@@ -370,8 +378,11 @@ class com.example.fairdraw.DBs.UserDB {
 + {static} userExists(arg0 : String, arg1 : ExistsCallback) : void
 + {static} upsertUser(arg0 : User, arg1 : WriteCallback) : void
 + {static} deleteUser(arg0 : String, arg1 : DeleteCallback) : void
++ {static} listenToUsers(arg0 : GetUsersCallback) : ListenerRegistration
 }
 interface com.example.fairdraw.DBs.UserDB$GetUserCallback {
+}
+interface com.example.fairdraw.DBs.UserDB$GetUsersCallback {
 }
 interface com.example.fairdraw.DBs.UserDB$ExistsCallback {
 }
@@ -476,6 +487,10 @@ enum com.example.fairdraw.Others.NotificationType {
 class com.example.fairdraw.Activities.OrganizerMainPage {
 # onCreate(arg0 : Bundle) : void
 }
+class com.example.fairdraw.Activities.OrganizerExportActivity {
+# onCreate(arg0 : Bundle) : void
++ bindEvent(arg0 : Event) : void
+}
 class com.example.fairdraw.Activities.DeepLinkRouterActivity {
 # onCreate(arg0 : Bundle) : void
 }
@@ -507,12 +522,13 @@ java.io.Serializable <|.. com.example.fairdraw.Models.User
 androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.ProfileActivity
 com.example.fairdraw.ServiceUtility.GeoService +.. com.example.fairdraw.ServiceUtility.GeoService$GeoCallback
 com.example.fairdraw.ServiceUtility.FirebaseImageStorageService +.. com.example.fairdraw.ServiceUtility.FirebaseImageStorageService$EventPosterInfo
+com.example.fairdraw.ServiceUtility.FirebaseImageStorageService +.. com.example.fairdraw.ServiceUtility.FirebaseImageStorageService$EventPostersCallback
 androidx.fragment.app.DialogFragment <|-- com.example.fairdraw.Fragments.DecisionFragment
 com.example.fairdraw.Adapters.Adapter <|-- com.example.fairdraw.Adapters.EntrantListArrayAdapter
 com.example.fairdraw.Adapters.EntrantListArrayAdapter +.. com.example.fairdraw.Adapters.EntrantListArrayAdapter$EntrantViewHolder
 com.example.fairdraw.Adapters.ViewHolder <|-- com.example.fairdraw.Adapters.EntrantListArrayAdapter$EntrantViewHolder
 androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.SignUpActivity
-androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.AdminManageProfiles
+com.example.fairdraw.Activities.BaseTopBottomActivity <|-- com.example.fairdraw.Activities.AdminManageProfiles
 androidx.fragment.app.DialogFragment <|-- com.example.fairdraw.Fragments.SendNotificationDialogFragment
 com.example.fairdraw.Fragments.SendNotificationDialogFragment +.. com.example.fairdraw.Fragments.SendNotificationDialogFragment$Listener
 java.io.Serializable <|.. com.example.fairdraw.Others.EntrantNotification
@@ -540,6 +556,7 @@ com.example.fairdraw.DBs.OrganizerDB +.. com.example.fairdraw.DBs.OrganizerDB$Ad
 com.example.fairdraw.DBs.OrganizerDB +.. com.example.fairdraw.DBs.OrganizerDB$UpdateOrganizerCallback
 com.example.fairdraw.DBs.OrganizerDB +.. com.example.fairdraw.DBs.OrganizerDB$DeleteOrganizerCallback
 com.example.fairdraw.DBs.UserDB +.. com.example.fairdraw.DBs.UserDB$GetUserCallback
+com.example.fairdraw.DBs.UserDB +.. com.example.fairdraw.DBs.UserDB$GetUsersCallback
 com.example.fairdraw.DBs.UserDB +.. com.example.fairdraw.DBs.UserDB$ExistsCallback
 com.example.fairdraw.DBs.UserDB +.. com.example.fairdraw.DBs.UserDB$WriteCallback
 com.example.fairdraw.DBs.UserDB +.. com.example.fairdraw.DBs.UserDB$DeleteCallback
@@ -562,5 +579,6 @@ com.example.fairdraw.DBs.EventDB +.. com.example.fairdraw.DBs.EventDB$AddToWaitl
 androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.EditProfileActivity
 androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.TestDeepLinkActivity
 com.example.fairdraw.Activities.BaseTopBottomActivity <|-- com.example.fairdraw.Activities.OrganizerMainPage
+com.example.fairdraw.Activities.BaseTopBottomActivity <|-- com.example.fairdraw.Activities.OrganizerExportActivity
 androidx.appcompat.app.AppCompatActivity <|-- com.example.fairdraw.Activities.DeepLinkRouterActivity
 @enduml

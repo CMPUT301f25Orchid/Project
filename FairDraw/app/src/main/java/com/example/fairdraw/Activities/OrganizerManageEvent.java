@@ -40,6 +40,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -169,7 +170,7 @@ public class OrganizerManageEvent extends BaseTopBottomActivity {
         rvRegistered = findViewById(R.id.rvRegistered);
         rvWaiting = findViewById(R.id.rvWaiting);
         btnSendNotification = findViewById(R.id.btnSendNotification);
-        btnDownloadFinalEntrants = findViewById(R.id.btnDownloadFinalEntrants);
+        btnDownloadFinalEntrants = findViewById(R.id.btnReturn);
         btnSeeWaitingMap = findViewById(R.id.btnSeeWaitingMap);
 
         EventDB.getEventCollection().document(eventId).addSnapshotListener((snapshot, e) -> {
@@ -280,15 +281,15 @@ public class OrganizerManageEvent extends BaseTopBottomActivity {
         // Validate entrant lists - some event documents in Firestore may be corrupted/missing fields.
         List<String> invited = e.getInvitedList();
         List<String> cancelled = e.getCancelledList();
-        List<String> enrolled = e.getEnrolledList();
+        AtomicReference<List<String>> enrolled = new AtomicReference<>(e.getEnrolledList());
         List<String> waiting = e.getWaitingList();
 
-        boolean anyNull = (invited == null) || (cancelled == null) || (enrolled == null) || (waiting == null);
+        boolean anyNull = (invited == null) || (cancelled == null) || (enrolled.get() == null) || (waiting == null);
         if (anyNull) {
             StringBuilder missing = new StringBuilder();
             if (invited == null) missing.append("invitedList ");
             if (cancelled == null) missing.append("cancelledList ");
-            if (enrolled == null) missing.append("enrolledList ");
+            if (enrolled.get() == null) missing.append("enrolledList ");
             if (waiting == null) missing.append("waitingList ");
 
             Log.w("OrganizerManageEvent", "Event data incomplete for event " + (e.getUuid() == null ? eventId : e.getUuid()) + ": missing lists: " + missing);
@@ -303,7 +304,7 @@ public class OrganizerManageEvent extends BaseTopBottomActivity {
             // Use safe empty lists for UI rendering to avoid NPEs
             if (invited == null) invited = new ArrayList<>();
             if (cancelled == null) cancelled = new ArrayList<>();
-            if (enrolled == null) enrolled = new ArrayList<>();
+            if (enrolled.get() == null) enrolled.set(new ArrayList<>());
             if (waiting == null) waiting = new ArrayList<>();
         } else {
             // Re-enable actions if data is present
@@ -316,7 +317,7 @@ public class OrganizerManageEvent extends BaseTopBottomActivity {
         // Make final safe copies for use inside lambdas/listeners
         final List<String> invitedSafe = invited;
         final List<String> cancelledSafe = cancelled;
-        final List<String> enrolledSafe = enrolled;
+        final List<String> enrolledSafe = enrolled.get();
         final List<String> waitingSafe = waiting;
 
         // Show invited list
@@ -387,7 +388,10 @@ public class OrganizerManageEvent extends BaseTopBottomActivity {
         });
         
         btnDownloadFinalEntrants.setOnClickListener(v -> {
-            exportEnrolledEntrantsToCsv(enrolledSafe, e.getTitle());
+            enrolled.set(e.getEnrolledList());
+            Intent intent = new Intent(OrganizerManageEvent.this, OrganizerExportActivity.class);
+            intent.putExtra("eventId", eventId);
+            startActivity(intent);
         });
 
         btnSeeWaitingMap.setOnClickListener(v -> {

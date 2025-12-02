@@ -53,6 +53,17 @@ public class FirebaseImageStorageService {
     }
 
     /**
+     * Callback interface for receiving event poster list updates.
+     */
+    public interface EventPostersCallback {
+        /**
+         * Called when the list of event posters is retrieved.
+         * @param posters List of EventPosterInfo objects, or null on error.
+         */
+        void onCallback(@Nullable List<EventPosterInfo> posters);
+    }
+
+    /**
      * Default constructor. Initializes the Firebase Storage instance.
      */
     public FirebaseImageStorageService() {
@@ -305,6 +316,26 @@ public class FirebaseImageStorageService {
                                 }
                                 return posters;
                             });
+                });
+    }
+
+    /**
+     * Fetches all event posters and delivers them via a callback.
+     * <p>
+     * This method provides a callback-based interface for fetching event posters,
+     * making it easier to use in lifecycle-aware components. Unlike Firestore,
+     * Firebase Storage does not support real-time listeners, so this performs
+     * a one-time fetch when called.
+     *
+     * @param callback The callback to receive the list of event posters.
+     *                 Called with the list on success, or null on failure.
+     */
+    public void listenToEventPosters(@NonNull EventPostersCallback callback) {
+        listAllEventPosters()
+                .addOnSuccessListener(posters -> callback.onCallback(posters))
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Failed to fetch event posters", e);
+                    callback.onCallback(null);
                 });
     }
 
