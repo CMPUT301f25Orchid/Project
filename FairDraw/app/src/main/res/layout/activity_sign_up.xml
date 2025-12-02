@@ -7,42 +7,32 @@
     android:padding="24dp"
     android:background="#2E57FF">
 
-    <TextView
-        android:id="@+id/tvTitle2"
-        android:layout_width="0dp"
+
+    <ImageView
+        android:id="@+id/ivAvatar2"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="FAIRDRAW\nEVENTS"
-        android:textColor="#FFFFFF"
-        android:textStyle="bold"
-        android:textSize="28sp"
-        android:gravity="center"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="120dp"
+        android:background="@drawable/fairdraw_logo"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="#FFFFFF" />
 
     <TextView
         android:id="@+id/tvSubtitle2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
         android:text="~The community centre Lottery App~"
         android:textColor="#FFFFFF"
         android:textSize="16sp"
-        android:gravity="center"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@id/tvTitle2"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/ivAvatar2" />
 
-    <ImageView
-        android:id="@+id/ivAvatar2"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:src="@android:drawable/sym_def_app_icon"
-        app:tint="#FFFFFF"
-        android:layout_marginTop="24dp"
-        app:layout_constraintTop_toBottomOf="@id/tvSubtitle2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilFname"
@@ -57,7 +47,7 @@
         app:boxCornerRadiusBottomStart="8dp"
         app:boxCornerRadiusBottomEnd="8dp"
         app:boxBackgroundColor="#FFFFFFFF"
-        app:layout_constraintTop_toBottomOf="@id/ivAvatar2"
+        app:layout_constraintTop_toBottomOf="@id/tvSubtitle2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -131,7 +121,7 @@
         android:layout_width="158dp"
         android:layout_height="48dp"
         android:layout_marginStart="48dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="48dp"
         android:text="Sign Up"
         android:textAllCaps="false"
