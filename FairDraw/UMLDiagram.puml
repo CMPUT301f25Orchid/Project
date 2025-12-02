@@ -51,6 +51,7 @@ interface com.example.fairdraw.DBs.EntrantDB$PushNotificationCallback {
 interface com.example.fairdraw.DBs.EntrantDB$NotificationsListener {
 }
 class com.example.fairdraw.Activities.BaseTopBottomActivity {
+# onCreate(arg0 : android.os.Bundle) : void
 # initBottomNav(arg0 : BarType, arg1 : BottomNavigationView) : void
 # initTopNav(arg0 : BarType) : void
 }
@@ -227,6 +228,9 @@ enum com.example.fairdraw.Others.EventState {
 class com.example.fairdraw.ServiceUtility.GatePrefs {
 + {static} getKnownExists(arg0 : Context) : boolean
 + {static} setKnownExists(arg0 : Context, arg1 : boolean) : void
+}
+class com.example.fairdraw.Activities.ActivityUtils {
++ {static} ensureUserExistsOrRedirect(arg0 : Activity) : void
 }
 class com.example.fairdraw.Fragments.SendNotificationDialogFragment {
 + {static} newInstance(arg0 : String) : SendNotificationDialogFragment
