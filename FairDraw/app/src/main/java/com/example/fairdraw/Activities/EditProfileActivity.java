@@ -188,14 +188,18 @@ public class EditProfileActivity extends AppCompatActivity {
         UserDB.deleteUser(deviceId, (finalOk, finalE) -> {
             if (finalOk) {
                 Log.d(TAG, "User account deleted successfully.");
-                Snackbar.make(findViewById(android.R.id.content), "Account deleted.", Snackbar.LENGTH_SHORT).show();
+                runOnUiThread(() -> {
+                    Snackbar.make(findViewById(android.R.id.content), "Account deleted.", Snackbar.LENGTH_SHORT).show();
 
+                    // Clear cached account data including device id before navigating to SignUpActivity
+                    DevicePrefsManager.clearCachedAccountData(EditProfileActivity.this);
 
-                // Navigate back to the main sign-up/entry activity
-                Intent intent = new Intent(EditProfileActivity.this, SignUpActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                finish();
+                    // Navigate back to the main sign-up/entry activity
+                    Intent intent = new Intent(EditProfileActivity.this, SignUpActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
+                });
             } else {
                 handleDeleteError(finalE);
             }
