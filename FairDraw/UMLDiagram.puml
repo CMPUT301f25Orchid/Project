@@ -401,6 +401,8 @@ class com.example.fairdraw.Activities.MainActivity {
 }
 class com.example.fairdraw.ServiceUtility.DevicePrefsManager {
 + {static} getDeviceId(arg0 : Context) : String
++ {static} clearDeviceId(arg0 : Context) : void
++ {static} clearCachedAccountData(arg0 : Context) : void
 }
 class com.example.fairdraw.Models.Entrant {
 + getDeviceId() : String
