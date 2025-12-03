@@ -14,8 +14,15 @@ import java.util.UUID;
  * account is not available.
  */
 public final class DevicePrefsManager {
-    private static final String PREF_NAME = "device_prefs";
-    private static final String DEVICE_ID_KEY = "device_id";
+    /** SharedPreferences file name for device-related preferences. */
+    static final String PREF_NAME = "device_prefs";
+    /** Key for the stored device id. */
+    static final String DEVICE_ID_KEY = "device_id";
+    /** Key for the cached FCM token. */
+    static final String KEY_FCM_TOKEN = "fcm_token";
+    /** Key for the cached profile picture URI. */
+    static final String KEY_PROFILE_PIC_URI = "profile_pic_uri";
+
     private static volatile String uniqueId;
 
     private DevicePrefsManager() {}
@@ -44,6 +51,42 @@ public final class DevicePrefsManager {
 
             uniqueId = cached;
             return uniqueId;
+        }
+    }
+
+    /**
+     * Clears the stored device id from SharedPreferences.
+     * The next call to {@link #getDeviceId(Context)} will generate a new id.
+     *
+     * @param context any Context; the application context will be used internally
+     */
+    public static void clearDeviceId(Context context) {
+        synchronized (DevicePrefsManager.class) {
+            Context appCtx = context.getApplicationContext();
+            SharedPreferences sp = appCtx.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+            sp.edit().remove(DEVICE_ID_KEY).apply();
+            uniqueId = null;
+        }
+    }
+
+    /**
+     * Clears all cached account-related data from SharedPreferences.
+     * This includes the device id, FCM token, and profile picture URI.
+     * Should be called when a user deletes their own account to prevent
+     * reuse of the same device id on re-signup.
+     *
+     * @param context any Context; the application context will be used internally
+     */
+    public static void clearCachedAccountData(Context context) {
+        synchronized (DevicePrefsManager.class) {
+            Context appCtx = context.getApplicationContext();
+            SharedPreferences sp = appCtx.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+            sp.edit()
+                    .remove(DEVICE_ID_KEY)
+                    .remove(KEY_FCM_TOKEN)
+                    .remove(KEY_PROFILE_PIC_URI)
+                    .apply();
+            uniqueId = null;
         }
     }
 }
