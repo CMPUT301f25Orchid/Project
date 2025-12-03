@@ -97,6 +97,16 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#clearCachedAccountData(android.content.Context)" class="member-name-link">clearCachedAccountData</a><wbr>(<a href="https://developer.android.com/reference/android/content/Context.html" title="class or interface in android.content" class="external-link">Context</a>&nbsp;context)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Clears all cached account-related data from SharedPreferences.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#clearDeviceId(android.content.Context)" class="member-name-link">clearDeviceId</a><wbr>(<a href="https://developer.android.com/reference/android/content/Context.html" title="class or interface in android.content" class="external-link">Context</a>&nbsp;context)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Clears the stored device id from SharedPreferences.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getDeviceId(android.content.Context)" class="member-name-link">getDeviceId</a><wbr>(<a href="https://developer.android.com/reference/android/content/Context.html" title="class or interface in android.content" class="external-link">Context</a>&nbsp;context)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
@@ -130,6 +140,32 @@ loadScripts(document, 'script');</script>
 <dd><code>context</code> - any Context; the application context will be used internally</dd>
 <dt>Returns:</dt>
 <dd>a non-null UUID string that uniquely identifies this installation</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="clearDeviceId(android.content.Context)">
+<h3>clearDeviceId</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">clearDeviceId</span><wbr><span class="parameters">(<a href="https://developer.android.com/reference/android/content/Context.html" title="class or interface in android.content" class="external-link">Context</a>&nbsp;context)</span></div>
+<div class="block">Clears the stored device id from SharedPreferences.
+ The next call to <a href="#getDeviceId(android.content.Context)"><code>getDeviceId(Context)</code></a> will generate a new id.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>context</code> - any Context; the application context will be used internally</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="clearCachedAccountData(android.content.Context)">
+<h3>clearCachedAccountData</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">clearCachedAccountData</span><wbr><span class="parameters">(<a href="https://developer.android.com/reference/android/content/Context.html" title="class or interface in android.content" class="external-link">Context</a>&nbsp;context)</span></div>
+<div class="block">Clears all cached account-related data from SharedPreferences.
+ This includes the device id, FCM token, and profile picture URI.
+ Should be called when a user deletes their own account to prevent
+ reuse of the same device id on re-signup.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>context</code> - any Context; the application context will be used internally</dd>
 </dl>
 </section>
 </li>
