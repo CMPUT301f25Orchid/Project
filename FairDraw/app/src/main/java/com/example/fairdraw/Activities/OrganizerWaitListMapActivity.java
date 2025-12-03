@@ -1,7 +1,9 @@
 package com.example.fairdraw.Activities;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -12,10 +14,12 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.bumptech.glide.Glide;
 import com.example.fairdraw.DBs.EventDB;
 import com.example.fairdraw.Models.Event;
 import com.example.fairdraw.Models.AreaStats;
 import com.example.fairdraw.R;
+import com.example.fairdraw.ServiceUtility.FirebaseImageStorageService;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -35,7 +39,12 @@ public class OrganizerWaitListMapActivity extends BaseTopBottomActivity implemen
 
     private GoogleMap mMap;
     private String eventId;
+    private Event event;
+    private ImageView ivHeroImage;
+    private TextView tvTitle;
+    private TextView tvDescription;
     private TextView tvStatusPill;
+    private FirebaseImageStorageService storageService;
 
     // key -> AreaStats (bucketed region)
     private final Map<String, AreaStats> areaMap = new HashMap<>();
@@ -66,28 +75,28 @@ public class OrganizerWaitListMapActivity extends BaseTopBottomActivity implemen
         // Back button
         Button btnBack = findViewById(R.id.btnBackToEvent);
         btnBack.setOnClickListener(v -> finish());
+
+        // Initialize storage service and views
+        storageService = new FirebaseImageStorageService();
+        ivHeroImage = findViewById(R.id.heroImage);
+        tvTitle = findViewById(R.id.tvTitle);
+        tvDescription = findViewById(R.id.tvDescription);
         tvStatusPill = findViewById(R.id.tvStatusPill);
 
-        // Check registration status of event with current date
-        EventDB.getEvent(eventId, event -> {
-            if (event == null) {
-                Toast.makeText(this, "Failed to load event", Toast.LENGTH_LONG).show();
+        // Subscribe to realtime event updates
+        EventDB.getEventCollection().document(eventId).addSnapshotListener((snapshot, e) -> {
+            if (e != null) {
+                Log.w(TAG, "Listen failed.", e);
                 return;
             }
-            Date today = new Date();
-            Date eventRegOpen = event.getEventOpenRegDate();
-            Date eventRegClose = event.getEventCloseRegDate();
 
-            if (eventRegOpen != null && eventRegClose != null) {
-                if (today.before(eventRegOpen)) {
-                    tvStatusPill.setText("Registration Not Open");
+            if (snapshot != null && snapshot.exists()) {
+                Event event1 = snapshot.toObject(Event.class);
+                if (event1 != null) {
+                    bindEvent(event1);
                 }
-                else if (today.after(eventRegClose)) {
-                    tvStatusPill.setText("Registration Closed");
-                }
-                else {
-                    tvStatusPill.setText("Registration Open");
-                }
+            } else {
+                Log.d(TAG, "Current data: null");
             }
         });
 
@@ -99,6 +108,44 @@ public class OrganizerWaitListMapActivity extends BaseTopBottomActivity implemen
                 .commit();
 
         mapFragment.getMapAsync(this);
+    }
+
+    /**
+     * Binds the event data to the UI components.
+     *
+     * @param e The event object containing event details.
+     */
+    private void bindEvent(Event e) {
+        event = e;
+
+        // Show hero image
+        storageService.getEventPosterDownloadUrl(eventId).addOnCompleteListener(urlTask -> {
+            if (urlTask.isSuccessful()) {
+                String downloadUrl = urlTask.getResult().toString();
+                Glide.with(this).load(downloadUrl).into(ivHeroImage);
+            }
+        });
+
+        // Show title
+        tvTitle.setText((e.getTitle() == null || e.getTitle().isEmpty()) ? "Untitled Event" : e.getTitle());
+
+        // Show description
+        tvDescription.setText((e.getDescription() == null || e.getDescription().isEmpty()) ? "No description provided" : e.getDescription());
+
+        // Update registration status pill based on open/close dates
+        Date today = new Date();
+        Date eventRegOpen = e.getEventOpenRegDate();
+        Date eventRegClose = e.getEventCloseRegDate();
+
+        if (eventRegOpen != null && eventRegClose != null) {
+            if (today.before(eventRegOpen)) {
+                tvStatusPill.setText("Registration Not Open");
+            } else if (today.after(eventRegClose)) {
+                tvStatusPill.setText("Registration Closed");
+            } else {
+                tvStatusPill.setText("Registration Open");
+            }
+        }
     }
 
     @Override
