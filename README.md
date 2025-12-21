@@ -159,7 +159,7 @@ FairDraw/
 
 4. Add Firebase configuration:
    - Place your `google-services.json` in `app/` directory
-   - (Note: A configuration file is included in the repository)
+   - (Note: A configuration file is included in the repository that has been disabled)
 
 5. Build the project:
    ```bash
